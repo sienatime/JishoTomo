@@ -13,7 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class DrawerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class DrawerActivity extends AppCompatActivity
+    implements NavigationView.OnNavigationItemSelectedListener {
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -32,7 +33,8 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
 
     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
     ActionBarDrawerToggle toggle =
-        new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close);
     drawer.addDrawerListener(toggle);
     toggle.syncState();
 
@@ -69,7 +71,8 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
     return super.onOptionsItemSelected(item);
   }
 
-  @SuppressWarnings("StatementWithEmptyBody") @Override public boolean onNavigationItemSelected(MenuItem item) {
+  @SuppressWarnings("StatementWithEmptyBody") @Override
+  public boolean onNavigationItemSelected(MenuItem item) {
     // Handle navigation view item clicks here.
     int id = item.getItemId();
 
