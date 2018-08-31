@@ -1,10 +1,10 @@
 package net.emojiparty.android.jishotomo;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,6 +12,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import com.huma.room_for_asset.RoomAsset;
+import net.emojiparty.android.jishotomo.data.AppDatabase;
 
 public class DrawerActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener {
@@ -40,6 +43,15 @@ public class DrawerActivity extends AppCompatActivity
 
     NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
     navigationView.setNavigationItemSelectedListener(this);
+
+    AsyncTask.execute(new Runnable() {
+      @Override public void run() {
+        AppDatabase db =
+            RoomAsset.databaseBuilder(getApplicationContext(), AppDatabase.class, "jishotomo.db")
+                .build();
+        db.entryDao().getAll().size();
+      }
+    });
   }
 
   @Override public void onBackPressed() {
