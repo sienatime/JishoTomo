@@ -5,6 +5,9 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Entity(tableName = "senses", indices = {@Index("entry_id")})
 public class Sense {
@@ -75,5 +78,10 @@ public class Sense {
 
   public void setCrossReferences(String crossReferences) {
     this.crossReferences = crossReferences;
+  }
+
+  public List<String> glossesList() {
+    String[] splitGlosses = glosses.split(";");
+    return new ArrayList<String>(Arrays.asList(splitGlosses));
   }
 }

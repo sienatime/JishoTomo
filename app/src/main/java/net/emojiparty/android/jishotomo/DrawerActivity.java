@@ -50,6 +50,7 @@ public class DrawerActivity extends AppCompatActivity
         .inject(DrawerActivity.this);
   }
 
+  // Paging library reference https://developer.android.com/topic/libraries/architecture/paging
   private void setupRecyclerView() {
     RecyclerView searchResults = findViewById(R.id.search_results_rv);
     searchResults.setLayoutManager(new LinearLayoutManager(DrawerActivity.this));
