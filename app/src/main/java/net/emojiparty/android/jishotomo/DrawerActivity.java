@@ -1,7 +1,6 @@
 package net.emojiparty.android.jishotomo;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -16,13 +15,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import com.huma.room_for_asset.RoomAsset;
-import net.emojiparty.android.jishotomo.data.AppDatabase;
+import javax.inject.Inject;
+import net.emojiparty.android.jishotomo.data.AppModule;
+import net.emojiparty.android.jishotomo.data.DaggerAppComponent;
+import net.emojiparty.android.jishotomo.data.EntryDao;
+import net.emojiparty.android.jishotomo.data.RoomModule;
 import net.emojiparty.android.jishotomo.ui.DataBindingAdapter;
 import net.emojiparty.android.jishotomo.ui.PagedEntryViewModel;
+import net.emojiparty.android.jishotomo.ui.PagedEntryViewModelFactory;
 
 public class DrawerActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener {
+
+  @Inject public EntryDao entryDao;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -30,29 +35,28 @@ public class DrawerActivity extends AppCompatActivity
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
 
+    setupDagger();
     setupFab();
     setupDrawer(toolbar);
     setupNavigationView();
     setupRecyclerView();
+  }
 
-    AsyncTask.execute(new Runnable() {
-      @Override public void run() {
-        AppDatabase db =
-            RoomAsset.databaseBuilder(getApplicationContext(), AppDatabase.class, "jishotomo.db")
-                .build();
-        db.entryDao().getPrimarySenseEntry(77566);
-      }
-    });
+  private void setupDagger() {
+    DaggerAppComponent.builder()
+        .appModule(new AppModule(getApplication()))
+        .roomModule(new RoomModule(getApplication()))
+        .build()
+        .inject(DrawerActivity.this);
   }
 
   private void setupRecyclerView() {
     RecyclerView searchResults = findViewById(R.id.search_results_rv);
     searchResults.setLayoutManager(new LinearLayoutManager(DrawerActivity.this));
 
-
-
     PagedEntryViewModel viewModel =
-        ViewModelProviders.of(this).get(PagedEntryViewModel.class);
+        ViewModelProviders.of(this, new PagedEntryViewModelFactory(getApplication(), entryDao))
+            .get(PagedEntryViewModel.class);
     DataBindingAdapter adapter = new DataBindingAdapter(R.layout.list_item_entry);
     viewModel.entries.observe(this, adapter::submitList);
     searchResults.setAdapter(adapter);
@@ -108,8 +112,8 @@ public class DrawerActivity extends AppCompatActivity
   }
 
   // this is for the drawer, maybe move to another class
-  @SuppressWarnings("StatementWithEmptyBody") @Override
-  public boolean onNavigationItemSelected(MenuItem item) {
+  @SuppressWarnings("StatementWithEmptyBody") @Override public boolean onNavigationItemSelected(
+      MenuItem item) {
     // Handle navigation view item clicks here.
     int id = item.getItemId();
 

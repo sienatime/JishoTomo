@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 
+sourceCompatibility = 1.8
+
 android {
   compileSdkVersion 28
   defaultConfig {
@@ -46,4 +48,9 @@ dependencies {
   // Test helpers for Room
   testImplementation 'android.arch.persistence.room:testing:1.1.1'
   implementation 'com.github.humazed:RoomAsset:1.0.3'
+
+  // Dagger 2
+  implementation "com.google.dagger:dagger-android-support:2.13"
+  implementation "com.google.dagger:dagger:2.13"
+  annotationProcessor "com.google.dagger:dagger-compiler:2.13"
 }
