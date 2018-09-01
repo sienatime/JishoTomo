@@ -49,7 +49,7 @@ public class DrawerActivity extends AppCompatActivity
         AppDatabase db =
             RoomAsset.databaseBuilder(getApplicationContext(), AppDatabase.class, "jishotomo.db")
                 .build();
-        db.entryDao().getAll().size();
+        db.entryDao().getPrimarySenseEntry(77566);
       }
     });
   }

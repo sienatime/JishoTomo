@@ -4,7 +4,6 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 @Entity(tableName = "entries")
 public class Entry {
@@ -25,7 +24,6 @@ public class Entry {
   @ColumnInfo(name = "other_readings")
   private String otherReadings;
 
-  @Nullable
   @ColumnInfo(name = "jlpt_level")
   private Integer jlptLevel;
 
