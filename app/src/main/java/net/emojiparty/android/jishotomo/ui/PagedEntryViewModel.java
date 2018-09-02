@@ -8,10 +8,10 @@ import android.arch.paging.PagedList;
 import net.emojiparty.android.jishotomo.data.EntryDao;
 import net.emojiparty.android.jishotomo.data.EntryWithAllSenses;
 
-public class PagedEntryViewModel extends AndroidViewModel {
+public class PagedEntriesViewModel extends AndroidViewModel {
   public LiveData<PagedList<EntryWithAllSenses>> entries;
 
-  public PagedEntryViewModel(Application application, EntryDao entryDao) {
+  public PagedEntriesViewModel(Application application, EntryDao entryDao) {
     super(application);
     this.entries = new LivePagedListBuilder<>(
         entryDao.getAll(), 20).build();
