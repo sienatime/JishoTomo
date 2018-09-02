@@ -1,10 +1,8 @@
-package net.emojiparty.android.jishotomo;
+package net.emojiparty.android.jishotomo.ui;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -14,15 +12,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import javax.inject.Inject;
+import net.emojiparty.android.jishotomo.R;
 import net.emojiparty.android.jishotomo.data.AppModule;
 import net.emojiparty.android.jishotomo.data.DaggerAppComponent;
 import net.emojiparty.android.jishotomo.data.EntryDao;
 import net.emojiparty.android.jishotomo.data.RoomModule;
-import net.emojiparty.android.jishotomo.ui.DataBindingAdapter;
-import net.emojiparty.android.jishotomo.ui.PagedEntryViewModel;
-import net.emojiparty.android.jishotomo.ui.PagedEntryViewModelFactory;
 
 public class DrawerActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener {
@@ -36,7 +31,6 @@ public class DrawerActivity extends AppCompatActivity
     setSupportActionBar(toolbar);
 
     setupDagger();
-    setupFab();
     setupDrawer(toolbar);
     setupNavigationView();
     setupRecyclerView();
@@ -47,7 +41,7 @@ public class DrawerActivity extends AppCompatActivity
         .appModule(new AppModule(getApplication()))
         .roomModule(new RoomModule(getApplication()))
         .build()
-        .inject(DrawerActivity.this);
+        .inject(this);
   }
 
   // Paging library reference https://developer.android.com/topic/libraries/architecture/paging
@@ -55,23 +49,12 @@ public class DrawerActivity extends AppCompatActivity
     RecyclerView searchResults = findViewById(R.id.search_results_rv);
     searchResults.setLayoutManager(new LinearLayoutManager(DrawerActivity.this));
 
-    PagedEntryViewModel viewModel =
-        ViewModelProviders.of(this, new PagedEntryViewModelFactory(getApplication(), entryDao))
-            .get(PagedEntryViewModel.class);
+    PagedEntriesViewModel viewModel =
+        ViewModelProviders.of(this, new PagedEntriesViewModelFactory(getApplication(), entryDao))
+            .get(PagedEntriesViewModel.class);
     DataBindingAdapter adapter = new DataBindingAdapter(R.layout.list_item_entry);
     viewModel.entries.observe(this, adapter::submitList);
     searchResults.setAdapter(adapter);
-  }
-
-  private void setupFab() {
-    FloatingActionButton fab = findViewById(R.id.fab);
-    fab.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-            .setAction("Action", null)
-            .show();
-      }
-    });
   }
 
   private void setupDrawer(Toolbar toolbar) {

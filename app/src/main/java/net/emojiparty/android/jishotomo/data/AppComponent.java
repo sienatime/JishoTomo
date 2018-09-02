@@ -3,7 +3,7 @@ package net.emojiparty.android.jishotomo.data;
 import android.app.Application;
 import dagger.Component;
 import javax.inject.Singleton;
-import net.emojiparty.android.jishotomo.DrawerActivity;
+import net.emojiparty.android.jishotomo.ui.DrawerActivity;
 
 // https://medium.com/@marco_cattaneo/integrate-dagger-2-with-room-persistence-library-in-few-lines-abf48328eaeb
 @Singleton
