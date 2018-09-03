@@ -25,6 +25,7 @@
         android:layout_marginTop="24dp"
         android:paddingEnd="16dp"
         android:paddingRight="16dp"
+        style="@style/small_caps"
         visibleOrGone="@{presenter.partsOfSpeech != null}"
         android:text="@{presenter.partsOfSpeech}"
         app:layout_constraintStart_toStartOf="parent"
@@ -33,13 +34,7 @@
         />
     <View
         android:id="@+id/sense_divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorPrimaryDark"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginEnd="16dp"
+        style="@style/divider"
         app:layout_constraintTop_toBottomOf="@+id/li_parts_of_speech"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
@@ -51,8 +46,9 @@
         android:layout_marginRight="16dp"
         android:layout_marginTop="4dp"
         android:paddingBottom="24dp"
+        android:lineSpacingExtra="6sp"
         android:text='@{SemicolonSplit.splitAndJoin(presenter.glosses, "\n")}'
-        android:textSize="18sp"
+        android:textSize="@dimen/text_size_body"
         app:fontFamily="sans-serif"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/sense_divider"

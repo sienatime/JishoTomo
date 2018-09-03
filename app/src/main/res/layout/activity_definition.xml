@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
   <data>
-    <import type="android.view.View"/>
+    <import type="net.emojiparty.android.jishotomo.data.SemicolonSplit"/>
     <variable
         name="presenter"
         type="net.emojiparty.android.jishotomo.data.EntryWithAllSenses"
@@ -44,6 +44,7 @@
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           android:paddingTop="24dp"
+          android:paddingBottom="72dp"
           app:layout_behavior="@string/appbar_scrolling_view_behavior"
           >
 
@@ -55,6 +56,7 @@
             android:layout_marginStart="16dp"
             android:text="@{presenter.getReading()}"
             visibleOrGone="@{presenter.hasKanji()}"
+            android:textSize="@dimen/text_size_body"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="ねこじゃらし"
@@ -66,9 +68,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
             android:text="@{presenter.getKanjiOrReading()}"
-            android:textSize="36sp"
+            android:textSize="@dimen/text_size_headline"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/def_reading"
             tools:text="猫じゃらし"
@@ -92,6 +93,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
             android:text="@string/alt_kanji"
+            style="@style/small_caps"
             visibleOrGone="@{presenter.hasAlternateKanji()}"
             app:layout_constraintBottom_toTopOf="@+id/def_alt_kanji"
             app:layout_constraintStart_toStartOf="@+id/senses_rv"
@@ -105,8 +107,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{presenter.getAlternateKanji()}"
-            android:textSize="18sp"
             visibleOrGone="@{presenter.hasAlternateKanji()}"
+            android:textSize="@dimen/text_size_body"
             app:layout_constraintBottom_toTopOf="@+id/def_alt_readings_header"
             app:layout_constraintStart_toStartOf="@+id/def_alt_kanji_header"
             app:layout_constraintTop_toBottomOf="@+id/def_alt_kanji_header"
@@ -119,10 +121,13 @@
             android:layout_height="wrap_content"
             android:paddingBottom="8dp"
             android:paddingTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:text="@string/alt_readings"
+            style="@style/small_caps"
             visibleOrGone="@{presenter.hasAlternateReadings()}"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/def_alt_readings"
-            app:layout_constraintStart_toStartOf="@+id/def_alt_kanji"
             app:layout_constraintTop_toBottomOf="@+id/def_alt_kanji"
             />
 
@@ -131,8 +136,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{presenter.getAlternateReadings()}"
-            android:textSize="18sp"
             visibleOrGone="@{presenter.hasAlternateReadings()}"
+            android:textSize="@dimen/text_size_body"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/def_alt_readings_header"
             app:layout_constraintTop_toBottomOf="@+id/def_alt_readings_header"
@@ -142,8 +147,6 @@
       </android.support.constraint.ConstraintLayout>
 
     </android.support.v4.widget.NestedScrollView>
-
-
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
