@@ -17,14 +17,17 @@
 
   <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
-  <style name="divider">
-    <item name="android:layout_width">match_parent</item>
-    <item name="android:layout_height">1dp</item>
-    <item name="android:background">@color/lineGray</item>
+  <style name="divider" parent="divider_full_width">
     <item name="android:layout_marginLeft">16dp</item>
     <item name="android:layout_marginStart">16dp</item>
     <item name="android:layout_marginRight">16dp</item>
     <item name="android:layout_marginEnd">16dp</item>
+  </style>
+
+  <style name="divider_full_width">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">1dp</item>
+    <item name="android:background">@color/lineGray</item>
   </style>
 
   <style name="small_caps">

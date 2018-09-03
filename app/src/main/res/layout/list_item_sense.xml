@@ -12,7 +12,8 @@
         />
   </data>
 
-  <android.support.constraint.ConstraintLayout
+  <LinearLayout
+      android:orientation="vertical"
       android:layout_width="match_parent"
       android:layout_height="wrap_content">
 
@@ -20,41 +21,30 @@
         android:id="@+id/li_parts_of_speech"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
-        android:paddingEnd="16dp"
-        android:paddingRight="16dp"
+        android:paddingBottom="8dp"
         style="@style/small_caps"
         visibleOrGone="@{presenter.partsOfSpeech != null}"
         android:text="@{presenter.partsOfSpeech}"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         tools:text="NOUN, NA-ADJ"
         />
     <View
         android:id="@+id/sense_divider"
-        style="@style/divider"
-        app:layout_constraintTop_toBottomOf="@+id/li_parts_of_speech"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        style="@style/divider_full_width" />
+
     <TextView
         android:id="@+id/li_gloss"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         android:layout_marginTop="4dp"
-        android:paddingBottom="24dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
         android:lineSpacingExtra="6sp"
         android:text='@{SemicolonSplit.splitAndJoin(presenter.glosses, "\n")}'
         android:textSize="@dimen/text_size_body"
         app:fontFamily="sans-serif"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/sense_divider"
-        app:layout_constraintTop_toBottomOf="@+id/sense_divider"
         tools:text="stuff"
         />
 
-  </android.support.constraint.ConstraintLayout>
+  </LinearLayout>
 </layout>

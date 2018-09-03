@@ -40,11 +40,16 @@
         android:clipToPadding="false"
         >
 
-      <android.support.constraint.ConstraintLayout
+      <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="match_parent"
+          android:orientation="vertical"
           android:paddingTop="24dp"
           android:paddingBottom="72dp"
+          android:paddingLeft="16dp"
+          android:paddingStart="16dp"
+          android:paddingRight="16dp"
+          android:paddingEnd="16dp"
           app:layout_behavior="@string/appbar_scrolling_view_behavior"
           >
 
@@ -52,13 +57,9 @@
             android:id="@+id/def_reading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
             android:text="@{presenter.getReading()}"
             visibleOrGone="@{presenter.hasKanji()}"
             android:textSize="@dimen/text_size_body"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             tools:text="ねこじゃらし"
             />
 
@@ -66,12 +67,8 @@
             android:id="@+id/def_kanji"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
             android:text="@{presenter.getKanjiOrReading()}"
             android:textSize="@dimen/text_size_headline"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/def_reading"
             tools:text="猫じゃらし"
             />
 
@@ -80,9 +77,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-            app:layout_constraintStart_toStartOf="@+id/def_kanji"
-            app:layout_constraintTop_toBottomOf="@+id/def_kanji"
             />
+
+        <View
+            android:id="@+id/sense_divider"
+            style="@style/divider_full_width" />
 
         <TextView
             android:id="@+id/def_alt_kanji_header"
@@ -90,16 +89,9 @@
             android:layout_height="wrap_content"
             android:paddingBottom="8dp"
             android:paddingTop="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
             android:text="@string/alt_kanji"
             style="@style/small_caps"
             visibleOrGone="@{presenter.hasAlternateKanji()}"
-            app:layout_constraintBottom_toTopOf="@+id/def_alt_kanji"
-            app:layout_constraintStart_toStartOf="@+id/senses_rv"
-            app:layout_constraintTop_toBottomOf="@+id/senses_rv"
-            app:layout_constraintVertical_bias="0.0"
-            app:layout_constraintVertical_chainStyle="packed"
             />
 
         <TextView
@@ -109,9 +101,6 @@
             android:text="@{presenter.getAlternateKanji()}"
             visibleOrGone="@{presenter.hasAlternateKanji()}"
             android:textSize="@dimen/text_size_body"
-            app:layout_constraintBottom_toTopOf="@+id/def_alt_readings_header"
-            app:layout_constraintStart_toStartOf="@+id/def_alt_kanji_header"
-            app:layout_constraintTop_toBottomOf="@+id/def_alt_kanji_header"
             tools:text="ネコジャラシ"
             />
 
@@ -121,14 +110,9 @@
             android:layout_height="wrap_content"
             android:paddingBottom="8dp"
             android:paddingTop="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
             android:text="@string/alt_readings"
             style="@style/small_caps"
             visibleOrGone="@{presenter.hasAlternateReadings()}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/def_alt_readings"
-            app:layout_constraintTop_toBottomOf="@+id/def_alt_kanji"
             />
 
         <TextView
@@ -138,13 +122,10 @@
             android:text="@{presenter.getAlternateReadings()}"
             visibleOrGone="@{presenter.hasAlternateReadings()}"
             android:textSize="@dimen/text_size_body"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/def_alt_readings_header"
-            app:layout_constraintTop_toBottomOf="@+id/def_alt_readings_header"
             tools:text="ネコジャラシ"
             />
 
-      </android.support.constraint.ConstraintLayout>
+      </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
 
