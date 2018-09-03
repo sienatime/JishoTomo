@@ -44,11 +44,19 @@ public class EntryWithAllSenses {
   }
 
   public String getAlternateKanji() {
-    return SemicolonSplit.splitAndJoin(entry.getOtherKanji());
+    return SemicolonSplit.splitAndJoin(getEntry().getOtherKanji());
   }
 
   public String getAlternateReadings() {
-    return SemicolonSplit.splitAndJoin(entry.getOtherReadings());
+    return SemicolonSplit.splitAndJoin(getEntry().getOtherReadings());
+  }
+
+  public boolean hasAlternateKanji() {
+    return getEntry().getOtherKanji() != null;
+  }
+
+  public boolean hasAlternateReadings() {
+    return getEntry().getOtherReadings() != null;
   }
 
   public void openDefinitionActivity(Context context) {
