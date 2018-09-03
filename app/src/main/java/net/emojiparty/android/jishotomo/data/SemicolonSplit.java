@@ -19,8 +19,17 @@ public class SemicolonSplit {
     return TextUtils.join(", ", list);
   }
 
+  public static String join(List<String> list, String delimiter) {
+    return TextUtils.join(delimiter, list);
+  }
+
   public static String splitAndJoin(@Nullable String semicolonSeparatedString) {
     ArrayList<String> list = (ArrayList<String>) split(semicolonSeparatedString);
     return join(list);
+  }
+
+  public static String splitAndJoin(@Nullable String semicolonSeparatedString, String delimiter) {
+    ArrayList<String> list = (ArrayList<String>) split(semicolonSeparatedString);
+    return join(list, delimiter);
   }
 }

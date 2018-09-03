@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import javax.inject.Inject;
@@ -37,12 +38,16 @@ public class DefinitionActivity extends AppCompatActivity {
      ActivityDefinitionBinding binding =
         DataBindingUtil.setContentView(this, R.layout.activity_definition);
     binding.setLifecycleOwner(DefinitionActivity.this);
+    RecyclerView sensesRecyclerView = findViewById(R.id.senses_rv);
+    final DataBindingAdapter adapter = new DataBindingAdapter(R.layout.list_item_sense);
+    sensesRecyclerView.setAdapter(adapter);
     if (intent != null && intent.hasExtra(ENTRY_ID_EXTRA)) {
       int entryId = intent.getIntExtra(ENTRY_ID_EXTRA, ENTRY_NOT_FOUND);
       EntryViewModel viewModel = ViewModelProviders.of(this,
           new EntryViewModelFactory(getApplication(), entryDao, entryId)).get(EntryViewModel.class);
       viewModel.entry.observe(this, (@Nullable EntryWithAllSenses entryWithAllSenses) -> {
         binding.setPresenter(entryWithAllSenses);
+        adapter.setItems(entryWithAllSenses.getSenses());
       });
     }
   }
