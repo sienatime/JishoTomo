@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+  <data>
+    <import type="android.view.View"/>
+    <variable
+        name="presenter"
+        type="net.emojiparty.android.jishotomo.data.EntryWithAllSenses"
+        />
+  </data>
+
+  <android.support.design.widget.CoordinatorLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      tools:context=".ui.DefinitionActivity"
+      >
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        >
+
+      <android.support.v7.widget.Toolbar
+          android:id="@+id/toolbar"
+          android:layout_width="match_parent"
+          android:layout_height="?attr/actionBarSize"
+          android:background="?attr/colorPrimary"
+          app:popupTheme="@style/AppTheme.PopupOverlay"
+          />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="24dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        >
+
+      <TextView
+          android:id="@+id/def_reading"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="16dp"
+          android:layout_marginStart="16dp"
+          android:text="@{presenter.getReading()}"
+          android:visibility="@{ presenter.hasKanji() ? View.VISIBLE : View.GONE }"
+          tools:text="ねこじゃらし"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent"
+          />
+
+      <TextView
+          android:id="@+id/def_kanji"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="16dp"
+          android:layout_marginStart="16dp"
+          android:layout_marginTop="8dp"
+          android:text="@{presenter.getKanjiOrReading()}"
+          tools:text="猫じゃらし"
+          android:textSize="36sp"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/def_reading"
+          />
+
+      <!--<View-->
+          <!--android:id="@+id/senses_container"-->
+          <!--android:layout_height="0dp"-->
+          <!--android:layout_width="match_parent"-->
+          <!--app:layout_constraintStart_toStartOf="@id/def_kanji"-->
+          <!--app:layout_constraintTop_toBottomOf="@id/def_kanji"-->
+          <!--/>-->
+
+      <TextView
+          android:id="@+id/def_alt_kanji_header"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/alt_kanji"
+          app:layout_constraintStart_toStartOf="@+id/def_kanji"
+          app:layout_constraintTop_toBottomOf="@+id/def_kanji"
+          />
+
+      <TextView
+          android:id="@+id/def_alt_kanji"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@{presenter.getAlternateKanji()}"
+          tools:text="ネコジャラシ"
+          app:layout_constraintStart_toStartOf="@+id/def_alt_kanji_header"
+          app:layout_constraintTop_toBottomOf="@+id/def_alt_kanji_header"
+          />
+
+      <TextView
+          android:id="@+id/def_alt_readings_header"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/alt_readings"
+          app:layout_constraintStart_toStartOf="@+id/def_alt_kanji"
+          app:layout_constraintTop_toBottomOf="@+id/def_alt_kanji"
+          />
+
+      <TextView
+          android:id="@+id/def_alt_readings"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@{presenter.getAlternateReadings()}"
+          tools:text="ネコジャラシ"
+          app:layout_constraintStart_toStartOf="@+id/def_alt_readings_header"
+          app:layout_constraintTop_toBottomOf="@+id/def_alt_readings_header"
+          />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@android:drawable/ic_dialog_email"
+        />
+
+  </android.support.design.widget.CoordinatorLayout>
+</layout>

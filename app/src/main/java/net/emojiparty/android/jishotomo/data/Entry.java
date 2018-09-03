@@ -4,6 +4,7 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
+import java.util.List;
 
 @Entity(tableName = "entries")
 public class Entry {
@@ -73,5 +74,13 @@ public class Entry {
 
   public void setJlptLevel(Integer jlptLevel) {
     this.jlptLevel = jlptLevel;
+  }
+
+  public List<String> otherReadingsList() {
+    return SemicolonSplit.split(otherReadings);
+  }
+
+  public List<String> otherKanjiList() {
+    return SemicolonSplit.split(otherKanji);
   }
 }

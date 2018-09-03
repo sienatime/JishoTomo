@@ -2,8 +2,12 @@ package net.emojiparty.android.jishotomo.data;
 
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Relation;
-import android.text.TextUtils;
+import android.content.Context;
+import android.content.Intent;
 import java.util.List;
+import net.emojiparty.android.jishotomo.ui.DefinitionActivity;
+
+import static net.emojiparty.android.jishotomo.ui.DefinitionActivity.ENTRY_ID_EXTRA;
 
 public class EntryWithAllSenses {
   @Embedded Entry entry;
@@ -20,7 +24,7 @@ public class EntryWithAllSenses {
 
   public String getPrimaryGloss() {
     Sense primarySense = getPrimarySense();
-    return TextUtils.join(", ", primarySense.glossesList());
+    return SemicolonSplit.splitAndJoin(primarySense.getGlosses());
   }
 
   public String getKanjiOrReading() {
@@ -35,7 +39,23 @@ public class EntryWithAllSenses {
     return getSenses().get(0);
   }
 
-  private boolean hasKanji() {
+  public boolean hasKanji() {
     return getEntry().getPrimaryKanji() != null;
   }
+
+  public String getAlternateKanji() {
+    return SemicolonSplit.splitAndJoin(entry.getOtherKanji());
+  }
+
+  public String getAlternateReadings() {
+    return SemicolonSplit.splitAndJoin(entry.getOtherReadings());
+  }
+
+  public void openDefinitionActivity(Context context) {
+    Intent intent = new Intent(context, DefinitionActivity.class);
+    intent.putExtra(ENTRY_ID_EXTRA, entry.getId());
+    context.startActivity(intent);
+  }
+
+
 }

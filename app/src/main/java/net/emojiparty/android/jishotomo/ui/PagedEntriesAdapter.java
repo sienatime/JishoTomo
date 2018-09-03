@@ -12,11 +12,11 @@ import android.view.ViewGroup;
 import net.emojiparty.android.jishotomo.BR;
 import net.emojiparty.android.jishotomo.data.EntryWithAllSenses;
 
-public class DataBindingAdapter
-    extends PagedListAdapter<EntryWithAllSenses, DataBindingAdapter.DataBindingViewHolder> {
+public class PagedEntriesAdapter
+    extends PagedListAdapter<EntryWithAllSenses, PagedEntriesAdapter.DataBindingViewHolder> {
   private int layoutId;
 
-  public DataBindingAdapter(int layoutId) {
+  public PagedEntriesAdapter(int layoutId) {
     super(DIFF_CALLBACK);
     this.layoutId = layoutId;
   }

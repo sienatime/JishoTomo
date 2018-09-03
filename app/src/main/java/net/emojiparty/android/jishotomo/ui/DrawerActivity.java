@@ -52,7 +52,7 @@ public class DrawerActivity extends AppCompatActivity
     PagedEntriesViewModel viewModel =
         ViewModelProviders.of(this, new PagedEntriesViewModelFactory(getApplication(), entryDao))
             .get(PagedEntriesViewModel.class);
-    DataBindingAdapter adapter = new DataBindingAdapter(R.layout.list_item_entry);
+    PagedEntriesAdapter adapter = new PagedEntriesAdapter(R.layout.list_item_entry);
     viewModel.entries.observe(this, adapter::submitList);
     searchResults.setAdapter(adapter);
   }
