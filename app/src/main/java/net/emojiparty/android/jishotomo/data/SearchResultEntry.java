@@ -13,28 +13,12 @@ import static net.emojiparty.android.jishotomo.ui.DefinitionActivity.ENTRY_ID_EX
 //   the first Sense
 //     that Sense's glosses
 
-public class SearchResultEntry {
-  int id;
-  String primaryKanji;
-  String primaryReading;
-
+public class SearchResultEntry extends PrimaryOnlyEntry {
   @Relation(parentColumn = "id", entityColumn = "entry_id", entity = Sense.class, projection = {"glosses"})
   public List<String> glosses;
 
   public String getPrimaryGloss() {
     return SemicolonSplit.splitAndJoin(glosses.get(0));
-  }
-
-  public String getKanjiOrReading() {
-    return hasKanji() ? primaryKanji : primaryReading;
-  }
-
-  public String getReading() {
-    return hasKanji() ? primaryReading : null;
-  }
-
-  public boolean hasKanji() {
-    return primaryKanji != null;
   }
 
   public void openDefinitionActivity(Context context) {

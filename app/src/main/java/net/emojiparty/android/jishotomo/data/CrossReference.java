@@ -16,7 +16,7 @@ public class CrossReference {
   @NonNull @ColumnInfo(name = "cross_reference_sense_id") private int crossReferenceSenseId;
 
   @Ignore
-  private int crossReferenceEntityId;
+  private PrimaryOnlyEntry crossReferenceEntry;
 
   @NonNull public int getId() {
     return id;
@@ -42,11 +42,11 @@ public class CrossReference {
     this.crossReferenceSenseId = crossReferenceSenseId;
   }
 
-  public int getCrossReferenceEntityId() {
-    return crossReferenceEntityId;
+  public PrimaryOnlyEntry getCrossReferenceEntry() {
+    return crossReferenceEntry;
   }
 
-  public void setCrossReferenceEntityId(int crossReferenceEntityId) {
-    this.crossReferenceEntityId = crossReferenceEntityId;
+  public void setCrossReferenceEntry(PrimaryOnlyEntry crossReferenceEntry) {
+    this.crossReferenceEntry = crossReferenceEntry;
   }
 }

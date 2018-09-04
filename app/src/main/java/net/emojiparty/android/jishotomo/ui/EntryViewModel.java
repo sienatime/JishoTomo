@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import net.emojiparty.android.jishotomo.data.CrossReference;
 import net.emojiparty.android.jishotomo.data.EntryDao;
 import net.emojiparty.android.jishotomo.data.EntryWithAllSenses;
+import net.emojiparty.android.jishotomo.data.PrimaryOnlyEntry;
 import net.emojiparty.android.jishotomo.data.SenseWithCrossReferences;
 
 public class EntryViewModel extends AndroidViewModel {
@@ -23,8 +24,8 @@ public class EntryViewModel extends AndroidViewModel {
       for (SenseWithCrossReferences senseWithCr : entry.getValue().getSenses()) {
         for (CrossReference cr : senseWithCr.getCrossReferences()) {
           int senseId = cr.getSenseId();
-          int entryId = entryDao.getEntryBySenseId(senseId);
-          cr.setCrossReferenceEntityId(entryId);
+          PrimaryOnlyEntry entry = entryDao.getEntryBySenseId(senseId);
+          cr.setCrossReferenceEntry(entry);
         }
       }
     }
