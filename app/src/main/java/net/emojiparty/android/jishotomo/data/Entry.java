@@ -2,11 +2,12 @@ package net.emojiparty.android.jishotomo.data;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 import java.util.List;
 
-@Entity(tableName = "entries")
+@Entity(tableName = "entries", indices = {@Index("jlpt_level")})
 public class Entry {
   @PrimaryKey
   @NonNull
