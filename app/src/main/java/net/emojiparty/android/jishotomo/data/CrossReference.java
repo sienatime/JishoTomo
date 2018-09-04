@@ -2,6 +2,7 @@ package net.emojiparty.android.jishotomo.data;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
@@ -13,6 +14,9 @@ public class CrossReference {
   @NonNull @ColumnInfo(name = "sense_id") private int senseId;
 
   @NonNull @ColumnInfo(name = "cross_reference_sense_id") private int crossReferenceSenseId;
+
+  @Ignore
+  private int crossReferenceEntityId;
 
   @NonNull public int getId() {
     return id;
@@ -36,5 +40,13 @@ public class CrossReference {
 
   public void setCrossReferenceSenseId(@NonNull int crossReferenceSenseId) {
     this.crossReferenceSenseId = crossReferenceSenseId;
+  }
+
+  public int getCrossReferenceEntityId() {
+    return crossReferenceEntityId;
+  }
+
+  public void setCrossReferenceEntityId(int crossReferenceEntityId) {
+    this.crossReferenceEntityId = crossReferenceEntityId;
   }
 }

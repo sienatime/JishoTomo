@@ -7,8 +7,8 @@ import android.arch.persistence.room.Query;
 
 @Dao
 public interface EntryDao {
-  @Query("SELECT * FROM entries ORDER BY id ASC")
-  DataSource.Factory<Integer, EntryWithAllSenses> getAll();
+  @Query("SELECT id, primary_kanji AS primaryKanji, primary_reading AS primaryReading FROM entries ORDER BY id ASC")
+  DataSource.Factory<Integer, SearchResultEntry> getAll();
 
   @Query("SELECT * FROM entries WHERE jlpt_level = :level")
   DataSource.Factory<Integer, Entry> findByJlptLevel(int level);
@@ -18,4 +18,7 @@ public interface EntryDao {
 
   @Query("SELECT * FROM entries WHERE entries.id = :id LIMIT 1")
   LiveData<EntryWithAllSenses> getEntryById(int id);
+
+  @Query("SELECT entries.id FROM entries JOIN senses ON senses.entry_id = entries.id WHERE senses.id = :senseId LIMIT 1")
+  int getEntryBySenseId(int senseId);
 }

@@ -6,10 +6,10 @@ import android.arch.lifecycle.LiveData;
 import android.arch.paging.LivePagedListBuilder;
 import android.arch.paging.PagedList;
 import net.emojiparty.android.jishotomo.data.EntryDao;
-import net.emojiparty.android.jishotomo.data.EntryWithAllSenses;
+import net.emojiparty.android.jishotomo.data.SearchResultEntry;
 
 public class PagedEntriesViewModel extends AndroidViewModel {
-  public LiveData<PagedList<EntryWithAllSenses>> entries;
+  public LiveData<PagedList<SearchResultEntry>> entries;
 
   public PagedEntriesViewModel(Application application, EntryDao entryDao) {
     super(application);

@@ -8,7 +8,7 @@
     <import type="net.emojiparty.android.jishotomo.data.SemicolonSplit"/>
     <variable
         name="presenter"
-        type="net.emojiparty.android.jishotomo.data.Sense"
+        type="net.emojiparty.android.jishotomo.data.SenseWithCrossReferences"
         />
   </data>
 
@@ -24,8 +24,8 @@
         android:layout_marginTop="24dp"
         android:paddingBottom="8dp"
         style="@style/small_caps"
-        visibleOrGone="@{presenter.partsOfSpeech != null}"
-        android:text="@{presenter.partsOfSpeech}"
+        visibleOrGone="@{presenter.getSense().partsOfSpeech != null}"
+        android:text="@{presenter.getSense().partsOfSpeech}"
         tools:text="NOUN, NA-ADJ"
         />
     <View
@@ -40,7 +40,7 @@
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
         android:lineSpacingExtra="6sp"
-        android:text='@{SemicolonSplit.splitAndJoin(presenter.glosses, "\n")}'
+        android:text='@{SemicolonSplit.splitAndJoin(presenter.getSense().glosses, "\n")}'
         android:textSize="@dimen/text_size_body"
         app:fontFamily="sans-serif"
         tools:text="stuff"

@@ -10,10 +10,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import net.emojiparty.android.jishotomo.BR;
-import net.emojiparty.android.jishotomo.data.EntryWithAllSenses;
+import net.emojiparty.android.jishotomo.data.SearchResultEntry;
 
 public class PagedEntriesAdapter
-    extends PagedListAdapter<EntryWithAllSenses, PagedEntriesAdapter.DataBindingViewHolder> {
+    extends PagedListAdapter<SearchResultEntry, PagedEntriesAdapter.DataBindingViewHolder> {
   private int layoutId;
 
   public PagedEntriesAdapter(int layoutId) {
@@ -44,20 +44,20 @@ public class PagedEntriesAdapter
       this.context = context;
     }
 
-    void bind(EntryWithAllSenses presenter) {
+    void bind(SearchResultEntry presenter) {
       binding.setVariable(BR.presenter, presenter);
       binding.executePendingBindings();
     }
   }
 
-  private static DiffUtil.ItemCallback<EntryWithAllSenses> DIFF_CALLBACK =
-      new DiffUtil.ItemCallback<EntryWithAllSenses>() {
+  private static DiffUtil.ItemCallback<SearchResultEntry> DIFF_CALLBACK =
+      new DiffUtil.ItemCallback<SearchResultEntry>() {
         // not used
-        @Override public boolean areItemsTheSame(EntryWithAllSenses oldEntryWithAllSenses, EntryWithAllSenses newEntryWithAllSenses) {
+        @Override public boolean areItemsTheSame(SearchResultEntry oldSearchResultEntry, SearchResultEntry newSearchResultEntry) {
           return true;
         }
 
-        @Override public boolean areContentsTheSame(EntryWithAllSenses oldEntryWithAllSenses, EntryWithAllSenses newEntryWithAllSenses) {
+        @Override public boolean areContentsTheSame(SearchResultEntry oldSearchResultEntry, SearchResultEntry newSearchResultEntry) {
           return true;
         }
       };
