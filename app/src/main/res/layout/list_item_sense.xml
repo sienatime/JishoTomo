@@ -46,5 +46,18 @@
         tools:text="stuff"
         />
 
+    <TextView
+        android:id="@+id/li_cross_references"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:text='@{presenter.crossReferenceText()}'
+        android:textSize="@dimen/text_size_body"
+        app:fontFamily="sans-serif"
+        tools:text="stuff"
+        />
+
   </LinearLayout>
 </layout>

@@ -21,4 +21,8 @@ import javax.inject.Singleton;
   @Singleton @Provides EntryDao providesEntryDao(AppDatabase db) {
     return db.entryDao();
   }
+
+  @Singleton @Provides SenseDao providesSenseDao(AppDatabase db) {
+    return db.senseDao();
+  }
 }

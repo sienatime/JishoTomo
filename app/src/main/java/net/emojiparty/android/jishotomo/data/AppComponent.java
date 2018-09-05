@@ -13,6 +13,7 @@ public interface AppComponent {
   void inject(DrawerActivity drawerActivity);
   void inject(DefinitionActivity definitionActivity);
   EntryDao entryDao();
+  SenseDao senseDao();
   AppDatabase db();
   Application application();
 }

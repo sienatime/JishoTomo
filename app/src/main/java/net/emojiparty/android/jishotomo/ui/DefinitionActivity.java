@@ -1,5 +1,6 @@
 package net.emojiparty.android.jishotomo.ui;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -11,19 +12,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import java.util.ArrayList;
+import java.util.List;
 import javax.inject.Inject;
 import net.emojiparty.android.jishotomo.R;
 import net.emojiparty.android.jishotomo.data.AppModule;
+import net.emojiparty.android.jishotomo.data.CrossReference;
 import net.emojiparty.android.jishotomo.data.DaggerAppComponent;
 import net.emojiparty.android.jishotomo.data.EntryDao;
 import net.emojiparty.android.jishotomo.data.EntryWithAllSenses;
 import net.emojiparty.android.jishotomo.data.RoomModule;
+import net.emojiparty.android.jishotomo.data.SenseDao;
+import net.emojiparty.android.jishotomo.data.SenseWithCrossReferences;
+import net.emojiparty.android.jishotomo.data.SenseWithEntry;
 import net.emojiparty.android.jishotomo.databinding.ActivityDefinitionBinding;
 
 public class DefinitionActivity extends AppCompatActivity {
   public static final String ENTRY_ID_EXTRA = "ENTRY_ID_EXTRA";
   public static final int ENTRY_NOT_FOUND = -1;
   @Inject public EntryDao entryDao;
+  @Inject public SenseDao senseDao;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -35,7 +43,7 @@ public class DefinitionActivity extends AppCompatActivity {
   }
 
   private void setupViewModel(Intent intent) {
-     ActivityDefinitionBinding binding =
+    ActivityDefinitionBinding binding =
         DataBindingUtil.setContentView(this, R.layout.activity_definition);
     binding.setLifecycleOwner(DefinitionActivity.this);
     RecyclerView sensesRecyclerView = findViewById(R.id.senses_rv);
@@ -44,10 +52,21 @@ public class DefinitionActivity extends AppCompatActivity {
     if (intent != null && intent.hasExtra(ENTRY_ID_EXTRA)) {
       int entryId = intent.getIntExtra(ENTRY_ID_EXTRA, ENTRY_NOT_FOUND);
       EntryViewModel viewModel = ViewModelProviders.of(this,
-          new EntryViewModelFactory(getApplication(), entryDao, entryId)).get(EntryViewModel.class);
-      viewModel.entry.observe(this, (@Nullable EntryWithAllSenses entryWithAllSenses) -> {
-        binding.setPresenter(entryWithAllSenses);
-        adapter.setItems(entryWithAllSenses.getSenses());
+          new EntryViewModelFactory(getApplication(), entryDao, entryId))
+          .get(EntryViewModel.class);
+      viewModel.entry.observe(this, (@Nullable EntryWithAllSenses entry) -> {
+        binding.setPresenter(entry);
+        adapter.setItems(entry.getSenses());
+
+        if (entry != null) {
+          for (SenseWithCrossReferences senseWithCr : entry.getSenses()) {
+            this.senseDao.getSenseWithEntry(senseWithCr.getCrossReferenceSenseIds())
+                .observe(DefinitionActivity.this, (@Nullable List<SenseWithEntry> xRefSenses) -> {
+                  viewModel.crossReferencedSenses.postValue(xRefSenses);
+                  // or i guess i could just append to the textview right here?
+                });
+          }
+        }
       });
     }
   }
