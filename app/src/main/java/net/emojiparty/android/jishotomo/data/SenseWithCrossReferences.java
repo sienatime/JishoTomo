@@ -1,6 +1,7 @@
 package net.emojiparty.android.jishotomo.data;
 
 import android.arch.persistence.room.Embedded;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Relation;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,9 @@ public class SenseWithCrossReferences {
   @Embedded Sense sense;
   @Relation(parentColumn = "id", entityColumn = "sense_id")
   public List<CrossReference> crossReferences;
+
+  @Ignore
+  public String xRefString = "";
 
   public Sense getSense() {
     return sense;
@@ -31,13 +35,14 @@ public class SenseWithCrossReferences {
     return ids;
   }
 
-  public String crossReferenceText() {
-    //String text = "See also: ";
-    //for (LiveData<SenseWithEntry> senseWithEntry : xRefSenses) {
-    //  if (senseWithEntry.getValue() != null) {
-    //    text += senseWithEntry.getValue().getPrimaryReading();
-    //  }
-    //}
-    return "";
+  public String crossReferenceText(List<PrimaryOnlyEntry> entries) {
+    if (entries == null) {
+      return "nullzo";
+    }
+    String text = "See also: ";
+    for (PrimaryOnlyEntry entry : entries) {
+      text += entry.getKanjiOrReading();
+    }
+    return text;
   }
 }

@@ -53,7 +53,7 @@
         android:layout_marginTop="4dp"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
-        android:text='@{presenter.crossReferenceText()}'
+        android:text='@{presenter.xRefString}'
         android:textSize="@dimen/text_size_body"
         app:fontFamily="sans-serif"
         tools:text="stuff"

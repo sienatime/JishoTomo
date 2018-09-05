@@ -1,6 +1,5 @@
 package net.emojiparty.android.jishotomo.ui;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -12,19 +11,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import net.emojiparty.android.jishotomo.R;
 import net.emojiparty.android.jishotomo.data.AppModule;
-import net.emojiparty.android.jishotomo.data.CrossReference;
 import net.emojiparty.android.jishotomo.data.DaggerAppComponent;
 import net.emojiparty.android.jishotomo.data.EntryDao;
 import net.emojiparty.android.jishotomo.data.EntryWithAllSenses;
+import net.emojiparty.android.jishotomo.data.PrimaryOnlyEntry;
 import net.emojiparty.android.jishotomo.data.RoomModule;
 import net.emojiparty.android.jishotomo.data.SenseDao;
 import net.emojiparty.android.jishotomo.data.SenseWithCrossReferences;
-import net.emojiparty.android.jishotomo.data.SenseWithEntry;
 import net.emojiparty.android.jishotomo.databinding.ActivityDefinitionBinding;
 
 public class DefinitionActivity extends AppCompatActivity {
@@ -59,15 +56,22 @@ public class DefinitionActivity extends AppCompatActivity {
         adapter.setItems(entry.getSenses());
 
         if (entry != null) {
-          for (SenseWithCrossReferences senseWithCr : entry.getSenses()) {
-            this.senseDao.getSenseWithEntry(senseWithCr.getCrossReferenceSenseIds())
-                .observe(DefinitionActivity.this, (@Nullable List<SenseWithEntry> xRefSenses) -> {
-                  viewModel.crossReferencedSenses.postValue(xRefSenses);
-                  // or i guess i could just append to the textview right here?
-                });
-          }
+          setCrossReferences(entry.getSenses(), adapter);
         }
       });
+    }
+  }
+
+  private void setCrossReferences(List<SenseWithCrossReferences> senses, DataBindingAdapter adapter) {
+    for (SenseWithCrossReferences senseWithCr : senses) {
+      List<Integer> crossReferenceSenseIds = senseWithCr.getCrossReferenceSenseIds();
+      if (crossReferenceSenseIds.size() > 0) {
+        this.entryDao.getEntriesBySenseId(crossReferenceSenseIds)
+            .observe(DefinitionActivity.this, (@Nullable List<PrimaryOnlyEntry> xRefEntries) -> {
+              senseWithCr.xRefString = senseWithCr.crossReferenceText(xRefEntries);
+              adapter.notifyDataSetChanged();
+            });
+      }
     }
   }
 
