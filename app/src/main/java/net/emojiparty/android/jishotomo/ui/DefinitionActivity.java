@@ -11,14 +11,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.inject.Inject;
 import net.emojiparty.android.jishotomo.R;
 import net.emojiparty.android.jishotomo.data.AppModule;
+import net.emojiparty.android.jishotomo.data.CrossReferencedEntry;
 import net.emojiparty.android.jishotomo.data.DaggerAppComponent;
 import net.emojiparty.android.jishotomo.data.EntryDao;
 import net.emojiparty.android.jishotomo.data.EntryWithAllSenses;
-import net.emojiparty.android.jishotomo.data.PrimaryOnlyEntry;
 import net.emojiparty.android.jishotomo.data.RoomModule;
 import net.emojiparty.android.jishotomo.data.SenseDao;
 import net.emojiparty.android.jishotomo.data.SenseWithCrossReferences;
@@ -52,27 +54,48 @@ public class DefinitionActivity extends AppCompatActivity {
           new EntryViewModelFactory(getApplication(), entryDao, entryId))
           .get(EntryViewModel.class);
       viewModel.entry.observe(this, (@Nullable EntryWithAllSenses entry) -> {
-        binding.setPresenter(entry);
-        adapter.setItems(entry.getSenses());
-
         if (entry != null) {
-          setCrossReferences(entry.getSenses(), adapter);
+          binding.setPresenter(entry);
+          adapter.setItems(entry.getSenses());
+          setCrossReferences(entry, adapter);
         }
       });
     }
   }
 
-  private void setCrossReferences(List<SenseWithCrossReferences> senses, DataBindingAdapter adapter) {
-    for (SenseWithCrossReferences senseWithCr : senses) {
-      List<Integer> crossReferenceSenseIds = senseWithCr.getCrossReferenceSenseIds();
-      if (crossReferenceSenseIds.size() > 0) {
-        this.entryDao.getEntriesBySenseId(crossReferenceSenseIds)
-            .observe(DefinitionActivity.this, (@Nullable List<PrimaryOnlyEntry> xRefEntries) -> {
-              senseWithCr.xRefString = senseWithCr.crossReferenceText(xRefEntries);
-              adapter.notifyDataSetChanged();
-            });
+  private void setCrossReferences(EntryWithAllSenses entry, DataBindingAdapter adapter) {
+    senseDao.getCrossReferencedEntities(entry.getEntry().getId())
+        .observe(this, (@Nullable List<CrossReferencedEntry> senses) -> {
+          if (senses != null) {
+            HashMap<Integer, List<CrossReferencedEntry>> hashMap = crossReferenceHash(senses);
+
+            for (SenseWithCrossReferences sense : entry.getSenses()) {
+              List<CrossReferencedEntry> list = hashMap.get(sense.getSense().getId());
+              if (list != null) {
+                sense.setCrossReferences(list);
+                sense.setxRefString();
+              }
+            }
+
+            adapter.notifyDataSetChanged();
+          }
+        });
+  }
+
+  private HashMap<Integer, List<CrossReferencedEntry>> crossReferenceHash(
+      List<CrossReferencedEntry> senses) {
+    HashMap<Integer, List<CrossReferencedEntry>> hashMap = new HashMap<>();
+    for (CrossReferencedEntry crossReferencedEntry : senses) {
+      Integer senseId = crossReferencedEntry.senseId;
+      if (hashMap.get(senseId) == null) {
+        ArrayList<CrossReferencedEntry> xrefs = new ArrayList<>();
+        xrefs.add(crossReferencedEntry);
+        hashMap.put(senseId, xrefs);
+      } else {
+        hashMap.get(senseId).add(crossReferencedEntry);
       }
     }
+    return hashMap;
   }
 
   private void setupDagger() {

@@ -6,8 +6,12 @@ import android.arch.persistence.room.Query;
 import java.util.List;
 
 @Dao public interface SenseDao {
-  @Query("SELECT senses.id, "
-      + "entries.id AS entryId, entries.primary_kanji AS primaryKanji, entries.primary_reading AS primaryReading "
-      + "FROM senses JOIN entries ON senses.entry_id = entries.id WHERE senses.id IN (:senseIds)")
-  LiveData<List<SenseWithEntry>> getSenseWithEntry(List<Integer> senseIds);
+  @Query("SELECT mainSenses.id AS senseId,"
+      + "  xRefEntries.id AS id, xRefEntries.primary_kanji AS primaryKanji, xRefEntries.primary_reading AS primaryReading "
+      + "  FROM senses AS mainSenses"
+      + "  JOIN cross_references ON cross_references.sense_id = mainSenses.id"
+      + "  JOIN senses AS xRefSenses ON xRefSenses.id = cross_references.cross_reference_sense_id"
+      + "  JOIN entries AS xRefEntries ON xRefSenses.entry_id = xRefEntries.id"
+      + "  WHERE mainSenses.entry_id = :entryId")
+  LiveData<List<CrossReferencedEntry>> getCrossReferencedEntities(int entryId);
 }
