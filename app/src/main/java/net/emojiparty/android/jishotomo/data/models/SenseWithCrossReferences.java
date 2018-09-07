@@ -22,15 +22,4 @@ public class SenseWithCrossReferences {
   public void setCrossReferences(List<CrossReferencedEntry> crossReferences) {
     this.crossReferences = crossReferences;
   }
-
-  public String getCrossReferencesDisplay() {
-    if (crossReferences == null) {
-      return null;
-    }
-    String text = "See also: ";
-    for (CrossReferencedEntry xrefJoin : crossReferences) {
-      text += xrefJoin.getKanjiOrReading() + ", ";
-    }
-    return text;
-  }
 }

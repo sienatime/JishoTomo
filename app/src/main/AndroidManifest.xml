@@ -27,6 +27,11 @@
       <meta-data
           android:name="android.support.PARENT_ACTIVITY"
           android:value="net.emojiparty.android.jishotomo.ui.activities.DrawerActivity"/>
+      <intent-filter>
+        <category android:name="android.intent.category.DEFAULT" />
+        <action android:name="android.intent.action.VIEW" />
+        <data android:scheme="net.emojiparty.android.jishotomo" />
+      </intent-filter>
     </activity>
   </application>
 

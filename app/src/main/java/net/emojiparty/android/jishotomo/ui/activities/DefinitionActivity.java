@@ -37,8 +37,8 @@ public class DefinitionActivity extends AppCompatActivity {
     RecyclerView sensesRecyclerView = findViewById(R.id.senses_rv);
     final DataBindingAdapter adapter = new DataBindingAdapter(R.layout.list_item_sense);
     sensesRecyclerView.setAdapter(adapter);
-    if (intent != null && intent.hasExtra(ENTRY_ID_EXTRA)) {
-      int entryId = intent.getIntExtra(ENTRY_ID_EXTRA, ENTRY_NOT_FOUND);
+    int entryId = findEntryId(intent);
+    if (entryId != ENTRY_NOT_FOUND) {
       EntryViewModel viewModel = ViewModelProviders.of(this,
           new EntryViewModelFactory(getApplication(), this, entryId))
           .get(EntryViewModel.class);
@@ -48,6 +48,20 @@ public class DefinitionActivity extends AppCompatActivity {
           adapter.setItems(entry.getSenses());
         }
       });
+    }
+  }
+
+  private int findEntryId(Intent intent) {
+    if (intent == null) {
+      return ENTRY_NOT_FOUND;
+    }
+    if (intent.hasExtra(ENTRY_ID_EXTRA)) {
+      return intent.getIntExtra(ENTRY_ID_EXTRA, ENTRY_NOT_FOUND);
+    } else if (intent.getData() != null) {
+      String id = intent.getData().getLastPathSegment();
+      return Integer.parseInt(id);
+    } else {
+      return ENTRY_NOT_FOUND;
     }
   }
 
