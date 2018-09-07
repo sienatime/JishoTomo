@@ -14,5 +14,5 @@ import net.emojiparty.android.jishotomo.data.models.CrossReferencedEntry;
       + "  JOIN senses AS xRefSenses ON xRefSenses.id = cross_references.cross_reference_sense_id"
       + "  JOIN entries AS xRefEntries ON xRefSenses.entry_id = xRefEntries.id"
       + "  WHERE mainSenses.entry_id = :entryId")
-  LiveData<List<CrossReferencedEntry>> getCrossReferencedEntities(int entryId);
+  LiveData<List<CrossReferencedEntry>> getCrossReferencedEntries(int entryId);
 }

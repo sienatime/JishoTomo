@@ -54,51 +54,15 @@ public class DefinitionActivity extends AppCompatActivity {
     if (intent != null && intent.hasExtra(ENTRY_ID_EXTRA)) {
       int entryId = intent.getIntExtra(ENTRY_ID_EXTRA, ENTRY_NOT_FOUND);
       EntryViewModel viewModel = ViewModelProviders.of(this,
-          new EntryViewModelFactory(getApplication(), entryDao, entryId))
+          new EntryViewModelFactory(getApplication(), entryDao, senseDao, entryId))
           .get(EntryViewModel.class);
       viewModel.entry.observe(this, (@Nullable EntryWithAllSenses entry) -> {
         if (entry != null) {
           binding.setPresenter(entry);
           adapter.setItems(entry.getSenses());
-          setCrossReferences(entry, adapter);
         }
       });
     }
-  }
-
-  private void setCrossReferences(EntryWithAllSenses entry, DataBindingAdapter adapter) {
-    senseDao.getCrossReferencedEntities(entry.getEntry().getId())
-        .observe(this, (@Nullable List<CrossReferencedEntry> senses) -> {
-          if (senses != null) {
-            HashMap<Integer, List<CrossReferencedEntry>> hashMap = crossReferenceHash(senses);
-
-            for (SenseWithCrossReferences sense : entry.getSenses()) {
-              List<CrossReferencedEntry> list = hashMap.get(sense.getSense().getId());
-              if (list != null) {
-                sense.setCrossReferences(list);
-                sense.setxRefString();
-              }
-            }
-
-            adapter.notifyDataSetChanged();
-          }
-        });
-  }
-
-  private HashMap<Integer, List<CrossReferencedEntry>> crossReferenceHash(
-      List<CrossReferencedEntry> senses) {
-    HashMap<Integer, List<CrossReferencedEntry>> hashMap = new HashMap<>();
-    for (CrossReferencedEntry crossReferencedEntry : senses) {
-      Integer senseId = crossReferencedEntry.senseId;
-      if (hashMap.get(senseId) == null) {
-        ArrayList<CrossReferencedEntry> xrefs = new ArrayList<>();
-        xrefs.add(crossReferencedEntry);
-        hashMap.put(senseId, xrefs);
-      } else {
-        hashMap.get(senseId).add(crossReferencedEntry);
-      }
-    }
-    return hashMap;
   }
 
   private void setupDagger() {
