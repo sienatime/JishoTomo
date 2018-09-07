@@ -51,8 +51,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="24dp"
         crossReferenceLinks='@{presenter.crossReferences}'
         android:textSize="@dimen/text_size_body"
         app:fontFamily="sans-serif"
