@@ -1,10 +1,16 @@
 package net.emojiparty.android.jishotomo.data;
 
+import android.app.Application;
+import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import javax.inject.Inject;
+import net.emojiparty.android.jishotomo.data.di.AppModule;
+import net.emojiparty.android.jishotomo.data.di.DaggerAppComponent;
+import net.emojiparty.android.jishotomo.data.di.RoomModule;
 import net.emojiparty.android.jishotomo.data.models.CrossReferencedEntry;
 import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses;
 import net.emojiparty.android.jishotomo.data.models.SenseWithCrossReferences;
@@ -12,24 +18,35 @@ import net.emojiparty.android.jishotomo.data.room.EntryDao;
 import net.emojiparty.android.jishotomo.data.room.SenseDao;
 
 public class AppRepository {
+  private LifecycleOwner lifecycleOwner;
+  @Inject public EntryDao entryDao;
+  @Inject public SenseDao senseDao;
 
-  public MutableLiveData<EntryWithAllSenses> getEntryWithAllSenses(EntryDao entryDao,
-      SenseDao senseDao, int entryId) {
-    MutableLiveData<EntryWithAllSenses> entryWithAllSensesMutableLiveData = new MutableLiveData<>();
+  public AppRepository(Application application, LifecycleOwner lifecycleOwner) {
+    this.lifecycleOwner = lifecycleOwner;
+    DaggerAppComponent.builder()
+        .appModule(new AppModule(application))
+        .roomModule(new RoomModule(application))
+        .build()
+        .inject(AppRepository.this);
+  }
 
-    entryDao.getEntryById(entryId).observeForever((@Nullable EntryWithAllSenses entry) -> {
+  public MutableLiveData<EntryWithAllSenses> getEntryWithAllSenses(int entryId) {
+    MutableLiveData<EntryWithAllSenses> liveData = new MutableLiveData<>();
+
+    entryDao.getEntryById(entryId).observe(lifecycleOwner, (@Nullable EntryWithAllSenses entry) -> {
       if (entry != null) {
-        setCrossReferences(entry, senseDao, entryWithAllSensesMutableLiveData);
+        setCrossReferences(entry, liveData);
       }
     });
 
-    return entryWithAllSensesMutableLiveData;
+    return liveData;
   }
 
-  private void setCrossReferences(EntryWithAllSenses entry, SenseDao senseDao,
-      MutableLiveData<EntryWithAllSenses> entryWithAllSensesMutableLiveData) {
+  private void setCrossReferences(EntryWithAllSenses entry,
+      MutableLiveData<EntryWithAllSenses> liveData) {
     senseDao.getCrossReferencedEntries(entry.getEntry().getId())
-        .observeForever((@Nullable List<CrossReferencedEntry> crossReferencedEntries) -> {
+        .observe(lifecycleOwner, (@Nullable List<CrossReferencedEntry> crossReferencedEntries) -> {
           if (crossReferencedEntries != null) {
             HashMap<Integer, List<CrossReferencedEntry>> hashMap =
                 crossReferenceHash(crossReferencedEntries);
@@ -42,7 +59,7 @@ public class AppRepository {
               }
             }
           }
-          entryWithAllSensesMutableLiveData.setValue(entry);
+          liveData.setValue(entry);
         });
   }
 
