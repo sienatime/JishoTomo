@@ -10,7 +10,7 @@
       android:supportsRtl="true"
       android:theme="@style/AppTheme">
     <activity
-        android:name=".ui.DrawerActivity"
+        android:name=".ui.activities.DrawerActivity"
         android:label="@string/app_name"
         android:theme="@style/AppTheme.NoActionBar">
       <intent-filter>
@@ -20,13 +20,13 @@
       </intent-filter>
     </activity>
     <activity
-        android:name=".ui.DefinitionActivity"
+        android:name=".ui.activities.DefinitionActivity"
         android:label="@string/app_name"
-        android:parentActivityName=".ui.DrawerActivity"
+        android:parentActivityName=".ui.activities.DrawerActivity"
         android:theme="@style/AppTheme.NoActionBar">
       <meta-data
           android:name="android.support.PARENT_ACTIVITY"
-          android:value="net.emojiparty.android.jishotomo.ui.DrawerActivity"/>
+          android:value="net.emojiparty.android.jishotomo.ui.activities.DrawerActivity"/>
     </activity>
   </application>
 

@@ -6,9 +6,9 @@ import android.content.Intent;
 import java.util.List;
 import net.emojiparty.android.jishotomo.data.SemicolonSplit;
 import net.emojiparty.android.jishotomo.data.room.Sense;
-import net.emojiparty.android.jishotomo.ui.DefinitionActivity;
+import net.emojiparty.android.jishotomo.ui.activities.DefinitionActivity;
 
-import static net.emojiparty.android.jishotomo.ui.DefinitionActivity.ENTRY_ID_EXTRA;
+import static net.emojiparty.android.jishotomo.ui.activities.DefinitionActivity.ENTRY_ID_EXTRA;
 
 // this should have only the things needed to display the search result:
 //   the Entry's primary_kanji, primary_reading

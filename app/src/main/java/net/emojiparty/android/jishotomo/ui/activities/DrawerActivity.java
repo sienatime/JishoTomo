@@ -1,4 +1,4 @@
-package net.emojiparty.android.jishotomo.ui;
+package net.emojiparty.android.jishotomo.ui.activities;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
@@ -18,6 +18,9 @@ import net.emojiparty.android.jishotomo.data.di.AppModule;
 import net.emojiparty.android.jishotomo.data.di.DaggerAppComponent;
 import net.emojiparty.android.jishotomo.data.di.RoomModule;
 import net.emojiparty.android.jishotomo.data.room.EntryDao;
+import net.emojiparty.android.jishotomo.ui.adapters.PagedEntriesAdapter;
+import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesViewModel;
+import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesViewModelFactory;
 
 public class DrawerActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener {

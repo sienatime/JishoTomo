@@ -1,4 +1,4 @@
-package net.emojiparty.android.jishotomo.ui;
+package net.emojiparty.android.jishotomo.ui.adapters;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;

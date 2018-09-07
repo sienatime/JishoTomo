@@ -6,8 +6,8 @@ import javax.inject.Singleton;
 import net.emojiparty.android.jishotomo.data.room.AppDatabase;
 import net.emojiparty.android.jishotomo.data.room.EntryDao;
 import net.emojiparty.android.jishotomo.data.room.SenseDao;
-import net.emojiparty.android.jishotomo.ui.DefinitionActivity;
-import net.emojiparty.android.jishotomo.ui.DrawerActivity;
+import net.emojiparty.android.jishotomo.ui.activities.DefinitionActivity;
+import net.emojiparty.android.jishotomo.ui.activities.DrawerActivity;
 
 // https://medium.com/@marco_cattaneo/integrate-dagger-2-with-room-persistence-library-in-few-lines-abf48328eaeb
 @Singleton

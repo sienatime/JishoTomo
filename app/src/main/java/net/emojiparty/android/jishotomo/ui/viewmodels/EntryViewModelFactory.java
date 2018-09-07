@@ -1,4 +1,4 @@
-package net.emojiparty.android.jishotomo.ui;
+package net.emojiparty.android.jishotomo.ui.viewmodels;
 
 import android.app.Application;
 import android.arch.lifecycle.ViewModel;

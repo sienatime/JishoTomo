@@ -1,4 +1,4 @@
-package net.emojiparty.android.jishotomo.ui;
+package net.emojiparty.android.jishotomo.ui.activities;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -25,6 +25,9 @@ import net.emojiparty.android.jishotomo.data.models.SenseWithCrossReferences;
 import net.emojiparty.android.jishotomo.data.room.EntryDao;
 import net.emojiparty.android.jishotomo.data.room.SenseDao;
 import net.emojiparty.android.jishotomo.databinding.ActivityDefinitionBinding;
+import net.emojiparty.android.jishotomo.ui.adapters.DataBindingAdapter;
+import net.emojiparty.android.jishotomo.ui.viewmodels.EntryViewModel;
+import net.emojiparty.android.jishotomo.ui.viewmodels.EntryViewModelFactory;
 
 public class DefinitionActivity extends AppCompatActivity {
   public static final String ENTRY_ID_EXTRA = "ENTRY_ID_EXTRA";
