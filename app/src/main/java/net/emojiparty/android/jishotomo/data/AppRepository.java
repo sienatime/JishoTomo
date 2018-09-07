@@ -55,7 +55,6 @@ public class AppRepository {
               List<CrossReferencedEntry> list = hashMap.get(sense.getSense().getId());
               if (list != null) {
                 sense.setCrossReferences(list);
-                sense.setxRefString();
               }
             }
           }

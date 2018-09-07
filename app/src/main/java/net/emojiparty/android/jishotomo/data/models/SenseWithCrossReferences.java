@@ -9,8 +9,6 @@ public class SenseWithCrossReferences {
   @Embedded public Sense sense;
 
   @Ignore
-  public String xRefString;
-  @Ignore
   public List<CrossReferencedEntry> crossReferences;
 
   public Sense getSense() {
@@ -25,14 +23,14 @@ public class SenseWithCrossReferences {
     this.crossReferences = crossReferences;
   }
 
-  public void setxRefString() {
+  public String getCrossReferencesDisplay() {
     if (crossReferences == null) {
-      return;
+      return null;
     }
     String text = "See also: ";
     for (CrossReferencedEntry xrefJoin : crossReferences) {
       text += xrefJoin.getKanjiOrReading() + ", ";
     }
-    this.xRefString = text;
+    return text;
   }
 }
