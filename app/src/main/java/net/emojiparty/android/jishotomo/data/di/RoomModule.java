@@ -1,10 +1,13 @@
-package net.emojiparty.android.jishotomo.data;
+package net.emojiparty.android.jishotomo.data.di;
 
 import android.app.Application;
 import com.huma.room_for_asset.RoomAsset;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;
+import net.emojiparty.android.jishotomo.data.room.AppDatabase;
+import net.emojiparty.android.jishotomo.data.room.EntryDao;
+import net.emojiparty.android.jishotomo.data.room.SenseDao;
 
 // https://medium.com/@marco_cattaneo/integrate-dagger-2-with-room-persistence-library-in-few-lines-abf48328eaeb
 @Module public class RoomModule {

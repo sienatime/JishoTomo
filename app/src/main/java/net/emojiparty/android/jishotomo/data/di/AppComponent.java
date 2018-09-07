@@ -1,8 +1,11 @@
-package net.emojiparty.android.jishotomo.data;
+package net.emojiparty.android.jishotomo.data.di;
 
 import android.app.Application;
 import dagger.Component;
 import javax.inject.Singleton;
+import net.emojiparty.android.jishotomo.data.room.AppDatabase;
+import net.emojiparty.android.jishotomo.data.room.EntryDao;
+import net.emojiparty.android.jishotomo.data.room.SenseDao;
 import net.emojiparty.android.jishotomo.ui.DefinitionActivity;
 import net.emojiparty.android.jishotomo.ui.DrawerActivity;
 

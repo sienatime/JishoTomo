@@ -1,9 +1,9 @@
-package net.emojiparty.android.jishotomo.data;
+package net.emojiparty.android.jishotomo.data.models;
 
 public class PrimaryOnlyEntry {
-  int id;
-  String primaryKanji;
-  String primaryReading;
+  public int id;
+  public String primaryKanji;
+  public String primaryReading;
 
   public String getKanjiOrReading() {
     return hasKanji() ? primaryKanji : primaryReading;

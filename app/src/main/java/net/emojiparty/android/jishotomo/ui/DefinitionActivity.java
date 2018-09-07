@@ -16,14 +16,14 @@ import java.util.HashMap;
 import java.util.List;
 import javax.inject.Inject;
 import net.emojiparty.android.jishotomo.R;
-import net.emojiparty.android.jishotomo.data.AppModule;
-import net.emojiparty.android.jishotomo.data.CrossReferencedEntry;
-import net.emojiparty.android.jishotomo.data.DaggerAppComponent;
-import net.emojiparty.android.jishotomo.data.EntryDao;
-import net.emojiparty.android.jishotomo.data.EntryWithAllSenses;
-import net.emojiparty.android.jishotomo.data.RoomModule;
-import net.emojiparty.android.jishotomo.data.SenseDao;
-import net.emojiparty.android.jishotomo.data.SenseWithCrossReferences;
+import net.emojiparty.android.jishotomo.data.di.AppModule;
+import net.emojiparty.android.jishotomo.data.di.DaggerAppComponent;
+import net.emojiparty.android.jishotomo.data.di.RoomModule;
+import net.emojiparty.android.jishotomo.data.models.CrossReferencedEntry;
+import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses;
+import net.emojiparty.android.jishotomo.data.models.SenseWithCrossReferences;
+import net.emojiparty.android.jishotomo.data.room.EntryDao;
+import net.emojiparty.android.jishotomo.data.room.SenseDao;
 import net.emojiparty.android.jishotomo.databinding.ActivityDefinitionBinding;
 
 public class DefinitionActivity extends AppCompatActivity {

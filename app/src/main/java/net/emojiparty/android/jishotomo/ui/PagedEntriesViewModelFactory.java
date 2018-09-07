@@ -4,7 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
-import net.emojiparty.android.jishotomo.data.EntryDao;
+import net.emojiparty.android.jishotomo.data.room.EntryDao;
 
 public class PagedEntriesViewModelFactory extends ViewModelProvider.NewInstanceFactory {
   private Application application;

@@ -1,4 +1,4 @@
-package net.emojiparty.android.jishotomo.data;
+package net.emojiparty.android.jishotomo.data.di;
 
 import android.app.Application;
 import dagger.Module;

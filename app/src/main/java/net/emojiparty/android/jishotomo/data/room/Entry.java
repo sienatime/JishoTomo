@@ -1,4 +1,4 @@
-package net.emojiparty.android.jishotomo.data;
+package net.emojiparty.android.jishotomo.data.room;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
@@ -6,6 +6,7 @@ import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 import java.util.List;
+import net.emojiparty.android.jishotomo.data.SemicolonSplit;
 
 @Entity(tableName = "entries", indices = {@Index("jlpt_level")})
 public class Entry {

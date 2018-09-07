@@ -14,10 +14,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import javax.inject.Inject;
 import net.emojiparty.android.jishotomo.R;
-import net.emojiparty.android.jishotomo.data.AppModule;
-import net.emojiparty.android.jishotomo.data.DaggerAppComponent;
-import net.emojiparty.android.jishotomo.data.EntryDao;
-import net.emojiparty.android.jishotomo.data.RoomModule;
+import net.emojiparty.android.jishotomo.data.di.AppModule;
+import net.emojiparty.android.jishotomo.data.di.DaggerAppComponent;
+import net.emojiparty.android.jishotomo.data.di.RoomModule;
+import net.emojiparty.android.jishotomo.data.room.EntryDao;
 
 public class DrawerActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener {

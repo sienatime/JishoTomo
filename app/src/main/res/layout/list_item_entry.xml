@@ -7,7 +7,7 @@
   <data>
     <variable
         name="presenter"
-        type="net.emojiparty.android.jishotomo.data.SearchResultEntry"
+        type="net.emojiparty.android.jishotomo.data.models.SearchResultEntry"
         />
   </data>
 

@@ -1,9 +1,10 @@
-package net.emojiparty.android.jishotomo.data;
+package net.emojiparty.android.jishotomo.data.room;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Query;
 import java.util.List;
+import net.emojiparty.android.jishotomo.data.models.CrossReferencedEntry;
 
 @Dao public interface SenseDao {
   @Query("SELECT mainSenses.id AS senseId,"

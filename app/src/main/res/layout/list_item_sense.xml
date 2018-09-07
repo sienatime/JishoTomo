@@ -8,7 +8,7 @@
     <import type="net.emojiparty.android.jishotomo.data.SemicolonSplit"/>
     <variable
         name="presenter"
-        type="net.emojiparty.android.jishotomo.data.SenseWithCrossReferences"
+        type="net.emojiparty.android.jishotomo.data.models.SenseWithCrossReferences"
         />
   </data>
 

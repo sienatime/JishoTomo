@@ -1,9 +1,11 @@
-package net.emojiparty.android.jishotomo.data;
+package net.emojiparty.android.jishotomo.data.room;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.paging.DataSource;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Query;
+import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses;
+import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
 
 @Dao
 public interface EntryDao {

@@ -1,4 +1,4 @@
-package net.emojiparty.android.jishotomo.data;
+package net.emojiparty.android.jishotomo.data.room;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
@@ -6,6 +6,7 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
+import net.emojiparty.android.jishotomo.data.models.PrimaryOnlyEntry;
 
 @Entity(tableName = "cross_references", indices = {@Index("sense_id")})
 public class CrossReference {

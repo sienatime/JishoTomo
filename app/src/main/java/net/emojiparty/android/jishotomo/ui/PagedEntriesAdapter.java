@@ -10,7 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import net.emojiparty.android.jishotomo.BR;
-import net.emojiparty.android.jishotomo.data.SearchResultEntry;
+import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
 
 public class PagedEntriesAdapter
     extends PagedListAdapter<SearchResultEntry, PagedEntriesAdapter.DataBindingViewHolder> {

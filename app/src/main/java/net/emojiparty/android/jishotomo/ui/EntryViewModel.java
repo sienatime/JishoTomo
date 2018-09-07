@@ -4,8 +4,8 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
-import net.emojiparty.android.jishotomo.data.EntryDao;
-import net.emojiparty.android.jishotomo.data.EntryWithAllSenses;
+import net.emojiparty.android.jishotomo.data.room.EntryDao;
+import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses;
 
 public class EntryViewModel extends AndroidViewModel {
   public LiveData<EntryWithAllSenses> entry;

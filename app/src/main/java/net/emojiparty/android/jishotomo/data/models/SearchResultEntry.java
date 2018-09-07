@@ -1,9 +1,11 @@
-package net.emojiparty.android.jishotomo.data;
+package net.emojiparty.android.jishotomo.data.models;
 
 import android.arch.persistence.room.Relation;
 import android.content.Context;
 import android.content.Intent;
 import java.util.List;
+import net.emojiparty.android.jishotomo.data.SemicolonSplit;
+import net.emojiparty.android.jishotomo.data.room.Sense;
 import net.emojiparty.android.jishotomo.ui.DefinitionActivity;
 
 import static net.emojiparty.android.jishotomo.ui.DefinitionActivity.ENTRY_ID_EXTRA;
