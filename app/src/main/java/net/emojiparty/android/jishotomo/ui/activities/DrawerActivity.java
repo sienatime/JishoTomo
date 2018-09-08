@@ -1,6 +1,9 @@
 package net.emojiparty.android.jishotomo.ui.activities;
 
+import android.app.SearchManager;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -9,6 +12,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +29,7 @@ import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesViewModelFacto
 public class DrawerActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener {
 
+  private PagedEntriesViewModel viewModel;
   @Inject public EntryDao entryDao;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +39,21 @@ public class DrawerActivity extends AppCompatActivity
     setSupportActionBar(toolbar);
 
     setupDagger();
+    viewModel =
+        ViewModelProviders.of(this, new PagedEntriesViewModelFactory(getApplication(), entryDao))
+            .get(PagedEntriesViewModel.class);
+    searchIntent(getIntent());
     setupDrawer(toolbar);
     setupNavigationView();
     setupRecyclerView();
+  }
+
+  // https://developer.android.com/guide/topics/search/search-dialog
+  private void searchIntent(Intent intent) {
+    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+      String query = intent.getStringExtra(SearchManager.QUERY);
+      viewModel.searchTermLiveData.setValue(query);
+    }
   }
 
   private void setupDagger() {
@@ -47,14 +64,14 @@ public class DrawerActivity extends AppCompatActivity
         .inject(this);
   }
 
+  @Override protected void onNewIntent(Intent intent) {
+    searchIntent(intent);
+  }
+
   // Paging library reference https://developer.android.com/topic/libraries/architecture/paging
   private void setupRecyclerView() {
     RecyclerView searchResults = findViewById(R.id.search_results_rv);
     searchResults.setLayoutManager(new LinearLayoutManager(DrawerActivity.this));
-
-    PagedEntriesViewModel viewModel =
-        ViewModelProviders.of(this, new PagedEntriesViewModelFactory(getApplication(), entryDao))
-            .get(PagedEntriesViewModel.class);
     PagedEntriesAdapter adapter = new PagedEntriesAdapter(R.layout.list_item_entry);
     viewModel.entries.observe(this, adapter::submitList);
     searchResults.setAdapter(adapter);
@@ -85,17 +102,15 @@ public class DrawerActivity extends AppCompatActivity
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.drawer, menu);
+
+    // Get the SearchView and set the searchable configuration
+    SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+    SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+    // Assumes current activity is the searchable activity
+    searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+    searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+
     return true;
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int id = item.getItemId();
-
-    if (id == R.id.action_settings) {
-      return true;
-    }
-
-    return super.onOptionsItemSelected(item);
   }
 
   // this is for the drawer, maybe move to another class

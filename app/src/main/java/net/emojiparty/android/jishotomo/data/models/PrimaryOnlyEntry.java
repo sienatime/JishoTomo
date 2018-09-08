@@ -1,8 +1,12 @@
 package net.emojiparty.android.jishotomo.data.models;
 
+import android.arch.persistence.room.ColumnInfo;
+
 public class PrimaryOnlyEntry {
   public int id;
+  @ColumnInfo(name = "primary_kanji")
   public String primaryKanji;
+  @ColumnInfo(name = "primary_reading")
   public String primaryReading;
 
   public String getKanjiOrReading() {
