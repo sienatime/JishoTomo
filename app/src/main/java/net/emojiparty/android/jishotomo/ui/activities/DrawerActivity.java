@@ -53,6 +53,8 @@ public class DrawerActivity extends AppCompatActivity
     if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
       String query = intent.getStringExtra(SearchManager.QUERY);
       viewModel.searchTermLiveData.setValue(query);
+    } else {
+      viewModel.searchTermLiveData.setValue(null);
     }
   }
 
