@@ -135,7 +135,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email"
+        android:onClick="@{() -> presenter.toggleFavorite()}"
+        android:src="@{presenter.entry.favorited ? @drawable/ic_star : @drawable/ic_star_border }"
         />
 
   </android.support.design.widget.CoordinatorLayout>

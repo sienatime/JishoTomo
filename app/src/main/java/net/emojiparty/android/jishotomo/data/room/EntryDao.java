@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.paging.DataSource;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses;
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
 
@@ -20,4 +21,7 @@ public interface EntryDao {
 
   @Query("SELECT * FROM entries WHERE entries.id = :id LIMIT 1")
   LiveData<EntryWithAllSenses> getEntryById(int id);
+
+  @Update
+  void updateEntry(Entry entry);
 }

@@ -1,19 +1,22 @@
 package net.emojiparty.android.jishotomo.data;
 
-import android.app.Application;
 import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.paging.LivePagedListBuilder;
+import android.arch.paging.PagedList;
+import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.inject.Inject;
-import net.emojiparty.android.jishotomo.data.di.AppModule;
-import net.emojiparty.android.jishotomo.data.di.DaggerAppComponent;
-import net.emojiparty.android.jishotomo.data.di.RoomModule;
+import net.emojiparty.android.jishotomo.JishoTomoApp;
 import net.emojiparty.android.jishotomo.data.models.CrossReferencedEntry;
 import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses;
+import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
 import net.emojiparty.android.jishotomo.data.models.SenseWithCrossReferences;
+import net.emojiparty.android.jishotomo.data.room.Entry;
 import net.emojiparty.android.jishotomo.data.room.EntryDao;
 import net.emojiparty.android.jishotomo.data.room.SenseDao;
 
@@ -22,13 +25,13 @@ public class AppRepository {
   @Inject public EntryDao entryDao;
   @Inject public SenseDao senseDao;
 
-  public AppRepository(Application application, LifecycleOwner lifecycleOwner) {
+  public AppRepository() {
+    JishoTomoApp.getAppComponent().inject(this);
+  }
+
+  public AppRepository(LifecycleOwner lifecycleOwner) {
     this.lifecycleOwner = lifecycleOwner;
-    DaggerAppComponent.builder()
-        .appModule(new AppModule(application))
-        .roomModule(new RoomModule(application))
-        .build()
-        .inject(AppRepository.this);
+    JishoTomoApp.getAppComponent().inject(this);
   }
 
   public MutableLiveData<EntryWithAllSenses> getEntryWithAllSenses(int entryId) {
@@ -41,6 +44,22 @@ public class AppRepository {
     });
 
     return liveData;
+  }
+
+  public LiveData<PagedList<SearchResultEntry>> search(String term) {
+    String formattedQuery = String.format("%%%s%%", term);
+    return new LivePagedListBuilder<>(entryDao.search(formattedQuery), 20).build();
+  }
+
+  public LiveData<PagedList<SearchResultEntry>> browse() {
+    return new LivePagedListBuilder<>(entryDao.getAll(), 20).build();
+  }
+
+  public void toggleFavorite(Entry entry) {
+    AsyncTask.execute(() -> {
+      entry.setFavorited(!entry.getFavorited());
+      entryDao.updateEntry(entry);
+    });
   }
 
   private void setCrossReferences(EntryWithAllSenses entry,

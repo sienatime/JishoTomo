@@ -19,23 +19,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-import javax.inject.Inject;
 import net.emojiparty.android.jishotomo.R;
-import net.emojiparty.android.jishotomo.data.di.AppModule;
-import net.emojiparty.android.jishotomo.data.di.DaggerAppComponent;
-import net.emojiparty.android.jishotomo.data.di.RoomModule;
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
-import net.emojiparty.android.jishotomo.data.room.EntryDao;
 import net.emojiparty.android.jishotomo.ui.adapters.PagedEntriesAdapter;
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesViewModel;
-import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesViewModelFactory;
 
 public class DrawerActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener {
 
   private PagedEntriesViewModel viewModel;
   private ProgressBar loadingIndicator;
-  @Inject public EntryDao entryDao;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -43,10 +36,7 @@ public class DrawerActivity extends AppCompatActivity
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
 
-    setupDagger();
-    viewModel =
-        ViewModelProviders.of(this, new PagedEntriesViewModelFactory(getApplication(), entryDao))
-            .get(PagedEntriesViewModel.class);
+    viewModel = ViewModelProviders.of(this).get(PagedEntriesViewModel.class);
     loadingIndicator = findViewById(R.id.loading);
     searchIntent(getIntent());
     setupDrawer(toolbar);
@@ -64,14 +54,6 @@ public class DrawerActivity extends AppCompatActivity
     } else {
       viewModel.searchTermLiveData.setValue(null);
     }
-  }
-
-  private void setupDagger() {
-    DaggerAppComponent.builder()
-        .appModule(new AppModule(getApplication()))
-        .roomModule(new RoomModule(getApplication()))
-        .build()
-        .inject(this);
   }
 
   @Override protected void onNewIntent(Intent intent) {

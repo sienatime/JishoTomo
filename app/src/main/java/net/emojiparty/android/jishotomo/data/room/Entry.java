@@ -30,6 +30,8 @@ public class Entry {
   @ColumnInfo(name = "jlpt_level")
   private Integer jlptLevel;
 
+  private Boolean favorited;
+
   public int getId() {
     return id;
   }
@@ -84,5 +86,13 @@ public class Entry {
 
   public List<String> otherKanjiList() {
     return SemicolonSplit.split(otherKanji);
+  }
+
+  public Boolean getFavorited() {
+    return favorited;
+  }
+
+  public void setFavorited(Boolean favorited) {
+    this.favorited = favorited;
   }
 }

@@ -13,6 +13,6 @@ public class EntryViewModel extends AndroidViewModel {
 
   public EntryViewModel(@NonNull Application application, LifecycleOwner lifecycleOwner, int entryId) {
     super(application);
-    entry = new AppRepository(application, lifecycleOwner).getEntryWithAllSenses(entryId);
+    entry = new AppRepository(lifecycleOwner).getEntryWithAllSenses(entryId);
   }
 }

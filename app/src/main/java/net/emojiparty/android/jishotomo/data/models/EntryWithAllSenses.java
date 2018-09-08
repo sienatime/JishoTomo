@@ -3,6 +3,7 @@ package net.emojiparty.android.jishotomo.data.models;
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Relation;
 import java.util.List;
+import net.emojiparty.android.jishotomo.data.AppRepository;
 import net.emojiparty.android.jishotomo.data.SemicolonSplit;
 import net.emojiparty.android.jishotomo.data.room.Entry;
 import net.emojiparty.android.jishotomo.data.room.Sense;
@@ -46,5 +47,10 @@ public class EntryWithAllSenses {
 
   public boolean hasAlternateReadings() {
     return getEntry().getOtherReadings() != null;
+  }
+
+  public void toggleFavorite() {
+    AppRepository appRepo = new AppRepository();
+    appRepo.toggleFavorite(getEntry());
   }
 }
