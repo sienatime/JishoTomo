@@ -2,6 +2,7 @@ package net.emojiparty.android.jishotomo.ui.activities;
 
 import android.app.SearchManager;
 import android.arch.lifecycle.ViewModelProviders;
+import android.arch.paging.PagedList;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,11 +17,14 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import javax.inject.Inject;
 import net.emojiparty.android.jishotomo.R;
 import net.emojiparty.android.jishotomo.data.di.AppModule;
 import net.emojiparty.android.jishotomo.data.di.DaggerAppComponent;
 import net.emojiparty.android.jishotomo.data.di.RoomModule;
+import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
 import net.emojiparty.android.jishotomo.data.room.EntryDao;
 import net.emojiparty.android.jishotomo.ui.adapters.PagedEntriesAdapter;
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesViewModel;
@@ -30,6 +34,7 @@ public class DrawerActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener {
 
   private PagedEntriesViewModel viewModel;
+  private ProgressBar loadingIndicator;
   @Inject public EntryDao entryDao;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
@@ -42,14 +47,17 @@ public class DrawerActivity extends AppCompatActivity
     viewModel =
         ViewModelProviders.of(this, new PagedEntriesViewModelFactory(getApplication(), entryDao))
             .get(PagedEntriesViewModel.class);
+    loadingIndicator = findViewById(R.id.loading);
     searchIntent(getIntent());
     setupDrawer(toolbar);
     setupNavigationView();
     setupRecyclerView();
   }
 
+  // https://developer.android.com/training/search/setup
   // https://developer.android.com/guide/topics/search/search-dialog
   private void searchIntent(Intent intent) {
+    loadingIndicator.setVisibility(View.VISIBLE);
     if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
       String query = intent.getStringExtra(SearchManager.QUERY);
       viewModel.searchTermLiveData.setValue(query);
@@ -75,7 +83,10 @@ public class DrawerActivity extends AppCompatActivity
     RecyclerView searchResults = findViewById(R.id.search_results_rv);
     searchResults.setLayoutManager(new LinearLayoutManager(DrawerActivity.this));
     PagedEntriesAdapter adapter = new PagedEntriesAdapter(R.layout.list_item_entry);
-    viewModel.entries.observe(this, adapter::submitList);
+    viewModel.entries.observe(this, (PagedList<SearchResultEntry> entries) -> {
+      loadingIndicator.setVisibility(View.INVISIBLE);
+      adapter.submitList(entries);
+    });
     searchResults.setAdapter(adapter);
   }
 
