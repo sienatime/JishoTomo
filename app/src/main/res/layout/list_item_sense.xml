@@ -6,6 +6,7 @@
 
   <data>
     <import type="net.emojiparty.android.jishotomo.data.SemicolonSplit"/>
+    <import type="net.emojiparty.android.jishotomo.ui.SenseDisplay"/>
     <variable
         name="presenter"
         type="net.emojiparty.android.jishotomo.data.models.SenseWithCrossReferences"
@@ -15,7 +16,9 @@
   <LinearLayout
       android:orientation="vertical"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content">
+      android:layout_height="wrap_content"
+      android:paddingBottom="24dp"
+      >
 
     <TextView
         android:id="@+id/li_parts_of_speech"
@@ -25,7 +28,7 @@
         android:paddingBottom="8dp"
         style="@style/small_caps"
         visibleOrGone="@{presenter.getSense().partsOfSpeech != null}"
-        android:text="@{presenter.getSense().partsOfSpeech}"
+        android:text="@{SenseDisplay.formatPartsOfSpeech(presenter.getSense(), context)}"
         tools:text="NOUN, NA-ADJ"
         />
     <View
@@ -38,12 +41,25 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:paddingTop="16dp"
-        android:paddingBottom="16dp"
         android:lineSpacingExtra="6sp"
         android:text='@{SemicolonSplit.splitAndJoin(presenter.getSense().glosses, "\n")}'
         android:textSize="@dimen/text_size_body"
         app:fontFamily="sans-serif"
-        tools:text="stuff"
+        tools:text="stuff\nand other things\nlots of words on this one, wow"
+        />
+
+    <TextView
+        android:id="@+id/li_applies_to"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:paddingTop="16dp"
+        android:lineSpacingExtra="6sp"
+        visibleOrGone="@{presenter.getSense().appliesTo != null}"
+        android:text='@{@string/applies_to(SemicolonSplit.splitAndJoin(presenter.getSense().appliesTo))}'
+        android:textSize="@dimen/text_size_body"
+        app:fontFamily="sans-serif"
+        tools:text="Applies to: 半片"
         />
 
     <TextView
@@ -52,11 +68,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:paddingTop="8dp"
-        android:paddingBottom="24dp"
         crossReferenceLinks='@{presenter.crossReferences}'
         android:textSize="@dimen/text_size_body"
         app:fontFamily="sans-serif"
-        tools:text="stuff"
+        tools:text="See also: 半片"
         />
 
   </LinearLayout>
