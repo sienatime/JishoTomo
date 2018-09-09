@@ -48,6 +48,10 @@ public class DrawerActivity extends AppCompatActivity
     setupDrawer(toolbar);
     setupNavigationView();
     setupRecyclerView();
+
+    toolbar.findViewById(R.id.toolbar_title).setOnClickListener((View view) -> {
+      searchResults.scrollToPosition(0);
+    });
   }
 
   // https://developer.android.com/training/search/setup
