@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import java.util.ArrayList;
 import net.emojiparty.android.jishotomo.R;
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
@@ -34,6 +35,7 @@ public class DrawerActivity extends AppCompatActivity
   private ProgressBar loadingIndicator;
   private MenuItem searchViewMenuItem;
   private RecyclerView searchResults;
+  private TextView toolbarTitle;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -44,12 +46,13 @@ public class DrawerActivity extends AppCompatActivity
     viewModel = ViewModelProviders.of(this).get(PagedEntriesViewModel.class);
     searchResults = findViewById(R.id.search_results_rv);
     loadingIndicator = findViewById(R.id.loading);
+    toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
     searchIntent(getIntent());
     setupDrawer(toolbar);
     setupNavigationView();
     setupRecyclerView();
 
-    toolbar.findViewById(R.id.toolbar_title).setOnClickListener((View view) -> {
+    toolbarTitle.setOnClickListener((View view) -> {
       searchResults.scrollToPosition(0);
     });
   }
@@ -59,14 +62,17 @@ public class DrawerActivity extends AppCompatActivity
   private void searchIntent(Intent intent) {
     String query = null;
     String searchType;
+    int titleId = 0;
     if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
       query = intent.getStringExtra(SearchManager.QUERY);
       searchType = PagedEntriesControl.SEARCH;
+      titleId = R.string.search_results;
     } else {
       searchType = PagedEntriesControl.BROWSE;
+      titleId = R.string.app_name;
     }
     PagedEntriesControl pagedEntriesControl = new PagedEntriesControl(searchType, query);
-    setPagedEntriesControl(pagedEntriesControl);
+    setPagedEntriesControl(pagedEntriesControl, titleId);
   }
 
   @Override protected void onNewIntent(Intent intent) {
@@ -119,7 +125,10 @@ public class DrawerActivity extends AppCompatActivity
     return true;
   }
 
-  private void setPagedEntriesControl(PagedEntriesControl pagedEntriesControl) {
+  private void setPagedEntriesControl(PagedEntriesControl pagedEntriesControl, int titleId) {
+    if (titleId > 0) {
+      toolbarTitle.setText(getResources().getString(titleId));
+    }
     loadingIndicator.setVisibility(View.VISIBLE);
     viewModel.pagedEntriesControlLiveData.setValue(pagedEntriesControl);
   }
@@ -139,20 +148,26 @@ public class DrawerActivity extends AppCompatActivity
 
     PagedEntriesControl pagedEntriesControl = new PagedEntriesControl();
     ArrayList<Integer> jlptIds = jlptMenuIds();
+    int titleId = 0;
 
     if (id == R.id.nav_search) {
-      pagedEntriesControl.searchType = PagedEntriesControl.SEARCH;
       searchViewMenuItem.expandActionView();
     } else if (id == R.id.nav_browse) {
       pagedEntriesControl.searchType = PagedEntriesControl.BROWSE;
+      titleId = R.string.app_name;
     } else if (id == R.id.nav_favorites) {
       pagedEntriesControl.searchType = PagedEntriesControl.FAVORITES;
+      titleId = R.string.favorites;
     } else if (jlptIds.indexOf(id) > -1) {
       pagedEntriesControl.searchType = PagedEntriesControl.JLPT;
-      pagedEntriesControl.jlptLevel = jlptIds.indexOf(id) + 1;
+      int jlptLevel = jlptIds.indexOf(id) + 1;
+      pagedEntriesControl.jlptLevel = jlptLevel;
+      titleId = getResources().getIdentifier("jlpt_n" + String.valueOf(jlptLevel), "string", getPackageName());
     }
 
-    setPagedEntriesControl(pagedEntriesControl);
+    if (pagedEntriesControl.searchType != null) {
+      setPagedEntriesControl(pagedEntriesControl, titleId);
+    }
 
     DrawerLayout drawer = findViewById(R.id.drawer_layout);
     drawer.closeDrawer(GravityCompat.START);
