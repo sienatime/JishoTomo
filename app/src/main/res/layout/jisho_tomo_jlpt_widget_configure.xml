@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    >
+
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="8dp"
+      android:text="@string/configure"
+      />
+
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="8dp"
+      android:text="@string/widget_explanation"
+      />
+
+  <RadioGroup
+      android:id="@+id/jlpt_button_group"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
+    <RadioButton
+        android:id="@+id/radio_button_n1"
+        android:text="@string/jlpt_n1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
+    <RadioButton
+        android:id="@+id/radio_button_n2"
+        android:text="@string/jlpt_n2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
+    <RadioButton
+        android:id="@+id/radio_button_n3"
+        android:text="@string/jlpt_n3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
+    <RadioButton
+        android:id="@+id/radio_button_n4"
+        android:text="@string/jlpt_n4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
+    <RadioButton
+        android:id="@+id/radio_button_n5"
+        android:text="@string/jlpt_n5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+  </RadioGroup>
+
+  <Button
+      android:id="@+id/add_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:text="@string/add_widget"
+      />
+
+</LinearLayout>
