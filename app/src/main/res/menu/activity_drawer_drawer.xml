@@ -3,36 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-  <group android:checkableBehavior="single">
-    <item
-        android:id="@+id/nav_camera"
-        android:icon="@drawable/ic_menu_camera"
-        android:title="Import"/>
-    <item
-        android:id="@+id/nav_gallery"
-        android:icon="@drawable/ic_menu_gallery"
-        android:title="Gallery"/>
-    <item
-        android:id="@+id/nav_slideshow"
-        android:icon="@drawable/ic_menu_slideshow"
-        android:title="Slideshow"/>
-    <item
-        android:id="@+id/nav_manage"
-        android:icon="@drawable/ic_menu_manage"
-        android:title="Tools"/>
-  </group>
-
-  <item android:title="Communicate">
-    <menu>
-      <item
-          android:id="@+id/nav_share"
-          android:icon="@drawable/ic_menu_share"
-          android:title="Share"/>
-      <item
-          android:id="@+id/nav_send"
-          android:icon="@drawable/ic_menu_send"
-          android:title="Send"/>
-    </menu>
-  </item>
+  <item
+      android:id="@+id/nav_search"
+      android:icon="@drawable/ic_menu_search"
+      android:title="@string/search"/>
+  <item
+      android:id="@+id/nav_browse"
+      android:icon="@drawable/ic_menu_browse"
+      android:title="@string/browse"/>
+  <item
+      android:id="@+id/nav_favorites"
+      android:icon="@drawable/ic_menu_favorites"
+      android:title="@string/favorites"/>
 
 </menu>

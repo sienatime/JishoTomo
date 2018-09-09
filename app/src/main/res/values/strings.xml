@@ -13,6 +13,11 @@
   <string name="list_of_words_delimiter">,\u0020</string>
   <string name="search_hint">Search the dictionary</string>
 
+  <!-- Menu -->
+  <string name="search">Search</string>
+  <string name="browse">Browse</string>
+  <string name="favorites">Favorites</string>
+
   <!-- parts of speech -->
   <!-- http://www.edrdg.org/jmdictdb/cgi-bin/edhelp.py?svc=jmdict&sid=#kw_pos -->
   <string name="adj_f">Adjective</string>
