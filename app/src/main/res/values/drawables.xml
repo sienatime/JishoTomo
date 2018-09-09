@@ -2,4 +2,5 @@
   <item name="ic_menu_search" type="drawable">@drawable/ic_search</item>
   <item name="ic_menu_browse" type="drawable">@drawable/ic_library_books</item>
   <item name="ic_menu_favorites" type="drawable">@drawable/ic_star</item>
+  <item name="ic_menu_jlpt" type="drawable">@drawable/ic_local_library</item>
 </resources>

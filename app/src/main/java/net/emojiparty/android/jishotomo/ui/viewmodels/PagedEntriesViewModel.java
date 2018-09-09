@@ -26,6 +26,8 @@ public class PagedEntriesViewModel extends AndroidViewModel {
           return appRepo.search(searchTerm);
         case PagedEntriesControl.FAVORITES:
           return appRepo.getFavorites();
+        case PagedEntriesControl.JLPT:
+          return appRepo.getByJlptLevel(pagedEntriesControl.jlptLevel);
         default:
           return appRepo.browse();
       }

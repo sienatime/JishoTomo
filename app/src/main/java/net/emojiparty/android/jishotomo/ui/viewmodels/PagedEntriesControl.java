@@ -5,9 +5,11 @@ import android.support.annotation.Nullable;
 public class PagedEntriesControl {
   public String searchType;
   @Nullable public String searchTerm;
+  @Nullable public Integer jlptLevel;
   public final static String SEARCH = "SEARCH";
   public final static String BROWSE = "BROWSE";
   public final static String FAVORITES = "FAVORITES";
+  public final static String JLPT = "JLPT";
 
   public PagedEntriesControl() {
   }

@@ -17,6 +17,12 @@
   <string name="search">Search</string>
   <string name="browse">Browse</string>
   <string name="favorites">Favorites</string>
+  <string name="jlpt">JLPT Lists</string>
+  <string name="jlpt_n1">N1 Vocabulary</string>
+  <string name="jlpt_n2">N2 Vocabulary</string>
+  <string name="jlpt_n3">N3 Vocabulary</string>
+  <string name="jlpt_n4">N4 Vocabulary</string>
+  <string name="jlpt_n5">N5 Vocabulary</string>
 
   <!-- parts of speech -->
   <!-- http://www.edrdg.org/jmdictdb/cgi-bin/edhelp.py?svc=jmdict&sid=#kw_pos -->

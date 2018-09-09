@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import java.util.ArrayList;
 import net.emojiparty.android.jishotomo.R;
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
 import net.emojiparty.android.jishotomo.ui.adapters.PagedEntriesAdapter;
@@ -32,6 +33,7 @@ public class DrawerActivity extends AppCompatActivity
   private PagedEntriesViewModel viewModel;
   private ProgressBar loadingIndicator;
   private MenuItem searchViewMenuItem;
+  private RecyclerView searchResults;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -40,6 +42,7 @@ public class DrawerActivity extends AppCompatActivity
     setSupportActionBar(toolbar);
 
     viewModel = ViewModelProviders.of(this).get(PagedEntriesViewModel.class);
+    searchResults = findViewById(R.id.search_results_rv);
     loadingIndicator = findViewById(R.id.loading);
     searchIntent(getIntent());
     setupDrawer(toolbar);
@@ -50,7 +53,6 @@ public class DrawerActivity extends AppCompatActivity
   // https://developer.android.com/training/search/setup
   // https://developer.android.com/guide/topics/search/search-dialog
   private void searchIntent(Intent intent) {
-    loadingIndicator.setVisibility(View.VISIBLE);
     String query = null;
     String searchType;
     if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
@@ -60,7 +62,7 @@ public class DrawerActivity extends AppCompatActivity
       searchType = PagedEntriesControl.BROWSE;
     }
     PagedEntriesControl pagedEntriesControl = new PagedEntriesControl(searchType, query);
-    viewModel.pagedEntriesControlLiveData.setValue(pagedEntriesControl);
+    setPagedEntriesControl(pagedEntriesControl);
   }
 
   @Override protected void onNewIntent(Intent intent) {
@@ -69,7 +71,6 @@ public class DrawerActivity extends AppCompatActivity
 
   // Paging library reference https://developer.android.com/topic/libraries/architecture/paging
   private void setupRecyclerView() {
-    RecyclerView searchResults = findViewById(R.id.search_results_rv);
     searchResults.setLayoutManager(new LinearLayoutManager(DrawerActivity.this));
     PagedEntriesAdapter adapter = new PagedEntriesAdapter(R.layout.list_item_entry);
     viewModel.entries.observe(this, (PagedList<SearchResultEntry> entries) -> {
@@ -105,33 +106,49 @@ public class DrawerActivity extends AppCompatActivity
   @Override public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.drawer, menu);
 
-    // Get the SearchView and set the searchable configuration
     SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
     searchViewMenuItem = menu.findItem(R.id.menu_search);
     SearchView searchView = (SearchView) searchViewMenuItem.getActionView();
-    // Assumes current activity is the searchable activity
     searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-    searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+    searchView.setIconifiedByDefault(false);
 
     return true;
+  }
+
+  private void setPagedEntriesControl(PagedEntriesControl pagedEntriesControl) {
+    loadingIndicator.setVisibility(View.VISIBLE);
+    viewModel.pagedEntriesControlLiveData.setValue(pagedEntriesControl);
+  }
+
+  private ArrayList<Integer> jlptMenuIds() {
+    ArrayList<Integer> ids = new ArrayList<>();
+    ids.add(R.id.nav_jlptn1);
+    ids.add(R.id.nav_jlptn2);
+    ids.add(R.id.nav_jlptn3);
+    ids.add(R.id.nav_jlptn4);
+    ids.add(R.id.nav_jlptn5);
+    return ids;
   }
 
   @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
     int id = item.getItemId();
 
-    String searchType = null;
+    PagedEntriesControl pagedEntriesControl = new PagedEntriesControl();
+    ArrayList<Integer> jlptIds = jlptMenuIds();
+
     if (id == R.id.nav_search) {
-      searchType = PagedEntriesControl.SEARCH;
+      pagedEntriesControl.searchType = PagedEntriesControl.SEARCH;
       searchViewMenuItem.expandActionView();
     } else if (id == R.id.nav_browse) {
-      searchType = PagedEntriesControl.BROWSE;
+      pagedEntriesControl.searchType = PagedEntriesControl.BROWSE;
     } else if (id == R.id.nav_favorites) {
-      searchType = PagedEntriesControl.FAVORITES;
+      pagedEntriesControl.searchType = PagedEntriesControl.FAVORITES;
+    } else if (jlptIds.indexOf(id) > -1) {
+      pagedEntriesControl.searchType = PagedEntriesControl.JLPT;
+      pagedEntriesControl.jlptLevel = jlptIds.indexOf(id) + 1;
     }
 
-    PagedEntriesControl pagedEntriesControl = new PagedEntriesControl(searchType);
-    loadingIndicator.setVisibility(View.VISIBLE);
-    viewModel.pagedEntriesControlLiveData.setValue(pagedEntriesControl);
+    setPagedEntriesControl(pagedEntriesControl);
 
     DrawerLayout drawer = findViewById(R.id.drawer_layout);
     drawer.closeDrawer(GravityCompat.START);

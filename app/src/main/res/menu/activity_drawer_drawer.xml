@@ -16,4 +16,33 @@
       android:icon="@drawable/ic_menu_favorites"
       android:title="@string/favorites"/>
 
+  <item android:title="@string/jlpt">
+    <menu>
+      <item
+          android:id="@+id/nav_jlptn1"
+          android:icon="@drawable/ic_menu_jlpt"
+          android:title="@string/jlpt_n1"/>
+
+      <item
+          android:id="@+id/nav_jlptn2"
+          android:icon="@drawable/ic_menu_jlpt"
+          android:title="@string/jlpt_n2"/>
+
+      <item
+          android:id="@+id/nav_jlptn3"
+          android:icon="@drawable/ic_menu_jlpt"
+          android:title="@string/jlpt_n3"/>
+
+      <item
+          android:id="@+id/nav_jlptn4"
+          android:icon="@drawable/ic_menu_jlpt"
+          android:title="@string/jlpt_n4"/>
+
+      <item
+          android:id="@+id/nav_jlptn5"
+          android:icon="@drawable/ic_menu_jlpt"
+          android:title="@string/jlpt_n5"/>
+    </menu>
+  </item>
+
 </menu>

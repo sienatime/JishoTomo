@@ -21,8 +21,14 @@ public class PagedEntriesAdapter
     this.layoutId = layoutId;
   }
 
+  // referenced PagedListAdapter documentation
   @Override public void onBindViewHolder(@NonNull DataBindingViewHolder holder, int position) {
-    holder.bind(getItem(position));
+    SearchResultEntry entry = getItem(position);
+    if (entry != null) {
+      holder.bind(entry);
+    } else {
+      holder.clear();
+    }
   }
 
   @NonNull @Override
@@ -48,6 +54,10 @@ public class PagedEntriesAdapter
       binding.setVariable(BR.presenter, presenter);
       binding.executePendingBindings();
     }
+
+    void clear() {
+      binding.unbind();
+    }
   }
 
   private static DiffUtil.ItemCallback<SearchResultEntry> DIFF_CALLBACK =
@@ -58,7 +68,7 @@ public class PagedEntriesAdapter
         }
 
         @Override public boolean areContentsTheSame(SearchResultEntry oldSearchResultEntry,
-            SearchResultEntry newSearchResultEntry) {
+            @NonNull SearchResultEntry newSearchResultEntry) {
           return oldSearchResultEntry.equals(newSearchResultEntry);
         }
       };

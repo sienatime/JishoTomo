@@ -60,6 +60,10 @@ public class AppRepository {
     return new LivePagedListBuilder<>(entryDao.getFavorites(), PAGE_SIZE).build();
   }
 
+  public LiveData<PagedList<SearchResultEntry>> getByJlptLevel(Integer level) {
+    return new LivePagedListBuilder<>(entryDao.findByJlptLevel(level), PAGE_SIZE).build();
+  }
+
   public void toggleFavorite(Entry entry) {
     AsyncTask.execute(() -> {
       entry.setFavorited(!entry.getFavorited());
