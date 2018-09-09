@@ -22,6 +22,7 @@ import net.emojiparty.android.jishotomo.data.room.SenseDao;
 
 public class AppRepository {
   private LifecycleOwner lifecycleOwner;
+  private final int PAGE_SIZE = 20;
   @Inject public EntryDao entryDao;
   @Inject public SenseDao senseDao;
 
@@ -48,11 +49,15 @@ public class AppRepository {
 
   public LiveData<PagedList<SearchResultEntry>> search(String term) {
     String formattedQuery = String.format("%%%s%%", term);
-    return new LivePagedListBuilder<>(entryDao.search(formattedQuery), 20).build();
+    return new LivePagedListBuilder<>(entryDao.search(formattedQuery), PAGE_SIZE).build();
   }
 
   public LiveData<PagedList<SearchResultEntry>> browse() {
-    return new LivePagedListBuilder<>(entryDao.getAll(), 20).build();
+    return new LivePagedListBuilder<>(entryDao.getAll(), PAGE_SIZE).build();
+  }
+
+  public LiveData<PagedList<SearchResultEntry>> getFavorites() {
+    return new LivePagedListBuilder<>(entryDao.getFavorites(), PAGE_SIZE).build();
   }
 
   public void toggleFavorite(Entry entry) {

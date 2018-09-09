@@ -10,17 +10,24 @@ import net.emojiparty.android.jishotomo.data.AppRepository;
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
 
 public class PagedEntriesViewModel extends AndroidViewModel {
-  public MutableLiveData<String> searchTermLiveData = new MutableLiveData<>();
   public final LiveData<PagedList<SearchResultEntry>> entries;
+  public MutableLiveData<PagedEntriesControl> pagedEntriesControlLiveData = new MutableLiveData<>();
 
   public PagedEntriesViewModel(Application application) {
     super(application);
     AppRepository appRepo = new AppRepository();
-    this.entries = Transformations.switchMap(searchTermLiveData, searchTerm -> {
-      if (searchTerm == null) {
-        return appRepo.browse();
-      } else {
-        return appRepo.search(searchTerm);
+
+    this.entries = Transformations.switchMap(pagedEntriesControlLiveData, pagedEntriesControl -> {
+      String searchType = pagedEntriesControl.searchType;
+      String searchTerm = pagedEntriesControl.searchTerm;
+
+      switch (searchType) {
+        case PagedEntriesControl.SEARCH:
+          return appRepo.search(searchTerm);
+        case PagedEntriesControl.FAVORITES:
+          return appRepo.getFavorites();
+        default:
+          return appRepo.browse();
       }
     });
   }

@@ -6,6 +6,7 @@ import android.arch.paging.PagedList;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -22,6 +23,7 @@ import android.widget.ProgressBar;
 import net.emojiparty.android.jishotomo.R;
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
 import net.emojiparty.android.jishotomo.ui.adapters.PagedEntriesAdapter;
+import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl;
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesViewModel;
 
 public class DrawerActivity extends AppCompatActivity
@@ -29,6 +31,7 @@ public class DrawerActivity extends AppCompatActivity
 
   private PagedEntriesViewModel viewModel;
   private ProgressBar loadingIndicator;
+  private MenuItem searchViewMenuItem;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -48,12 +51,16 @@ public class DrawerActivity extends AppCompatActivity
   // https://developer.android.com/guide/topics/search/search-dialog
   private void searchIntent(Intent intent) {
     loadingIndicator.setVisibility(View.VISIBLE);
+    String query = null;
+    String searchType;
     if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-      String query = intent.getStringExtra(SearchManager.QUERY);
-      viewModel.searchTermLiveData.setValue(query);
+      query = intent.getStringExtra(SearchManager.QUERY);
+      searchType = PagedEntriesControl.SEARCH;
     } else {
-      viewModel.searchTermLiveData.setValue(null);
+      searchType = PagedEntriesControl.BROWSE;
     }
+    PagedEntriesControl pagedEntriesControl = new PagedEntriesControl(searchType, query);
+    viewModel.pagedEntriesControlLiveData.setValue(pagedEntriesControl);
   }
 
   @Override protected void onNewIntent(Intent intent) {
@@ -100,7 +107,8 @@ public class DrawerActivity extends AppCompatActivity
 
     // Get the SearchView and set the searchable configuration
     SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-    SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+    searchViewMenuItem = menu.findItem(R.id.menu_search);
+    SearchView searchView = (SearchView) searchViewMenuItem.getActionView();
     // Assumes current activity is the searchable activity
     searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
     searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
@@ -108,19 +116,22 @@ public class DrawerActivity extends AppCompatActivity
     return true;
   }
 
-  // this is for the drawer, maybe move to another class
-  @SuppressWarnings("StatementWithEmptyBody") @Override public boolean onNavigationItemSelected(
-      MenuItem item) {
-    // Handle navigation view item clicks here.
+  @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
     int id = item.getItemId();
 
+    String searchType = null;
     if (id == R.id.nav_search) {
-      // Handle the camera action
+      searchType = PagedEntriesControl.SEARCH;
+      searchViewMenuItem.expandActionView();
     } else if (id == R.id.nav_browse) {
-
+      searchType = PagedEntriesControl.BROWSE;
     } else if (id == R.id.nav_favorites) {
-
+      searchType = PagedEntriesControl.FAVORITES;
     }
+
+    PagedEntriesControl pagedEntriesControl = new PagedEntriesControl(searchType);
+    loadingIndicator.setVisibility(View.VISIBLE);
+    viewModel.pagedEntriesControlLiveData.setValue(pagedEntriesControl);
 
     DrawerLayout drawer = findViewById(R.id.drawer_layout);
     drawer.closeDrawer(GravityCompat.START);

@@ -52,13 +52,14 @@ public class PagedEntriesAdapter
 
   private static DiffUtil.ItemCallback<SearchResultEntry> DIFF_CALLBACK =
       new DiffUtil.ItemCallback<SearchResultEntry>() {
-        // not used
-        @Override public boolean areItemsTheSame(SearchResultEntry oldSearchResultEntry, SearchResultEntry newSearchResultEntry) {
-          return true;
+        @Override public boolean areItemsTheSame(SearchResultEntry oldSearchResultEntry,
+            SearchResultEntry newSearchResultEntry) {
+          return oldSearchResultEntry.id == newSearchResultEntry.id;
         }
 
-        @Override public boolean areContentsTheSame(SearchResultEntry oldSearchResultEntry, SearchResultEntry newSearchResultEntry) {
-          return true;
+        @Override public boolean areContentsTheSame(SearchResultEntry oldSearchResultEntry,
+            SearchResultEntry newSearchResultEntry) {
+          return oldSearchResultEntry.equals(newSearchResultEntry);
         }
       };
 }

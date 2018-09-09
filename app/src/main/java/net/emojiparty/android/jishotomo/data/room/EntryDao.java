@@ -19,6 +19,9 @@ public interface EntryDao {
   @Query("SELECT id, primary_kanji, primary_reading FROM entries WHERE primary_kanji LIKE :term")
   DataSource.Factory<Integer, SearchResultEntry> search(String term);
 
+  @Query("SELECT id, primary_kanji, primary_reading FROM entries WHERE favorited = 1")
+  DataSource.Factory<Integer, SearchResultEntry> getFavorites();
+
   @Query("SELECT * FROM entries WHERE entries.id = :id LIMIT 1")
   LiveData<EntryWithAllSenses> getEntryById(int id);
 
