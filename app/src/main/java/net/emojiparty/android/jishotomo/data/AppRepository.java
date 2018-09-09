@@ -53,7 +53,7 @@ public class AppRepository {
   }
 
   public LiveData<PagedList<SearchResultEntry>> browse() {
-    return new LivePagedListBuilder<>(entryDao.getAll(), PAGE_SIZE).build();
+    return new LivePagedListBuilder<>(entryDao.browse(), PAGE_SIZE).build();
   }
 
   public LiveData<PagedList<SearchResultEntry>> getFavorites() {

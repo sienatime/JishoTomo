@@ -10,11 +10,14 @@ import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
 
 @Dao
 public interface EntryDao {
-  @Query("SELECT id, primary_kanji, primary_reading FROM entries ORDER BY id ASC")
-  DataSource.Factory<Integer, SearchResultEntry> getAll();
+  @Update
+  void updateEntry(Entry entry);
 
-  @Query("SELECT id, primary_kanji, primary_reading FROM entries WHERE jlpt_level = :level ORDER BY id ASC")
-  DataSource.Factory<Integer, SearchResultEntry> findByJlptLevel(Integer level);
+  @Query("SELECT * FROM entries WHERE entries.id = :id LIMIT 1")
+  LiveData<EntryWithAllSenses> getEntryById(int id);
+
+  @Query("SELECT id, primary_kanji, primary_reading FROM entries ORDER BY id ASC")
+  DataSource.Factory<Integer, SearchResultEntry> browse();
 
   @Query("SELECT id, primary_kanji, primary_reading FROM entries WHERE primary_kanji LIKE :term")
   DataSource.Factory<Integer, SearchResultEntry> search(String term);
@@ -22,9 +25,14 @@ public interface EntryDao {
   @Query("SELECT id, primary_kanji, primary_reading FROM entries WHERE favorited = 1")
   DataSource.Factory<Integer, SearchResultEntry> getFavorites();
 
-  @Query("SELECT * FROM entries WHERE entries.id = :id LIMIT 1")
-  LiveData<EntryWithAllSenses> getEntryById(int id);
+  @Query("SELECT id, primary_kanji, primary_reading FROM entries WHERE jlpt_level = :level ORDER BY id ASC")
+  DataSource.Factory<Integer, SearchResultEntry> findByJlptLevel(Integer level);
 
-  @Update
-  void updateEntry(Entry entry);
+  // WIDGET
+
+  @Query("SELECT id, primary_kanji, primary_reading FROM entries WHERE jlpt_level = :level ORDER BY id ASC LIMIT 1 OFFSET :offset")
+  SearchResultEntry randomByJlptLevel(Integer level, int offset);
+
+  @Query("SELECT COUNT(id) FROM entries WHERE jlpt_level = :level")
+  int getJlptLevelCount(Integer level);
 }
