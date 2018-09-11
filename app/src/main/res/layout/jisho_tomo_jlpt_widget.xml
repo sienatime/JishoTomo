@@ -1,23 +1,56 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#09C"
-    android:padding="@dimen/widget_margin"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:id="@+id/widget_container"
     >
 
   <TextView
-      android:id="@+id/appwidget_text"
-      android:layout_width="wrap_content"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_centerHorizontal="true"
-      android:layout_centerVertical="true"
-      android:layout_margin="8dp"
-      android:background="#09C"
-      android:contentDescription="@string/appwidget_text"
-      android:text="@string/appwidget_text"
-      android:textColor="#ffffff"
-      android:textSize="24sp"
-      android:textStyle="bold|italic"
+      android:padding="4dp"
+      android:background="@color/colorPrimary"
+      android:textColor="@android:color/primary_text_dark"
+      android:textSize="@dimen/text_size_body"
+      android:text="@string/word_of_the_day"
       />
 
-</RelativeLayout>
+  <TextView
+      android:id="@+id/widget_reading"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:paddingLeft="@dimen/widget_margin"
+      android:paddingRight="@dimen/widget_margin"
+      android:ellipsize="end"
+      android:maxLines="1"
+      android:singleLine="true"
+      android:textColor="@color/defaultTextColor"
+      android:textSize="@dimen/text_size_body"
+      />
+  <TextView
+      android:id="@+id/widget_kanji"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:paddingLeft="@dimen/widget_margin"
+      android:paddingRight="@dimen/widget_margin"
+      android:ellipsize="end"
+      android:maxLines="1"
+      android:textColor="@color/defaultTextColor"
+      android:singleLine="true"
+      android:textSize="@dimen/text_size_list_heading"
+      />
+  <TextView
+      android:id="@+id/widget_gloss"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:paddingLeft="@dimen/widget_margin"
+      android:paddingRight="@dimen/widget_margin"
+      android:ellipsize="end"
+      android:maxLines="1"
+      android:singleLine="true"
+      android:textColor="@color/defaultTextColor"
+      android:textSize="@dimen/text_size_body"
+      />
+
+</LinearLayout>

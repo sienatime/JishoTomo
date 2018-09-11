@@ -64,6 +64,23 @@ public class AppRepository {
     return new LivePagedListBuilder<>(entryDao.findByJlptLevel(level), PAGE_SIZE).build();
   }
 
+  public interface OnDataLoaded {
+    void success(SearchResultEntry entry);
+  }
+
+  public void getRandomEntryByJlptLevel(Integer level, OnDataLoaded callback) {
+    AsyncTask.execute(() -> {
+      int jlptCount = entryDao.getJlptLevelCount(level);
+      SearchResultEntry entry = entryDao.randomByJlptLevel(level, randomOffset(jlptCount));
+      callback.success(entry);
+    });
+  }
+
+  private int randomOffset(int count) {
+    int max = count - 1;
+    return (int)(Math.random() * max);
+  }
+
   public void toggleFavorite(Entry entry) {
     AsyncTask.execute(() -> {
       entry.setFavorited(!entry.getFavorited());

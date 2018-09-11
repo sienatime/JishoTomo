@@ -26,7 +26,7 @@
   <string name="jlpt_n5">N5</string>
 
   <!-- Widget -->
-  <string name="appwidget_text">EXAMPLE</string>
+  <string name="word_of_the_day">Word of the Day</string>
   <string name="configure">Select a JLPT Level</string>
   <string name="widget_explanation">The widget will display a random word from your selected JLPT level every day.</string>
   <string name="add_widget">Add widget</string>
