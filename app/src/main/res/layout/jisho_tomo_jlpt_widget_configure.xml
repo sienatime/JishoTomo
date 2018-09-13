@@ -3,27 +3,37 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp"
     >
 
   <TextView
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
+      android:layout_height="?attr/actionBarSize"
       android:layout_marginBottom="8dp"
+      android:background="@color/colorPrimary"
+      android:gravity="center_vertical"
+      android:paddingLeft="16dp"
+      android:paddingRight="16dp"
       android:text="@string/configure"
+      android:textColor="@android:color/primary_text_dark"
+      android:textSize="20sp"
       />
 
   <TextView
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginBottom="8dp"
+      android:padding="16dp"
       android:text="@string/widget_explanation"
+      android:textSize="14sp"
       />
 
   <RadioGroup
       android:id="@+id/jlpt_button_group"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:paddingLeft="16dp"
+      android:paddingRight="16dp"
+      android:textSize="18sp"
       >
     <RadioButton
         android:id="@+id/radio_button_n1"
@@ -65,7 +75,13 @@
       android:id="@+id/add_button"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="8dp"
+      android:layout_marginTop="16dp"
+      android:layout_marginLeft="8dp"
+      android:layout_marginRight="8dp"
+      android:paddingLeft="16dp"
+      android:paddingRight="16dp"
+      android:background="@color/colorAccent"
+      android:textColor="@android:color/primary_text_light"
       android:text="@string/add_widget"
       />
 

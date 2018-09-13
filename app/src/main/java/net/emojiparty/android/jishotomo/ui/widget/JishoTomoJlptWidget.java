@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
 import android.widget.RemoteViews;
 import net.emojiparty.android.jishotomo.R;
 import net.emojiparty.android.jishotomo.data.AppRepository;
@@ -29,6 +30,8 @@ public class JishoTomoJlptWidget extends AppWidgetProvider {
       RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.jisho_tomo_jlpt_widget);
       views.setTextViewText(R.id.widget_kanji, entry.getKanjiOrReading());
       views.setTextViewText(R.id.widget_reading, entry.getReading());
+      int readingVisible = entry.getReading() == null ? View.GONE : View.VISIBLE;
+      views.setViewVisibility(R.id.widget_reading, readingVisible);
       views.setTextViewText(R.id.widget_gloss, entry.getPrimaryGloss());
 
       Intent appIntent = new Intent(context, DefinitionActivity.class);
