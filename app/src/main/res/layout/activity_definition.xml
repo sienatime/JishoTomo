@@ -40,16 +40,15 @@
         android:clipToPadding="false"
         >
 
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:orientation="vertical"
-          android:paddingTop="24dp"
+      <android.support.constraint.ConstraintLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
           android:paddingBottom="72dp"
-          android:paddingLeft="16dp"
-          android:paddingStart="16dp"
-          android:paddingRight="16dp"
           android:paddingEnd="16dp"
+          android:paddingLeft="16dp"
+          android:paddingRight="16dp"
+          android:paddingStart="16dp"
+          android:paddingTop="24dp"
           app:layout_behavior="@string/appbar_scrolling_view_behavior"
           >
 
@@ -58,9 +57,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{presenter.getReading()}"
-            visibleOrGone="@{presenter.hasKanji()}"
             android:textSize="@dimen/text_size_body"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="ねこじゃらし"
+            visibleOrGone="@{presenter.hasKanji()}"
             />
 
         <TextView
@@ -69,19 +70,27 @@
             android:layout_height="wrap_content"
             android:text="@{presenter.getKanjiOrReading()}"
             android:textSize="@dimen/text_size_headline"
+            app:layout_constraintLeft_toLeftOf="@id/def_reading"
+            app:layout_constraintTop_toBottomOf="@id/def_reading"
             tools:text="猫じゃらし"
             />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/senses_rv"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/def_kanji"
             />
 
         <View
             android:id="@+id/sense_divider"
-            style="@style/divider_full_width" />
+            style="@style/divider_full_width"
+            app:layout_constraintTop_toBottomOf="@id/senses_rv"
+            app:layout_constraintLeft_toLeftOf="@id/def_reading"
+            />
 
         <TextView
             android:id="@+id/def_alt_kanji_header"
@@ -89,19 +98,23 @@
             android:layout_height="wrap_content"
             android:paddingBottom="8dp"
             android:paddingTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/senses_rv"
+            app:layout_constraintLeft_toLeftOf="@id/def_reading"
             android:text="@string/alt_kanji"
-            style="@style/small_caps"
             visibleOrGone="@{presenter.hasAlternateKanji()}"
+            style="@style/small_caps"
             />
 
         <TextView
             android:id="@+id/def_alt_kanji"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/def_alt_kanji_header"
+            app:layout_constraintLeft_toLeftOf="@id/def_reading"
             android:text="@{presenter.getAlternateKanji()}"
-            visibleOrGone="@{presenter.hasAlternateKanji()}"
             android:textSize="@dimen/text_size_body"
             tools:text="ネコジャラシ"
+            visibleOrGone="@{presenter.hasAlternateKanji()}"
             />
 
         <TextView
@@ -110,22 +123,36 @@
             android:layout_height="wrap_content"
             android:paddingBottom="8dp"
             android:paddingTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/def_alt_kanji"
+            app:layout_constraintLeft_toLeftOf="@id/def_reading"
             android:text="@string/alt_readings"
-            style="@style/small_caps"
             visibleOrGone="@{presenter.hasAlternateReadings()}"
+            style="@style/small_caps"
             />
 
         <TextView
             android:id="@+id/def_alt_readings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/def_alt_readings_header"
+            app:layout_constraintLeft_toLeftOf="@id/def_reading"
             android:text="@{presenter.getAlternateReadings()}"
-            visibleOrGone="@{presenter.hasAlternateReadings()}"
             android:textSize="@dimen/text_size_body"
             tools:text="ネコジャラシ"
+            visibleOrGone="@{presenter.hasAlternateReadings()}"
+            />
+        <TextView
+            android:id="@+id/def_level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            jlptPill="@{presenter.entry.getJlptLevel()}"
+            tools:text="N1"
+            style="@style/dark_pill"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             />
 
-      </LinearLayout>
+      </android.support.constraint.ConstraintLayout>
 
     </android.support.v4.widget.NestedScrollView>
 

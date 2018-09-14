@@ -28,4 +28,14 @@ public class BindingMethods {
       textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
   }
+
+  @BindingAdapter({ "jlptPill" }) public static void setJlptPill(View view, Integer jlptLevel) {
+    if (jlptLevel != null) {
+      int stringId = StringForJlptLevel.getId(jlptLevel, view.getContext());
+      ((TextView) view).setText(stringId);
+      view.setVisibility(View.VISIBLE);
+    } else {
+      view.setVisibility(View.GONE);
+    }
+  }
 }

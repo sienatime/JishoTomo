@@ -10,6 +10,7 @@ import android.widget.RemoteViews;
 import net.emojiparty.android.jishotomo.R;
 import net.emojiparty.android.jishotomo.data.AppRepository;
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
+import net.emojiparty.android.jishotomo.ui.StringForJlptLevel;
 import net.emojiparty.android.jishotomo.ui.activities.DefinitionActivity;
 
 import static net.emojiparty.android.jishotomo.ui.activities.DefinitionActivity.ENTRY_ID_EXTRA;
@@ -34,7 +35,7 @@ public class JishoTomoJlptWidget extends AppWidgetProvider {
       views.setViewVisibility(R.id.widget_reading, readingVisible);
       views.setTextViewText(R.id.widget_gloss, entry.getPrimaryGloss());
 
-      int jlptStringId = context.getResources().getIdentifier("jlpt_n" + String.valueOf(selectedLevel), "string", context.getPackageName());
+      int jlptStringId = StringForJlptLevel.getId(selectedLevel, context);
       views.setTextViewText(R.id.widget_level, context.getString(jlptStringId));
 
       Intent appIntent = new Intent(context, DefinitionActivity.class);

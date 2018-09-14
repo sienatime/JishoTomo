@@ -35,4 +35,13 @@
     <item name="android:textStyle">bold</item>
   </style>
 
+  <style name="dark_pill">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:padding">4dp</item>
+    <item name="android:background">@drawable/rounded_corner_dark_bg</item>
+    <item name="android:textColor">@android:color/primary_text_dark</item>
+    <item name="android:textSize">14sp</item>
+  </style>
+
 </resources>

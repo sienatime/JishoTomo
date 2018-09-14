@@ -28,7 +28,7 @@
   <!-- Widget -->
   <string name="word_of_the_day">Word of the Day</string>
   <string name="configure">Select a JLPT Level</string>
-  <string name="widget_explanation">The widget will display a random word from your selected JLPT level every day.</string>
+  <string name="widget_explanation">The widget will display a random word from your selected JLPT level every 24 hours.</string>
   <string name="add_widget">Add widget</string>
 
   <!-- parts of speech -->
