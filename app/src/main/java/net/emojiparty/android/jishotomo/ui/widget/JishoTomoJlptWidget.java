@@ -34,6 +34,9 @@ public class JishoTomoJlptWidget extends AppWidgetProvider {
       views.setViewVisibility(R.id.widget_reading, readingVisible);
       views.setTextViewText(R.id.widget_gloss, entry.getPrimaryGloss());
 
+      int jlptStringId = context.getResources().getIdentifier("jlpt_n" + String.valueOf(selectedLevel), "string", context.getPackageName());
+      views.setTextViewText(R.id.widget_level, context.getString(jlptStringId));
+
       Intent appIntent = new Intent(context, DefinitionActivity.class);
       appIntent.putExtra(ENTRY_ID_EXTRA, entry.id);
 

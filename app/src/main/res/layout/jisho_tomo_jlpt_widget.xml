@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,6 +9,7 @@
     >
 
   <TextView
+      android:id="@+id/widget_toolbar"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:paddingRight="4dp"
@@ -26,6 +27,7 @@
 
   <TextView
       android:id="@+id/widget_reading"
+      android:layout_below="@id/widget_toolbar"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:paddingLeft="@dimen/widget_internal_padding"
@@ -40,6 +42,7 @@
       />
   <TextView
       android:id="@+id/widget_kanji"
+      android:layout_below="@id/widget_reading"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:paddingLeft="@dimen/widget_internal_padding"
@@ -53,6 +56,7 @@
       />
   <TextView
       android:id="@+id/widget_gloss"
+      android:layout_below="@id/widget_kanji"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:paddingLeft="@dimen/widget_internal_padding"
@@ -62,4 +66,20 @@
       tools:text="south"
       />
 
-</LinearLayout>
+  <TextView
+      android:id="@+id/widget_level"
+      android:layout_below="@id/widget_toolbar"
+      android:layout_alignParentRight="true"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="8dp"
+      android:layout_marginRight="8dp"
+      android:layout_marginTop="4dp"
+      android:padding="4dp"
+      android:background="@drawable/rounded_corner_dark_bg"
+      android:textColor="@android:color/primary_text_dark"
+      android:textSize="14sp"
+      tools:text="N5"
+      />
+
+</RelativeLayout>
