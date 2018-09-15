@@ -12,7 +12,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -36,6 +35,7 @@ public class DrawerActivity extends AppCompatActivity
   private MenuItem searchViewMenuItem;
   private RecyclerView searchResults;
   private TextView toolbarTitle;
+  private PagedEntriesAdapter adapter;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -45,6 +45,8 @@ public class DrawerActivity extends AppCompatActivity
 
     viewModel = ViewModelProviders.of(this).get(PagedEntriesViewModel.class);
     searchResults = findViewById(R.id.search_results_rv);
+
+    setRecyclerViewWithNewAdapter();
     loadingIndicator = findViewById(R.id.loading);
     toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
     searchIntent(getIntent());
@@ -57,6 +59,10 @@ public class DrawerActivity extends AppCompatActivity
     });
   }
 
+  private void setRecyclerViewWithNewAdapter() {
+    adapter = new PagedEntriesAdapter(R.layout.list_item_entry);
+    searchResults.setAdapter(adapter);
+  }
   // https://developer.android.com/training/search/setup
   // https://developer.android.com/guide/topics/search/search-dialog
   private void searchIntent(Intent intent) {
@@ -81,13 +87,10 @@ public class DrawerActivity extends AppCompatActivity
 
   // Paging library reference https://developer.android.com/topic/libraries/architecture/paging
   private void setupRecyclerView() {
-    searchResults.setLayoutManager(new LinearLayoutManager(DrawerActivity.this));
-    PagedEntriesAdapter adapter = new PagedEntriesAdapter(R.layout.list_item_entry);
     viewModel.entries.observe(this, (PagedList<SearchResultEntry> entries) -> {
       loadingIndicator.setVisibility(View.INVISIBLE);
       adapter.submitList(entries);
     });
-    searchResults.setAdapter(adapter);
   }
 
   private void setupDrawer(Toolbar toolbar) {
@@ -129,6 +132,11 @@ public class DrawerActivity extends AppCompatActivity
     if (titleId > 0) {
       toolbarTitle.setText(getResources().getString(titleId));
     }
+    // this is so that the PagedListAdapter does not try to perform a diff
+    // against the two lists when changing search types. the app was really laggy
+    // when changing lists without re-instantiating the adapter.
+    setRecyclerViewWithNewAdapter();
+
     loadingIndicator.setVisibility(View.VISIBLE);
     viewModel.pagedEntriesControlLiveData.setValue(pagedEntriesControl);
   }
