@@ -29,6 +29,9 @@ public interface EntryDao {
   @Query("SELECT * FROM entries WHERE favorited = 1")
   List<EntryWithAllSenses> getAllFavorites();
 
+  @Query("SELECT * FROM entries WHERE jlpt_level = :level ORDER BY id ASC")
+  List<EntryWithAllSenses> getAllByJlptLevel(Integer level);
+
   @Query("SELECT id, primary_kanji, primary_reading FROM entries WHERE jlpt_level = :level ORDER BY id ASC")
   DataSource.Factory<Integer, SearchResultEntry> findByJlptLevel(Integer level);
 

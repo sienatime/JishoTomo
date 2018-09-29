@@ -68,6 +68,10 @@ public class AppRepository {
     return entryDao.getAllFavorites();
   }
 
+  public List<EntryWithAllSenses> getAllByJlptLevel(Integer jlptLevel) {
+    return entryDao.getAllByJlptLevel(jlptLevel);
+  }
+
   public interface OnDataLoaded {
     void success(SearchResultEntry entry);
   }

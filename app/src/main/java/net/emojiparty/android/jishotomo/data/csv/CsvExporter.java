@@ -6,12 +6,14 @@ import android.os.Environment;
 import com.opencsv.CSVWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 import net.emojiparty.android.jishotomo.data.AppRepository;
 import net.emojiparty.android.jishotomo.data.SemicolonSplit;
 import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses;
 import net.emojiparty.android.jishotomo.data.models.SenseWithCrossReferences;
 import net.emojiparty.android.jishotomo.data.room.Sense;
 import net.emojiparty.android.jishotomo.ui.SenseDisplay;
+import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl;
 
 public class CsvExporter {
   private SenseDisplay senseDisplay;
@@ -22,8 +24,7 @@ public class CsvExporter {
 
   // https://www.callicoder.com/java-read-write-csv-file-opencsv/
   // https://stackoverflow.com/questions/11341931/how-to-create-a-csv-on-android
-  // TODO: switch on type to export different kinds of lists (faves or jlpt only)
-  public void export() {
+  public void export(String searchType, Integer jlptLevel) {
     AsyncTask.execute(() -> {
       String csv =
           (Environment.getExternalStorageDirectory().getAbsolutePath() + "/jisho_tomo_export.csv");
@@ -31,7 +32,7 @@ public class CsvExporter {
 
       try {
         writer = semicolonSeparatedWriter(csv);
-        for (EntryWithAllSenses entry : new AppRepository().getAllFavorites()) {
+        for (EntryWithAllSenses entry : entriesForSearchType(searchType, jlptLevel)) {
           writer.writeNext(new String[]{entry.getKanjiOrReading(), meaning(entry), reading(entry)});
         }
         writer.close();
@@ -39,6 +40,19 @@ public class CsvExporter {
         exception.toString();
       }
     });
+  }
+
+  private List<EntryWithAllSenses> entriesForSearchType(String searchType, Integer jlptLevel) {
+    AppRepository appRepo = new AppRepository();
+
+    switch (searchType) {
+      case PagedEntriesControl.FAVORITES:
+        return appRepo.getAllFavorites();
+      case PagedEntriesControl.JLPT:
+        return appRepo.getAllByJlptLevel(jlptLevel);
+      default:
+        throw new CsvForbiddenExportTypeException("Not allowed to export this kind of list! " + searchType);
+    }
   }
 
   private String meaning(EntryWithAllSenses entry) {

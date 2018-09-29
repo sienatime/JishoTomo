@@ -72,6 +72,7 @@ public class DrawerActivity extends AppCompatActivity
     adapter = new PagedEntriesAdapter(R.layout.list_item_entry);
     searchResults.setAdapter(adapter);
   }
+
   // https://developer.android.com/training/search/setup
   // https://developer.android.com/guide/topics/search/search-dialog
   private void searchIntent(Intent intent) {
@@ -144,7 +145,7 @@ public class DrawerActivity extends AppCompatActivity
       // TODO: show confirm dialog with some instructions
       // TODO: investigate using ContextCompat https://developer.android.com/training/permissions/requesting
       if (Build.VERSION.SDK_INT >= 23) {
-        String[] permissions = { Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        String[] permissions = { Manifest.permission.WRITE_EXTERNAL_STORAGE };
         requestPermissions(permissions, WRITE_REQUEST_CODE);
       } else {
         exportCsv();
@@ -156,15 +157,13 @@ public class DrawerActivity extends AppCompatActivity
   }
 
   // https://stackoverflow.com/questions/44455887/permission-denied-on-writing-to-external-storage-despite-permission
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull
-      int[] grantResults) {
+  @Override public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
+      @NonNull int[] grantResults) {
     switch (requestCode) {
       case WRITE_REQUEST_CODE:
-        if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
           exportCsv();
-        }
-        else{
+        } else {
           // TODO: handle permission denied
         }
         break;
@@ -172,9 +171,9 @@ public class DrawerActivity extends AppCompatActivity
   }
 
   private void exportCsv() {
-    // TODO: pass the kind of search/jlpt level
     // TODO: show progress indicator
-    new CsvExporter(this).export();
+    new CsvExporter(this).export(viewModel.pagedEntriesControl.searchType,
+        viewModel.pagedEntriesControl.jlptLevel);
   }
 
   private void setPagedEntriesControl(PagedEntriesControl pagedEntriesControl, int titleId) {
@@ -220,7 +219,8 @@ public class DrawerActivity extends AppCompatActivity
       pagedEntriesControl.searchType = PagedEntriesControl.JLPT;
       int jlptLevel = jlptIds.indexOf(id) + 1;
       pagedEntriesControl.jlptLevel = jlptLevel;
-      titleId = getResources().getIdentifier("jlpt_n" + String.valueOf(jlptLevel), "string", getPackageName());
+      titleId = getResources().getIdentifier("jlpt_n" + String.valueOf(jlptLevel), "string",
+          getPackageName());
     }
 
     if (pagedEntriesControl.searchType != null) {
