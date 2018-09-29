@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import net.emojiparty.android.jishotomo.R;
+import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger;
 import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses;
 import net.emojiparty.android.jishotomo.databinding.ActivityDefinitionBinding;
 import net.emojiparty.android.jishotomo.ui.adapters.DataBindingAdapter;
@@ -18,12 +19,14 @@ import net.emojiparty.android.jishotomo.ui.viewmodels.EntryViewModelFactory;
 public class DefinitionActivity extends AppCompatActivity {
   public static final String ENTRY_ID_EXTRA = "ENTRY_ID_EXTRA";
   public static final int ENTRY_NOT_FOUND = -1;
+  private AnalyticsLogger analyticsLogger;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_definition);
     setupViewModel(getIntent());
     setupToolbar();
+    analyticsLogger = new AnalyticsLogger(this);
   }
 
   private void setupViewModel(Intent intent) {
@@ -42,6 +45,7 @@ public class DefinitionActivity extends AppCompatActivity {
         if (entry != null) {
           binding.setPresenter(entry);
           adapter.setItems(entry.getSenses());
+          analyticsLogger.logViewItem(entry.entry.getId(), entry.getKanjiOrReading());
         }
       });
     }

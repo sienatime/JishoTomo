@@ -1,8 +1,11 @@
 package net.emojiparty.android.jishotomo.data.models;
 
 import android.arch.persistence.room.Embedded;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Relation;
+import android.content.Context;
 import java.util.List;
+import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger;
 import net.emojiparty.android.jishotomo.data.AppRepository;
 import net.emojiparty.android.jishotomo.data.SemicolonSplit;
 import net.emojiparty.android.jishotomo.data.room.Entry;
@@ -12,6 +15,8 @@ public class EntryWithAllSenses {
   @Embedded public Entry entry;
   @Relation(parentColumn = "id", entityColumn = "entry_id", entity = Sense.class)
   public List<SenseWithCrossReferences> senses;
+  @Ignore private AnalyticsLogger analyticsLogger;
+  @Ignore private AppRepository appRepository;
 
   public Entry getEntry() {
     return entry;
@@ -49,8 +54,25 @@ public class EntryWithAllSenses {
     return getEntry().getOtherReadings() != null;
   }
 
-  public void toggleFavorite() {
-    AppRepository appRepo = new AppRepository();
-    appRepo.toggleFavorite(getEntry());
+  // lazily instantiate AppRepository and AnalyticsLogger so that we don't have to
+  // always instantiate unless Favorite button is clicked,
+  // and if it is clicked again, we already have the references.
+  public void toggleFavorite(Context context) {
+    getAppRepository().toggleFavorite(getEntry());
+    getAnalyticsLogger(context).logToggleFavoriteEvent(entry.getId(), getKanjiOrReading(),
+        !entry.getFavorited());
+  }
+
+  private AppRepository getAppRepository() {
+    if (appRepository == null) {
+      appRepository = new AppRepository();
+    } return appRepository;
+  }
+
+  private AnalyticsLogger getAnalyticsLogger(Context context) {
+    if (analyticsLogger == null) {
+      analyticsLogger = new AnalyticsLogger(context);
+    }
+    return analyticsLogger;
   }
 }

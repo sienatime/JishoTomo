@@ -22,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import java.util.ArrayList;
 import net.emojiparty.android.jishotomo.R;
+import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger;
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
 import net.emojiparty.android.jishotomo.ui.adapters.PagedEntriesAdapter;
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl;
@@ -36,6 +37,7 @@ public class DrawerActivity extends AppCompatActivity
   private RecyclerView searchResults;
   private TextView toolbarTitle;
   private PagedEntriesAdapter adapter;
+  private AnalyticsLogger analyticsLogger;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -43,6 +45,7 @@ public class DrawerActivity extends AppCompatActivity
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
 
+    analyticsLogger = new AnalyticsLogger(this);
     viewModel = ViewModelProviders.of(this).get(PagedEntriesViewModel.class);
     searchResults = findViewById(R.id.search_results_rv);
 
@@ -139,6 +142,7 @@ public class DrawerActivity extends AppCompatActivity
 
     loadingIndicator.setVisibility(View.VISIBLE);
     viewModel.pagedEntriesControlLiveData.setValue(pagedEntriesControl);
+    analyticsLogger.logSearchResultsOrViewItemList(pagedEntriesControl);
   }
 
   private ArrayList<Integer> jlptMenuIds() {

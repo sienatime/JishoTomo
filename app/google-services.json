@@ -1,0 +1,45 @@
+{
+  "project_info": {
+    "project_number": "711333891834",
+    "firebase_url": "https://jisho-tomo.firebaseio.com",
+    "project_id": "jisho-tomo",
+    "storage_bucket": "jisho-tomo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:711333891834:android:394a654351697e6f",
+        "android_client_info": {
+          "package_name": "net.emojiparty.android.jishotomo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "711333891834-iq7971m3dln07cnjip15ndpr5g5juq7p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGosXAcQOC39vgcPyYeQ6gkSCddAWcqTo"
+        },
+        {
+          "current_key": "AIzaSyCGosXAcQOC39vgcPyYeQ6gkSCddAWcqTo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
