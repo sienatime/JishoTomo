@@ -174,7 +174,7 @@ public class DrawerActivity extends AppCompatActivity
   private void exportCsv() {
     // TODO: pass the kind of search/jlpt level
     // TODO: show progress indicator
-    CsvExporter.export();
+    new CsvExporter(this).export();
   }
 
   private void setPagedEntriesControl(PagedEntriesControl pagedEntriesControl, int titleId) {

@@ -9,9 +9,15 @@ import net.emojiparty.android.jishotomo.data.SemicolonSplit;
 import net.emojiparty.android.jishotomo.data.room.Sense;
 
 public class SenseDisplay {
-  public static String formatPartsOfSpeech(Sense sense, Context context) {
-    Resources resources = context.getResources();
-    String packageName = context.getPackageName();
+  private Resources resources;
+  private String packageName;
+
+  public SenseDisplay(Context context) {
+    this.resources = context.getResources();
+    this.packageName = context.getPackageName();
+  }
+
+  public String formatPartsOfSpeech(Sense sense) {
     List<String> partsOfSpeech = SemicolonSplit.split(sense.getPartsOfSpeech());
 
     LinkedHashSet<String> localizedPartsOfSpeech = new LinkedHashSet<>();
@@ -21,6 +27,10 @@ public class SenseDisplay {
       localizedPartsOfSpeech.add(resources.getString(stringId));
     }
     return TextUtils.join(", ", localizedPartsOfSpeech);
+  }
+
+  public static String formatPartsOfSpeech(Sense sense, Context context) {
+    return new SenseDisplay(context).formatPartsOfSpeech(sense);
   }
 
   private static String getPartOfSpeechKey(String partOfSpeech) {
