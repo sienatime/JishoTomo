@@ -1,10 +1,13 @@
 package net.emojiparty.android.jishotomo.ui.activities;
 
+import android.Manifest;
 import android.app.SearchManager;
 import android.arch.lifecycle.ViewModelProviders;
 import android.arch.paging.PagedList;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -24,6 +27,7 @@ import java.util.ArrayList;
 import net.emojiparty.android.jishotomo.JishoTomoApp;
 import net.emojiparty.android.jishotomo.R;
 import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger;
+import net.emojiparty.android.jishotomo.data.csv.CsvExporter;
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
 import net.emojiparty.android.jishotomo.ui.adapters.PagedEntriesAdapter;
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl;
@@ -39,6 +43,7 @@ public class DrawerActivity extends AppCompatActivity
   private TextView toolbarTitle;
   private PagedEntriesAdapter adapter;
   private AnalyticsLogger analyticsLogger;
+  private final int WRITE_REQUEST_CODE = 51803;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -129,7 +134,47 @@ public class DrawerActivity extends AppCompatActivity
     searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
     searchView.setIconifiedByDefault(false);
 
+    // TODO: hide export button if not JLPT or Favorites
+
     return true;
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == R.id.menu_export) {
+      // TODO: show confirm dialog with some instructions
+      // TODO: investigate using ContextCompat https://developer.android.com/training/permissions/requesting
+      if (Build.VERSION.SDK_INT >= 23) {
+        String[] permissions = { Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        requestPermissions(permissions, WRITE_REQUEST_CODE);
+      } else {
+        exportCsv();
+      }
+      return true;
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
+
+  // https://stackoverflow.com/questions/44455887/permission-denied-on-writing-to-external-storage-despite-permission
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull
+      int[] grantResults) {
+    switch (requestCode) {
+      case WRITE_REQUEST_CODE:
+        if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+          exportCsv();
+        }
+        else{
+          // TODO: handle permission denied
+        }
+        break;
+    }
+  }
+
+  private void exportCsv() {
+    // TODO: pass the kind of search/jlpt level
+    // TODO: show progress indicator
+    CsvExporter.export();
   }
 
   private void setPagedEntriesControl(PagedEntriesControl pagedEntriesControl, int titleId) {

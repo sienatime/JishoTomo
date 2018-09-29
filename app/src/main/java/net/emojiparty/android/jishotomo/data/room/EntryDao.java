@@ -5,6 +5,7 @@ import android.arch.paging.DataSource;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
+import java.util.List;
 import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses;
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
 
@@ -24,6 +25,9 @@ public interface EntryDao {
 
   @Query("SELECT id, primary_kanji, primary_reading FROM entries WHERE favorited = 1")
   DataSource.Factory<Integer, SearchResultEntry> getFavorites();
+
+  @Query("SELECT * FROM entries WHERE favorited = 1")
+  List<EntryWithAllSenses> getAllFavorites();
 
   @Query("SELECT id, primary_kanji, primary_reading FROM entries WHERE jlpt_level = :level ORDER BY id ASC")
   DataSource.Factory<Integer, SearchResultEntry> findByJlptLevel(Integer level);

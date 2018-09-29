@@ -24,6 +24,7 @@
   <string name="jlpt_n3">N3</string>
   <string name="jlpt_n4">N4</string>
   <string name="jlpt_n5">N5</string>
+  <string name="export">Export to CSV</string>
 
   <!-- Widget -->
   <string name="word_of_the_day">Word of the Day</string>

@@ -64,6 +64,10 @@ public class AppRepository {
     return new LivePagedListBuilder<>(entryDao.findByJlptLevel(level), PAGE_SIZE).build();
   }
 
+  public List<EntryWithAllSenses> getAllFavorites() {
+    return entryDao.getAllFavorites();
+  }
+
   public interface OnDataLoaded {
     void success(SearchResultEntry entry);
   }
