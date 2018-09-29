@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import net.emojiparty.android.jishotomo.JishoTomoApp;
 import net.emojiparty.android.jishotomo.R;
 import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger;
 import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses;
@@ -26,7 +27,7 @@ public class DefinitionActivity extends AppCompatActivity {
     setContentView(R.layout.activity_definition);
     setupViewModel(getIntent());
     setupToolbar();
-    analyticsLogger = new AnalyticsLogger(this);
+    analyticsLogger = ((JishoTomoApp) getApplication()).getAnalyticsLogger();
   }
 
   private void setupViewModel(Intent intent) {

@@ -5,6 +5,7 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Relation;
 import android.content.Context;
 import java.util.List;
+import net.emojiparty.android.jishotomo.JishoTomoApp;
 import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger;
 import net.emojiparty.android.jishotomo.data.AppRepository;
 import net.emojiparty.android.jishotomo.data.SemicolonSplit;
@@ -71,7 +72,9 @@ public class EntryWithAllSenses {
 
   private AnalyticsLogger getAnalyticsLogger(Context context) {
     if (analyticsLogger == null) {
-      analyticsLogger = new AnalyticsLogger(context);
+      Context appContext = context.getApplicationContext();
+      JishoTomoApp app = (JishoTomoApp) appContext;
+      analyticsLogger = app.getAnalyticsLogger();
     }
     return analyticsLogger;
   }

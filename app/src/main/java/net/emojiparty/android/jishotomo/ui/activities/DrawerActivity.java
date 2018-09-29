@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import java.util.ArrayList;
+import net.emojiparty.android.jishotomo.JishoTomoApp;
 import net.emojiparty.android.jishotomo.R;
 import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger;
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
@@ -45,7 +46,7 @@ public class DrawerActivity extends AppCompatActivity
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
 
-    analyticsLogger = new AnalyticsLogger(this);
+    analyticsLogger = ((JishoTomoApp) getApplication()).getAnalyticsLogger();
     viewModel = ViewModelProviders.of(this).get(PagedEntriesViewModel.class);
     searchResults = findViewById(R.id.search_results_rv);
 

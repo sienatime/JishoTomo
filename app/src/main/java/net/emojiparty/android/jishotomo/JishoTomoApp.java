@@ -10,6 +10,7 @@ import net.emojiparty.android.jishotomo.data.di.RoomModule;
 // https://blog.frankel.ch/true-singletons-with-dagger-2/
 public class JishoTomoApp extends Application {
   private static AppComponent applicationComponent;
+  private AnalyticsLogger analyticsLogger;
 
   public static AppComponent getAppComponent() {
     return applicationComponent;
@@ -21,6 +22,11 @@ public class JishoTomoApp extends Application {
         .appModule(new AppModule(this))
         .roomModule(new RoomModule(this))
         .build();
-    new AnalyticsLogger(this.getApplicationContext()).logAppOpenEvent();
+    analyticsLogger = new AnalyticsLogger(this.getApplicationContext());
+    analyticsLogger.logAppOpenEvent();
+  }
+
+  public AnalyticsLogger getAnalyticsLogger() {
+    return analyticsLogger;
   }
 }

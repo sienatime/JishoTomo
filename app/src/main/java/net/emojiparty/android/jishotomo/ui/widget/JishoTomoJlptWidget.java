@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.widget.RemoteViews;
+import net.emojiparty.android.jishotomo.JishoTomoApp;
 import net.emojiparty.android.jishotomo.R;
 import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger;
 import net.emojiparty.android.jishotomo.data.AppRepository;
@@ -30,7 +31,7 @@ public class JishoTomoJlptWidget extends AppWidgetProvider {
     appRepo.getRandomEntryByJlptLevel(selectedLevel, (SearchResultEntry entry) -> {
       RemoteViews views = configureViewWithEntry(selectedLevel, entry, context, appWidgetId);
       appWidgetManager.updateAppWidget(appWidgetId, views);
-      new AnalyticsLogger(context).logWidgetUpdated(selectedLevel, entry.id,
+      getAnalyticsLoggerFromContext(context).logWidgetUpdated(selectedLevel, entry.id,
           entry.getKanjiOrReading());
     });
   }
@@ -62,7 +63,7 @@ public class JishoTomoJlptWidget extends AppWidgetProvider {
 
   @Override public void onEnabled(Context context) {
     super.onEnabled(context);
-    new AnalyticsLogger(context).logAddWidget();
+    getAnalyticsLoggerFromContext(context).logAddWidget();
   }
 
   @Override
@@ -73,10 +74,15 @@ public class JishoTomoJlptWidget extends AppWidgetProvider {
   }
 
   @Override public void onDeleted(Context context, int[] appWidgetIds) {
-    AnalyticsLogger analyticsLogger = new AnalyticsLogger(context);
     for (int appWidgetId : appWidgetIds) {
       JishoTomoJlptWidgetConfigureActivity.deleteJlptLevelPref(context, appWidgetId);
-      analyticsLogger.logDeleteWidget();
+      getAnalyticsLoggerFromContext(context).logDeleteWidget();
     }
+  }
+
+  private static AnalyticsLogger getAnalyticsLoggerFromContext(Context context) {
+    Context appContext = context.getApplicationContext();
+    JishoTomoApp app = (JishoTomoApp) appContext;
+    return app.getAnalyticsLogger();
   }
 }
