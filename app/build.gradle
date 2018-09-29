@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 
 sourceCompatibility = 1.8
 
@@ -54,8 +55,10 @@ dependencies {
   implementation "com.google.dagger:dagger:2.13"
   annotationProcessor "com.google.dagger:dagger-compiler:2.13"
 
-  // Firebase Core: Analytics, Ads, Crash Reporting
+  // Firebase Core and Crashlytics: Analytics, Crash Reporting
   implementation 'com.google.firebase:firebase-core:16.0.3'
+  implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
+
 }
 
 apply plugin: 'com.google.gms.google-services'
