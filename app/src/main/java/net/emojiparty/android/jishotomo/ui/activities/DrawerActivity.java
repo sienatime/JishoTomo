@@ -44,6 +44,7 @@ public class DrawerActivity extends AppCompatActivity
   private PagedEntriesAdapter adapter;
   private AnalyticsLogger analyticsLogger;
   private final int WRITE_REQUEST_CODE = 51803;
+  private boolean showExportButton = false;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -135,7 +136,11 @@ public class DrawerActivity extends AppCompatActivity
     searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
     searchView.setIconifiedByDefault(false);
 
-    // TODO: hide export button if not JLPT or Favorites
+    if (showExportButton) {
+      menu.getItem(1).setVisible(true);
+    } else {
+      menu.getItem(1).setVisible(false);
+    }
 
     return true;
   }
@@ -172,6 +177,7 @@ public class DrawerActivity extends AppCompatActivity
 
   private void exportCsv() {
     // TODO: show progress indicator
+    // TODO: maybe offer to do something with the file when it's done... email? share?
     new CsvExporter(this).export(viewModel.pagedEntriesControl.searchType,
         viewModel.pagedEntriesControl.jlptLevel);
   }
@@ -200,6 +206,11 @@ public class DrawerActivity extends AppCompatActivity
     return ids;
   }
 
+  private void setShowExportButton(boolean show) {
+    showExportButton = show;
+    invalidateOptionsMenu();
+  }
+
   @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
     int id = item.getItemId();
 
@@ -209,18 +220,22 @@ public class DrawerActivity extends AppCompatActivity
 
     if (id == R.id.nav_search) {
       searchViewMenuItem.expandActionView();
+      setShowExportButton(false);
     } else if (id == R.id.nav_browse) {
       pagedEntriesControl.searchType = PagedEntriesControl.BROWSE;
       titleId = R.string.app_name;
+      setShowExportButton(false);
     } else if (id == R.id.nav_favorites) {
       pagedEntriesControl.searchType = PagedEntriesControl.FAVORITES;
       titleId = R.string.favorites;
+      setShowExportButton(true);
     } else if (jlptIds.indexOf(id) > -1) {
       pagedEntriesControl.searchType = PagedEntriesControl.JLPT;
       int jlptLevel = jlptIds.indexOf(id) + 1;
       pagedEntriesControl.jlptLevel = jlptLevel;
       titleId = getResources().getIdentifier("jlpt_n" + String.valueOf(jlptLevel), "string",
           getPackageName());
+      setShowExportButton(true);
     }
 
     if (pagedEntriesControl.searchType != null) {
