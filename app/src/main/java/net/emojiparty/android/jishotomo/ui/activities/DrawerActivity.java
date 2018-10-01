@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -23,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import java.util.ArrayList;
 import net.emojiparty.android.jishotomo.JishoTomoApp;
 import net.emojiparty.android.jishotomo.R;
@@ -30,6 +32,7 @@ import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger;
 import net.emojiparty.android.jishotomo.data.csv.CsvExporter;
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
 import net.emojiparty.android.jishotomo.ui.adapters.PagedEntriesAdapter;
+import net.emojiparty.android.jishotomo.ui.dialogs.ExplainExportDialog;
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl;
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesViewModel;
 
@@ -145,16 +148,21 @@ public class DrawerActivity extends AppCompatActivity
     return true;
   }
 
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId() == R.id.menu_export) {
-      // TODO: show confirm dialog with some instructions
-      // TODO: investigate using ContextCompat https://developer.android.com/training/permissions/requesting
+  private void checkForPermissionThenExport() {
+    if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        != PackageManager.PERMISSION_GRANTED) {
       if (Build.VERSION.SDK_INT >= 23) {
         String[] permissions = { Manifest.permission.WRITE_EXTERNAL_STORAGE };
         requestPermissions(permissions, WRITE_REQUEST_CODE);
-      } else {
-        exportCsv();
       }
+    } else {
+      exportCsv();
+    }
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == R.id.menu_export) {
+      explainCsvExport();
       return true;
     }
 
@@ -169,17 +177,23 @@ public class DrawerActivity extends AppCompatActivity
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
           exportCsv();
         } else {
-          // TODO: handle permission denied
+          Toast.makeText(this, R.string.permission_denied, Toast.LENGTH_LONG).show();
         }
         break;
     }
   }
 
+  private void explainCsvExport() {
+    ExplainExportDialog dialog = new ExplainExportDialog();
+    dialog.setCallback(this::checkForPermissionThenExport);
+    dialog.show(getSupportFragmentManager(), "export_explain");
+  }
+
   private void exportCsv() {
     // TODO: show progress indicator
-    // TODO: maybe offer to do something with the file when it's done... email? share?
-    new CsvExporter(this).export(viewModel.pagedEntriesControl.searchType,
-        viewModel.pagedEntriesControl.jlptLevel);
+    // TODO: offer to do something with the file when it's done... email? share?
+    new CsvExporter(DrawerActivity.this).export(viewModel.pagedEntriesControl.searchType,
+          viewModel.pagedEntriesControl.jlptLevel);
   }
 
   private void setPagedEntriesControl(PagedEntriesControl pagedEntriesControl, int titleId) {
