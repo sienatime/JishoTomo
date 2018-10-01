@@ -7,6 +7,7 @@ import android.arch.paging.PagedList;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -41,6 +42,7 @@ public class DrawerActivity extends AppCompatActivity
 
   private PagedEntriesViewModel viewModel;
   private ProgressBar loadingIndicator;
+  private ProgressBar exportIndicator;
   private MenuItem searchViewMenuItem;
   private RecyclerView searchResults;
   private TextView toolbarTitle;
@@ -61,6 +63,7 @@ public class DrawerActivity extends AppCompatActivity
 
     setRecyclerViewWithNewAdapter();
     loadingIndicator = findViewById(R.id.loading);
+    exportIndicator = findViewById(R.id.exporting);
     toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
     searchIntent(getIntent());
     setupDrawer(toolbar);
@@ -189,11 +192,48 @@ public class DrawerActivity extends AppCompatActivity
     dialog.show(getSupportFragmentManager(), "export_explain");
   }
 
+  // TODO: analytics events around success/failure
   private void exportCsv() {
-    // TODO: show progress indicator
-    // TODO: offer to do something with the file when it's done... email? share?
-    new CsvExporter(DrawerActivity.this).export(viewModel.pagedEntriesControl.searchType,
-          viewModel.pagedEntriesControl.jlptLevel);
+    // TODO: fix this warning
+    new AsyncTask<Context, Integer, Void>() {
+      @Override protected void onPreExecute() {
+        exportIndicator.setVisibility(View.VISIBLE);
+      }
+
+      @Override protected Void doInBackground(Context... contexts) {
+        CsvExporter csvExporter = new CsvExporter(contexts[0]);
+
+        csvExporter.setCallback(new CsvExporter.ExportCallback() {
+          @Override public void onUpdateProgress(Integer progress) {
+            onProgressUpdate(progress);
+          }
+
+          @Override public void onFailure(Exception exception) {
+            cancel(true);
+          }
+        });
+
+        csvExporter.export(viewModel.pagedEntriesControl.searchType,
+            viewModel.pagedEntriesControl.jlptLevel);
+
+        return null;
+      }
+
+      @Override protected void onProgressUpdate(Integer... values) {
+        exportIndicator.setProgress(values[0]);
+      }
+
+      @Override protected void onPostExecute(Void aVoid) {
+        exportIndicator.setVisibility(View.GONE);
+        Toast.makeText(DrawerActivity.this, R.string.csv_successful, Toast.LENGTH_SHORT).show();
+        // TODO: offer to do something with the file when it's done... email? share?
+      }
+
+      @Override protected void onCancelled() {
+        exportIndicator.setVisibility(View.GONE);
+        Toast.makeText(DrawerActivity.this, R.string.csv_failed, Toast.LENGTH_SHORT).show();
+      }
+    }.execute(DrawerActivity.this);
   }
 
   private void setPagedEntriesControl(PagedEntriesControl pagedEntriesControl, int titleId) {

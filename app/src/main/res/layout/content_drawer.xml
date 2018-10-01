@@ -15,6 +15,16 @@
       >
 
     <ProgressBar
+        android:id="@+id/exporting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_gravity="top"
+        android:indeterminate="false"
+        android:visibility="gone"
+        />
+
+    <ProgressBar
         android:id="@+id/loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
