@@ -161,14 +161,29 @@ public class DrawerActivity extends AppCompatActivity
     SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
     searchViewMenuItem = menu.findItem(R.id.menu_search);
     SearchView searchView = (SearchView) searchViewMenuItem.getActionView();
+    MenuItem exportIcon =  menu.getItem(1);
+    searchView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+      @Override public void onViewAttachedToWindow(View view) {
+        // hide export button while search input is open
+        exportIcon.setVisible(false);
+      }
+
+      @Override public void onViewDetachedFromWindow(View view) {
+        if (viewModel.pagedEntriesControl.searchType.equals(PagedEntriesControl.SEARCH)) {
+          // we performed a search, so hide the button
+          // (have to do this here because calling invalidateOptionsMenu while search input is open
+          // makes the search input close)
+          setShowExportButton(false);
+        } else {
+          // refresh export visibility based on current state, since
+          // we hid the button when we opened the search input
+          invalidateOptionsMenu();
+        }
+      }
+    });
     searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
     searchView.setIconifiedByDefault(false);
-
-    if (showExportButton) {
-      menu.getItem(1).setVisible(true);
-    } else {
-      menu.getItem(1).setVisible(false);
-    }
+    exportIcon.setVisible(showExportButton);
 
     return true;
   }
