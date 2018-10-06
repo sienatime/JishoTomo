@@ -18,6 +18,7 @@ import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl;
 public class CsvExporter {
   public interface ExportCallback {
     void onUpdateProgress(Integer progress);
+
     void onFailure(Exception exception);
   }
 
@@ -35,8 +36,8 @@ public class CsvExporter {
   // https://www.callicoder.com/java-read-write-csv-file-opencsv/
   // https://stackoverflow.com/questions/11341931/how-to-create-a-csv-on-android
   public void export(String searchType, Integer jlptLevel) {
-    String csv =
-        (Environment.getExternalStorageDirectory().getAbsolutePath() + "/jisho_tomo_export.csv");
+    String csv = (Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        .getAbsolutePath() + "/jisho_tomo_export.csv");
     CSVWriter writer;
     List<EntryWithAllSenses> entries = new ArrayList<>();
 
@@ -51,7 +52,8 @@ public class CsvExporter {
       int totalCount = entries.size();
       for (int i = 0; i < totalCount; i++) {
         EntryWithAllSenses entry = entries.get(i);
-        writer.writeNext(new String[]{entry.getKanjiOrReading(), meaning(entry), reading(entry)});
+        writer.writeNext(
+            new String[] { entry.getKanjiOrReading(), meaning(entry), reading(entry) });
         callback.onUpdateProgress((i + 1) * 100 / totalCount);
       }
       writer.close();
@@ -69,7 +71,8 @@ public class CsvExporter {
       case PagedEntriesControl.JLPT:
         return appRepo.getAllByJlptLevel(jlptLevel);
       default:
-        throw new CsvForbiddenExportTypeException("Not allowed to export this kind of list! " + searchType);
+        throw new CsvForbiddenExportTypeException(
+            "Not allowed to export this kind of list! " + searchType);
     }
   }
 
@@ -100,7 +103,8 @@ public class CsvExporter {
 
   private String reading(EntryWithAllSenses entry) {
     if (entry.hasKanji()) {
-      return String.format("%s[%s]", entry.entry.getPrimaryKanji(), entry.entry.getPrimaryReading());
+      return String.format("%s[%s]", entry.entry.getPrimaryKanji(),
+          entry.entry.getPrimaryReading());
     } else {
       return entry.entry.getPrimaryReading();
     }
