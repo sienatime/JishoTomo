@@ -35,7 +35,7 @@
   <!-- CSV export -->
   <string name="export_instructions">You can export your favorites or the JLPT lists to a CSV for
     importing into other programs, like Anki SRS. The format is expression;meaning;reading. Please
-    make sure to allow HTML. This feature requires permission to write to your external storage.</string>
+    make sure to allow HTML when you import.</string>
   <string name="export_yes">Proceed</string>
   <string name="export_no">Cancel</string>
   <string name="permission_denied">External Storage Write Permission Denied: You will not be able to use the Export feature.</string>

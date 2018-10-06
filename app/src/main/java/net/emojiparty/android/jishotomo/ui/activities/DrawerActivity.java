@@ -1,19 +1,15 @@
 package net.emojiparty.android.jishotomo.ui.activities;
 
-import android.Manifest;
 import android.app.SearchManager;
 import android.arch.lifecycle.ViewModelProviders;
 import android.arch.paging.PagedList;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -166,15 +162,7 @@ public class DrawerActivity extends AppCompatActivity
       return;
     }
 
-    if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        != PackageManager.PERMISSION_GRANTED) {
-      if (Build.VERSION.SDK_INT >= 23) {
-        String[] permissions = { Manifest.permission.WRITE_EXTERNAL_STORAGE };
-        requestPermissions(permissions, WRITE_REQUEST_CODE);
-      }
-    } else {
-      exportCsv();
-    }
+    exportCsv();
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -184,20 +172,6 @@ public class DrawerActivity extends AppCompatActivity
     }
 
     return super.onOptionsItemSelected(item);
-  }
-
-  // https://stackoverflow.com/questions/44455887/permission-denied-on-writing-to-external-storage-despite-permission
-  @Override public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
-      @NonNull int[] grantResults) {
-    switch (requestCode) {
-      case WRITE_REQUEST_CODE:
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          exportCsv();
-        } else {
-          Toast.makeText(this, R.string.permission_denied, Toast.LENGTH_LONG).show();
-        }
-        break;
-    }
   }
 
   private void explainCsvExport() {
