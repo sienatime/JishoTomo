@@ -7,7 +7,6 @@ import android.arch.paging.PagedList;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -30,7 +29,6 @@ import java.util.ArrayList;
 import net.emojiparty.android.jishotomo.JishoTomoApp;
 import net.emojiparty.android.jishotomo.R;
 import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger;
-import net.emojiparty.android.jishotomo.data.csv.CsvExporter;
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
 import net.emojiparty.android.jishotomo.ui.adapters.PagedEntriesAdapter;
 import net.emojiparty.android.jishotomo.ui.dialogs.ExplainExportDialog;
@@ -192,48 +190,37 @@ public class DrawerActivity extends AppCompatActivity
     dialog.show(getSupportFragmentManager(), "export_explain");
   }
 
+  interface CsvExportUiCallbacks {
+    void onProgressUpdate(Integer progress);
+    void onPreExecute();
+    void onPostExecute();
+    void onCanceled();
+  }
+
   // TODO: analytics events around success/failure
   private void exportCsv() {
-    // TODO: fix this warning
-    new AsyncTask<Context, Integer, Void>() {
-      @Override protected void onPreExecute() {
+    CsvExportUiCallbacks uiCallbacks = new CsvExportUiCallbacks() {
+      @Override public void onProgressUpdate(Integer progress) {
+        exportIndicator.setProgress(progress);
+      }
+
+      @Override public void onPreExecute() {
         exportIndicator.setVisibility(View.VISIBLE);
       }
 
-      @Override protected Void doInBackground(Context... contexts) {
-        CsvExporter csvExporter = new CsvExporter(contexts[0]);
-
-        csvExporter.setCallback(new CsvExporter.ExportCallback() {
-          @Override public void onUpdateProgress(Integer progress) {
-            onProgressUpdate(progress);
-          }
-
-          @Override public void onFailure(Exception exception) {
-            cancel(true);
-          }
-        });
-
-        csvExporter.export(viewModel.pagedEntriesControl.searchType,
-            viewModel.pagedEntriesControl.jlptLevel);
-
-        return null;
-      }
-
-      @Override protected void onProgressUpdate(Integer... values) {
-        exportIndicator.setProgress(values[0]);
-      }
-
-      @Override protected void onPostExecute(Void aVoid) {
+      @Override public void onPostExecute() {
         exportIndicator.setVisibility(View.GONE);
         Toast.makeText(DrawerActivity.this, R.string.csv_successful, Toast.LENGTH_SHORT).show();
         // TODO: offer to do something with the file when it's done... email? share?
       }
 
-      @Override protected void onCancelled() {
+      @Override public void onCanceled() {
         exportIndicator.setVisibility(View.GONE);
         Toast.makeText(DrawerActivity.this, R.string.csv_failed, Toast.LENGTH_SHORT).show();
       }
-    }.execute(DrawerActivity.this);
+    };
+
+    new CsvExportAsyncTask(uiCallbacks, viewModel.pagedEntriesControl).execute(DrawerActivity.this);
   }
 
   private void setPagedEntriesControl(PagedEntriesControl pagedEntriesControl, int titleId) {
