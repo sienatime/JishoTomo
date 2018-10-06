@@ -61,6 +61,19 @@
         <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
       </intent-filter>
     </activity>
+
+    <!-- https://guides.codepath.com/android/Sharing-Content-with-Intents -->
+    <!-- https://developer.android.com/reference/android/support/v4/content/FileProvider -->
+    <provider
+        android:name="android.support.v4.content.FileProvider"
+        android:authorities="net.emojiparty.fileprovider"
+        android:exported="false"
+        android:grantUriPermissions="true">
+      <meta-data
+          android:name="android.support.FILE_PROVIDER_PATHS"
+          android:resource="@xml/fileprovider" />
+    </provider>
+
   </application>
 
 </manifest>

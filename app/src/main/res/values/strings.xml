@@ -42,6 +42,7 @@
   <string name="no_external_storage">No external storage detected. You will not be able to use the Export feature.</string>
   <string name="csv_successful">CSV export successful!</string>
   <string name="csv_failed">CSV export failed.</string>
+  <string name="share_csv">Share Exported CSV</string>
 
   <!-- parts of speech -->
   <!-- http://www.edrdg.org/jmdictdb/cgi-bin/edhelp.py?svc=jmdict&sid=#kw_pos -->

@@ -7,12 +7,14 @@ import android.arch.paging.PagedList;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -26,10 +28,12 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.io.File;
 import java.util.ArrayList;
 import net.emojiparty.android.jishotomo.JishoTomoApp;
 import net.emojiparty.android.jishotomo.R;
 import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger;
+import net.emojiparty.android.jishotomo.data.csv.CsvExporter;
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
 import net.emojiparty.android.jishotomo.ui.adapters.PagedEntriesAdapter;
 import net.emojiparty.android.jishotomo.ui.dialogs.ExplainExportDialog;
@@ -204,26 +208,33 @@ public class DrawerActivity extends AppCompatActivity
 
   // TODO: analytics events around success/failure
   private void exportCsv() {
-    CsvExportAsyncTask.CsvExportUiCallbacks uiCallbacks = new CsvExportAsyncTask.CsvExportUiCallbacks() {
-      @Override public void onProgressUpdate(Integer progress) {
-        exportIndicator.setProgress(progress);
-      }
+    CsvExportAsyncTask.CsvExportUiCallbacks uiCallbacks =
+        new CsvExportAsyncTask.CsvExportUiCallbacks() {
+          @Override public void onProgressUpdate(Integer progress) {
+            exportIndicator.setProgress(progress);
+          }
 
-      @Override public void onPreExecute() {
-        exportIndicator.setVisibility(View.VISIBLE);
-      }
+          @Override public void onPreExecute() {
+            exportIndicator.setVisibility(View.VISIBLE);
+          }
 
-      @Override public void onPostExecute() {
-        exportIndicator.setVisibility(View.GONE);
-        Toast.makeText(DrawerActivity.this, R.string.csv_successful, Toast.LENGTH_SHORT).show();
-        // TODO: offer to do something with the file when it's done... email? share?
-      }
+          @Override public void onPostExecute() {
+            exportIndicator.setVisibility(View.GONE);
+            File csv = new File(CsvExporter.fileLocation(DrawerActivity.this));
+            Uri csvUri = FileProvider.getUriForFile(DrawerActivity.this,
+                "net.emojiparty.fileprovider", csv);
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, csvUri);
+            shareIntent.setType("text/csv");
+            startActivity(Intent.createChooser(shareIntent, getString(R.string.share_csv)));
+          }
 
-      @Override public void onCanceled() {
-        exportIndicator.setVisibility(View.GONE);
-        Toast.makeText(DrawerActivity.this, R.string.csv_failed, Toast.LENGTH_SHORT).show();
-      }
-    };
+          @Override public void onCanceled() {
+            exportIndicator.setVisibility(View.GONE);
+            Toast.makeText(DrawerActivity.this, R.string.csv_failed, Toast.LENGTH_SHORT).show();
+          }
+        };
 
     new CsvExportAsyncTask(uiCallbacks, viewModel.pagedEntriesControl).execute(DrawerActivity.this);
   }

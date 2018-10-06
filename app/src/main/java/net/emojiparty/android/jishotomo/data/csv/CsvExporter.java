@@ -1,7 +1,6 @@
 package net.emojiparty.android.jishotomo.data.csv;
 
 import android.content.Context;
-import android.os.Environment;
 import com.opencsv.CSVWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -22,11 +21,17 @@ public class CsvExporter {
     void onFailure(Exception exception);
   }
 
+  public static String fileLocation(Context context) {
+    return (context.getExternalFilesDir("csv_export") + "/jisho_tomo_export.csv");
+  }
+
   private SenseDisplay senseDisplay;
+  private Context context;
   private ExportCallback callback;
 
   public CsvExporter(Context context) {
     this.senseDisplay = new SenseDisplay(context);
+    this.context = context;
   }
 
   public void setCallback(ExportCallback callback) {
@@ -36,8 +41,6 @@ public class CsvExporter {
   // https://www.callicoder.com/java-read-write-csv-file-opencsv/
   // https://stackoverflow.com/questions/11341931/how-to-create-a-csv-on-android
   public void export(String searchType, Integer jlptLevel) {
-    String csv = (Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-        .getAbsolutePath() + "/jisho_tomo_export.csv");
     CSVWriter writer;
     List<EntryWithAllSenses> entries = new ArrayList<>();
 
@@ -48,7 +51,7 @@ public class CsvExporter {
     }
 
     try {
-      writer = semicolonSeparatedWriter(csv);
+      writer = semicolonSeparatedWriter(CsvExporter.fileLocation(context));
       int totalCount = entries.size();
       for (int i = 0; i < totalCount; i++) {
         EntryWithAllSenses entry = entries.get(i);
