@@ -49,6 +49,10 @@ public class DrawerActivity extends AppCompatActivity
   private AnalyticsLogger analyticsLogger;
   private boolean showExportButton = false;
 
+  private String STATE_SEARCH_TYPE = "state_search_type";
+  private String STATE_SEARCH_TERM = "state_search_term";
+  private String STATE_JLPT_LEVEL = "state_jlpt_level";
+
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_drawer);
@@ -63,7 +67,11 @@ public class DrawerActivity extends AppCompatActivity
     loadingIndicator = findViewById(R.id.loading);
     exportIndicator = findViewById(R.id.exporting);
     toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
-    searchIntent(getIntent());
+    if (savedInstanceState == null) {
+      searchIntent(getIntent());
+    } else {
+      restoreFromBundle(savedInstanceState);
+    }
     setupDrawer(toolbar);
     setupNavigationView();
     setupRecyclerView();
@@ -71,6 +79,17 @@ public class DrawerActivity extends AppCompatActivity
     toolbarTitle.setOnClickListener((View view) -> {
       searchResults.scrollToPosition(0);
     });
+  }
+
+  private void restoreFromBundle(Bundle bundle) {
+    String searchType = bundle.getString(STATE_SEARCH_TYPE);
+    String searchTerm = bundle.getString(STATE_SEARCH_TERM);
+    PagedEntriesControl pagedEntriesControl = new PagedEntriesControl(searchType, searchTerm);
+
+    if (bundle.containsKey(STATE_JLPT_LEVEL)) {
+      pagedEntriesControl.jlptLevel = bundle.getInt(STATE_JLPT_LEVEL);
+    }
+    setPagedEntriesControl(pagedEntriesControl);
   }
 
   private void setRecyclerViewWithNewAdapter() {
@@ -83,17 +102,13 @@ public class DrawerActivity extends AppCompatActivity
   private void searchIntent(Intent intent) {
     String query = null;
     String searchType;
-    int titleId = 0;
     if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
       query = intent.getStringExtra(SearchManager.QUERY);
       searchType = PagedEntriesControl.SEARCH;
-      titleId = R.string.search_results;
     } else {
       searchType = PagedEntriesControl.BROWSE;
-      titleId = R.string.app_name;
     }
-    PagedEntriesControl pagedEntriesControl = new PagedEntriesControl(searchType, query);
-    setPagedEntriesControl(pagedEntriesControl, titleId);
+    setPagedEntriesControl(new PagedEntriesControl(searchType, query));
   }
 
   @Override protected void onNewIntent(Intent intent) {
@@ -120,6 +135,15 @@ public class DrawerActivity extends AppCompatActivity
   private void setupNavigationView() {
     NavigationView navigationView = findViewById(R.id.nav_view);
     navigationView.setNavigationItemSelectedListener(this);
+  }
+
+  @Override protected void onSaveInstanceState(Bundle outState) {
+    if (viewModel.pagedEntriesControl.jlptLevel != null) {
+      outState.putInt(STATE_JLPT_LEVEL, viewModel.pagedEntriesControl.jlptLevel);
+    }
+    outState.putString(STATE_SEARCH_TYPE, viewModel.pagedEntriesControl.searchType);
+    outState.putString(STATE_SEARCH_TERM, viewModel.pagedEntriesControl.searchTerm);
+    super.onSaveInstanceState(outState);
   }
 
   @Override public void onBackPressed() {
@@ -193,8 +217,8 @@ public class DrawerActivity extends AppCompatActivity
           @Override public void onPostExecute() {
             exportIndicator.setVisibility(View.GONE);
             File csv = new File(CsvExporter.fileLocation(DrawerActivity.this));
-            Uri csvUri = FileProvider.getUriForFile(DrawerActivity.this,
-                "net.emojiparty.fileprovider", csv);
+            Uri csvUri =
+                FileProvider.getUriForFile(DrawerActivity.this, "net.emojiparty.fileprovider", csv);
             Intent shareIntent = new Intent();
             shareIntent.setAction(Intent.ACTION_SEND);
             shareIntent.putExtra(Intent.EXTRA_STREAM, csvUri);
@@ -213,10 +237,8 @@ public class DrawerActivity extends AppCompatActivity
     new CsvExportAsyncTask(uiCallbacks, viewModel.pagedEntriesControl).execute(DrawerActivity.this);
   }
 
-  private void setPagedEntriesControl(PagedEntriesControl pagedEntriesControl, int titleId) {
-    if (titleId > 0) {
-      toolbarTitle.setText(getResources().getString(titleId));
-    }
+  private void setPagedEntriesControl(PagedEntriesControl pagedEntriesControl) {
+    toolbarTitle.setText(getResources().getString(titleIdForSearchType(pagedEntriesControl)));
     // this is so that the PagedListAdapter does not try to perform a diff
     // against the two lists when changing search types. the app was really laggy
     // when changing lists without re-instantiating the adapter.
@@ -247,34 +269,44 @@ public class DrawerActivity extends AppCompatActivity
 
     PagedEntriesControl pagedEntriesControl = new PagedEntriesControl();
     ArrayList<Integer> jlptIds = jlptMenuIds();
-    int titleId = 0;
 
     if (id == R.id.nav_search) {
       searchViewMenuItem.expandActionView();
       setShowExportButton(false);
     } else if (id == R.id.nav_browse) {
       pagedEntriesControl.searchType = PagedEntriesControl.BROWSE;
-      titleId = R.string.app_name;
       setShowExportButton(false);
     } else if (id == R.id.nav_favorites) {
       pagedEntriesControl.searchType = PagedEntriesControl.FAVORITES;
-      titleId = R.string.favorites;
       setShowExportButton(true);
     } else if (jlptIds.indexOf(id) > -1) {
       pagedEntriesControl.searchType = PagedEntriesControl.JLPT;
-      int jlptLevel = jlptIds.indexOf(id) + 1;
-      pagedEntriesControl.jlptLevel = jlptLevel;
-      titleId = getResources().getIdentifier("jlpt_n" + String.valueOf(jlptLevel), "string",
-          getPackageName());
+      pagedEntriesControl.jlptLevel = jlptIds.indexOf(id) + 1;
       setShowExportButton(true);
     }
 
     if (pagedEntriesControl.searchType != null) {
-      setPagedEntriesControl(pagedEntriesControl, titleId);
+      setPagedEntriesControl(pagedEntriesControl);
     }
 
     DrawerLayout drawer = findViewById(R.id.drawer_layout);
     drawer.closeDrawer(GravityCompat.START);
     return true;
+  }
+
+  private int titleIdForSearchType(PagedEntriesControl pagedEntriesControl) {
+    switch (pagedEntriesControl.searchType) {
+      case PagedEntriesControl.BROWSE:
+        return R.string.app_name;
+      case PagedEntriesControl.FAVORITES:
+        return R.string.favorites;
+      case PagedEntriesControl.JLPT:
+        return getResources().getIdentifier(
+            "jlpt_n" + String.valueOf(pagedEntriesControl.jlptLevel), "string", getPackageName());
+      case PagedEntriesControl.SEARCH:
+        return R.string.search_results;
+      default:
+        return R.string.app_name;
+    }
   }
 }
