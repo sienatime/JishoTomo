@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
@@ -149,7 +150,18 @@ public class DrawerActivity extends AppCompatActivity
     return true;
   }
 
+  // https://developer.android.com/training/data-storage/files#InternalVsExternalStorage
+  private boolean isExternalStorageWritable() {
+    String state = Environment.getExternalStorageState();
+    return Environment.MEDIA_MOUNTED.equals(state);
+  }
+
   private void checkForPermissionThenExport() {
+    if (!isExternalStorageWritable()) {
+      Toast.makeText(this, R.string.no_external_storage, Toast.LENGTH_LONG).show();
+      return;
+    }
+
     if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         != PackageManager.PERMISSION_GRANTED) {
       if (Build.VERSION.SDK_INT >= 23) {
@@ -190,16 +202,9 @@ public class DrawerActivity extends AppCompatActivity
     dialog.show(getSupportFragmentManager(), "export_explain");
   }
 
-  interface CsvExportUiCallbacks {
-    void onProgressUpdate(Integer progress);
-    void onPreExecute();
-    void onPostExecute();
-    void onCanceled();
-  }
-
   // TODO: analytics events around success/failure
   private void exportCsv() {
-    CsvExportUiCallbacks uiCallbacks = new CsvExportUiCallbacks() {
+    CsvExportAsyncTask.CsvExportUiCallbacks uiCallbacks = new CsvExportAsyncTask.CsvExportUiCallbacks() {
       @Override public void onProgressUpdate(Integer progress) {
         exportIndicator.setProgress(progress);
       }

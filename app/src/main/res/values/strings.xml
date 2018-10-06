@@ -39,6 +39,7 @@
   <string name="export_yes">Proceed</string>
   <string name="export_no">Cancel</string>
   <string name="permission_denied">External Storage Write Permission Denied: You will not be able to use the Export feature.</string>
+  <string name="no_external_storage">No external storage detected. You will not be able to use the Export feature.</string>
   <string name="csv_successful">CSV export successful!</string>
   <string name="csv_failed">CSV export failed.</string>
 

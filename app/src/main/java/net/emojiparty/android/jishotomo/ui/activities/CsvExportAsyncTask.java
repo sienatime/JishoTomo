@@ -6,10 +6,17 @@ import net.emojiparty.android.jishotomo.data.csv.CsvExporter;
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl;
 
 public class CsvExportAsyncTask extends AsyncTask<Context, Integer, Void> {
-  private DrawerActivity.CsvExportUiCallbacks uiCallbacks;
+  public interface CsvExportUiCallbacks {
+    void onProgressUpdate(Integer progress);
+    void onPreExecute();
+    void onPostExecute();
+    void onCanceled();
+  }
+
+  private CsvExportUiCallbacks uiCallbacks;
   private PagedEntriesControl pagedEntriesControl;
 
-  CsvExportAsyncTask(DrawerActivity.CsvExportUiCallbacks uiCallbacks, PagedEntriesControl pagedEntriesControl) {
+  CsvExportAsyncTask(CsvExportUiCallbacks uiCallbacks, PagedEntriesControl pagedEntriesControl) {
     super();
     this.uiCallbacks = uiCallbacks;
     this.pagedEntriesControl = pagedEntriesControl;
