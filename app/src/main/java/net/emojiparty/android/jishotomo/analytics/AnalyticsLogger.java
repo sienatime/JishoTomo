@@ -13,6 +13,8 @@ public class AnalyticsLogger {
   private final String EVENT_ADD_WIDGET = "add_widget";
   private final String EVENT_REMOVE_WIDGET = "remove_widget";
   private final String EVENT_UPDATED_WIDGET = "updated_widget";
+  private final String EVENT_CSV_SUCCESS = "csv_success";
+  private final String EVENT_CSV_FAILED = "csv_failed";
   private final String PARAM_JLPT_LEVEL = "jlpt_level";
 
   public AnalyticsLogger(Context context) {
@@ -58,6 +60,14 @@ public class AnalyticsLogger {
     Bundle bundle = entryBundle(entryId, expression);
     bundle.putString(PARAM_JLPT_LEVEL, String.valueOf(jlptLevel));
     firebaseAnalytics.logEvent(EVENT_UPDATED_WIDGET, bundle);
+  }
+
+  public void logCsvSuccess() {
+    firebaseAnalytics.logEvent(EVENT_CSV_SUCCESS,  new Bundle());
+  }
+
+  public void logCsvFailed() {
+    firebaseAnalytics.logEvent(EVENT_CSV_FAILED,  new Bundle());
   }
 
   private Bundle entryBundle(int entryId, String expression) {

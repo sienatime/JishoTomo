@@ -47,7 +47,6 @@ public class DrawerActivity extends AppCompatActivity
   private TextView toolbarTitle;
   private PagedEntriesAdapter adapter;
   private AnalyticsLogger analyticsLogger;
-  private final int WRITE_REQUEST_CODE = 51803;
   private boolean showExportButton = false;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
@@ -180,7 +179,6 @@ public class DrawerActivity extends AppCompatActivity
     dialog.show(getSupportFragmentManager(), "export_explain");
   }
 
-  // TODO: analytics events around success/failure
   private void exportCsv() {
     CsvExportAsyncTask.CsvExportUiCallbacks uiCallbacks =
         new CsvExportAsyncTask.CsvExportUiCallbacks() {
@@ -202,11 +200,13 @@ public class DrawerActivity extends AppCompatActivity
             shareIntent.putExtra(Intent.EXTRA_STREAM, csvUri);
             shareIntent.setType("text/csv");
             startActivity(Intent.createChooser(shareIntent, getString(R.string.share_csv)));
+            analyticsLogger.logCsvSuccess();
           }
 
           @Override public void onCanceled() {
             exportIndicator.setVisibility(View.GONE);
             Toast.makeText(DrawerActivity.this, R.string.csv_failed, Toast.LENGTH_SHORT).show();
+            analyticsLogger.logCsvSuccess();
           }
         };
 
