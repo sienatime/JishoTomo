@@ -1,10 +1,12 @@
 package net.emojiparty.android.jishotomo.ui.presentation;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.databinding.BindingAdapter;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.style.LocaleSpan;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
@@ -18,6 +20,7 @@ import net.emojiparty.android.jishotomo.R;
 import net.emojiparty.android.jishotomo.data.SemicolonSplit;
 import net.emojiparty.android.jishotomo.data.models.CrossReferencedEntry;
 import net.emojiparty.android.jishotomo.ui.activities.DefinitionActivity;
+import org.w3c.dom.Text;
 
 import static net.emojiparty.android.jishotomo.ui.activities.DefinitionActivity.ENTRY_ID_EXTRA;
 
@@ -43,6 +46,20 @@ public class BindingMethods {
     for (int i = 0; i < crossReferencedEntries.size(); i++) {
       CrossReferencedEntry crossReferencedEntry = crossReferencedEntries.get(i);
       linearLayout.addView(crossReferenceButton.create(crossReferencedEntry));
+    }
+  }
+
+  @BindingAdapter({ "variableEllipsize" })
+  public static void variableEllipsize(View view, Context context) {
+    TextView textview = (TextView) view;
+    if (ScreenSize.isWideLayout((Activity) context)) {
+      textview.setEllipsize(null);
+      textview.setMaxLines(Integer.MAX_VALUE);
+      textview.setSingleLine(false);
+    } else {
+      textview.setEllipsize(TextUtils.TruncateAt.END);
+      textview.setMaxLines(1);
+      textview.setSingleLine(true);
     }
   }
 

@@ -43,14 +43,8 @@ public class CrossReferenceButton {
     LinearLayout.LayoutParams layoutParams =
         new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
             LinearLayout.LayoutParams.WRAP_CONTENT);
-    int marginInPixels = getPixelValue(margin);
+    int marginInPixels = ScreenSize.dpsToPixels(margin, resources);
     layoutParams.setMarginEnd(marginInPixels);
     button.setLayoutParams(layoutParams);
-  }
-
-  // http://android.pcsalt.com/set-margins-in-dp-programmatically-android/
-  private int getPixelValue(float dimensionInDp) {
-    return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dimensionInDp,
-        resources.getDisplayMetrics());
   }
 }
