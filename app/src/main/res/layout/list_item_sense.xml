@@ -68,11 +68,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
         android:paddingTop="8dp"
-        crossReferenceLinks='@{presenter.crossReferences}'
         android:textSize="@dimen/text_size_body"
         app:fontFamily="sans-serif"
-        tools:text="See also: 半片"
+        visibleOrGone="@{presenter.crossReferences.size() > 0}"
+        android:text="@string/see_also"
+        />
+
+    <LinearLayout
+        android:id="@+id/li_cross_reference_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        crossReferenceLinks="@{presenter.crossReferences}"
         />
 
   </LinearLayout>
