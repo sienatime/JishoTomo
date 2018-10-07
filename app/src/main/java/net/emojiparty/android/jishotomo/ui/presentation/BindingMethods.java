@@ -2,16 +2,14 @@ package net.emojiparty.android.jishotomo.ui.presentation;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.databinding.BindingAdapter;
-import android.text.Html;
 import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
 import android.text.style.LocaleSpan;
+import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.Button;
-import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.util.List;
@@ -33,25 +31,18 @@ public class BindingMethods {
   @BindingAdapter({ "crossReferenceLinks" }) public static void setCrossReferenceLinks(View view,
       List<CrossReferencedEntry> crossReferencedEntries) {
     LinearLayout linearLayout = (LinearLayout) view;
-    if (crossReferencedEntries == null || crossReferencedEntries.size() == 0 || linearLayout.getChildCount() > 0) {
+    if (crossReferencedEntries == null
+        || crossReferencedEntries.size() == 0
+        || linearLayout.getChildCount() > 0) {
       return;
     }
 
     Context context = view.getContext();
-    int buttonStyle = R.style.xref_button;
+    CrossReferenceButton crossReferenceButton = new CrossReferenceButton(context);
 
     for (int i = 0; i < crossReferencedEntries.size(); i++) {
       CrossReferencedEntry crossReferencedEntry = crossReferencedEntries.get(i);
-      Button button = new Button(new ContextThemeWrapper(context, buttonStyle), null, buttonStyle);
-      SpannableString spannable = new SpannableString(crossReferencedEntry.getKanjiOrReading());
-      spannable.setSpan(new LocaleSpan(Locale.JAPANESE), 0, spannable.length(), 0);
-      button.setText(spannable);
-      button.setOnClickListener((View clickView) -> {
-        Intent intent = new Intent(context, DefinitionActivity.class);
-        intent.putExtra(ENTRY_ID_EXTRA, crossReferencedEntry.id);
-        context.startActivity(intent);
-      });
-      linearLayout.addView(button);
+      linearLayout.addView(crossReferenceButton.create(crossReferencedEntry));
     }
   }
 
@@ -65,7 +56,7 @@ public class BindingMethods {
         String.format(context.getString(R.string.applies_to_format), literalAppliesTo,
             allAppliesTo);
 
-    SpannableString spannableString = MixedLocaleSpan.format(formatted, literalAppliesTo);
+    SpannableString spannableString = JapaneseLocaleSpan.mixed(formatted, literalAppliesTo);
     textView.setText(spannableString);
   }
 
@@ -84,9 +75,7 @@ public class BindingMethods {
       String text) {
     if (text != null) {
       TextView textView = (TextView) view;
-      SpannableString spannable = new SpannableString(text);
-      spannable.setSpan(new LocaleSpan(Locale.JAPANESE), 0, spannable.length(), 0);
-      textView.setText(spannable);
+      textView.setText(JapaneseLocaleSpan.all(text));
     }
   }
 }
