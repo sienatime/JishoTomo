@@ -69,6 +69,5 @@ public class DefinitionActivity extends AppCompatActivity {
   private void setupToolbar() {
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
-    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
   }
 }
