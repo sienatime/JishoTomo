@@ -1,31 +1,23 @@
 package net.emojiparty.android.jishotomo.ui.presentation;
 
-import android.content.res.Resources;
-import android.text.TextUtils;
-import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import net.emojiparty.android.jishotomo.R;
+import net.emojiparty.android.jishotomo.data.SemicolonSplit;
 import net.emojiparty.android.jishotomo.data.models.CrossReferencedEntry;
 
 public class CrossReferenceText {
-  public static String format(View view, List<CrossReferencedEntry> crossReferencedEntries) {
-    Resources resources = view.getResources();
-
+  public static String format(List<CrossReferencedEntry> crossReferencedEntries) {
     ArrayList<String> linkTexts = new ArrayList<>();
     for (CrossReferencedEntry entry : crossReferencedEntries) {
-      linkTexts.add(entryLink(entry, resources));
+      linkTexts.add(entryLink(entry));
     }
 
-    String seeAlso = resources.getString(R.string.see_also);
-    String links = TextUtils.join(resources.getString(R.string.list_of_words_delimiter), linkTexts);
-    return String.format(resources.getString(R.string.see_also_format), seeAlso, links);
+    return SemicolonSplit.join(linkTexts);
   }
 
-  private static String entryLink(CrossReferencedEntry entry, Resources resources) {
-    Locale locale = resources.getConfiguration().locale;
-    return String.format(locale,
+  private static String entryLink(CrossReferencedEntry entry) {
+    return String.format(Locale.US,
         "<a href='net.emojiparty.android.jishotomo://definition/%d'>%s</a>", entry.id,
         entry.getKanjiOrReading());
   }

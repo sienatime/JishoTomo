@@ -29,15 +29,16 @@ public class BindingMethods {
     } else {
       view.setVisibility(View.VISIBLE);
 
-      String text = CrossReferenceText.format(view, crossReferencedEntries);
-      TextView textView = (TextView) view;
-      Spanned spanned = Html.fromHtml(text);
-      SpannableString spannableString = new SpannableString(spanned);
-      int defaultLocaleLength = view.getContext().getString(R.string.see_also).length();
+      Context context = view.getContext();
+      String seeAlso = context.getString(R.string.see_also);
+      String links = CrossReferenceText.format(crossReferencedEntries);
 
-      spannableString.setSpan(new LocaleSpan(Locale.getDefault()), 0, defaultLocaleLength, 0);
-      spannableString.setSpan(new LocaleSpan(Locale.JAPANESE), defaultLocaleLength + 1, spannableString.length(), 0);
-      textView.setText(spannableString);
+      String allText = String.format(context.getString(R.string.see_also_format), seeAlso, links);
+      Spanned spanned = Html.fromHtml(allText);
+      SpannableString mixedLocaleSpan = MixedLocaleSpan.format(spanned, seeAlso);
+
+      TextView textView = (TextView) view;
+      textView.setText(mixedLocaleSpan);
       textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
   }
@@ -49,11 +50,7 @@ public class BindingMethods {
     String allAppliesTo = SemicolonSplit.splitAndJoin(appliesTo);
     String formatted = String.format(context.getString(R.string.applies_to_format), literalAppliesTo, allAppliesTo);
 
-    SpannableString spannableString = new SpannableString(formatted);
-    int defaultLocaleLength = view.getContext().getString(R.string.applies_to).length();
-
-    spannableString.setSpan(new LocaleSpan(Locale.getDefault()), 0, defaultLocaleLength, 0);
-    spannableString.setSpan(new LocaleSpan(Locale.JAPANESE), defaultLocaleLength + 1, spannableString.length(), 0);
+    SpannableString spannableString = MixedLocaleSpan.format(formatted, literalAppliesTo);
     textView.setText(spannableString);
   }
 
