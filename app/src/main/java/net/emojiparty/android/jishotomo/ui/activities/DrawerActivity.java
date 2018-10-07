@@ -52,6 +52,7 @@ public class DrawerActivity extends AppCompatActivity
   private String STATE_SEARCH_TYPE = "state_search_type";
   private String STATE_SEARCH_TERM = "state_search_term";
   private String STATE_JLPT_LEVEL = "state_jlpt_level";
+  private String STATE_SHOW_EXPORT_BUTTON = "state_show_export_button";
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -90,6 +91,7 @@ public class DrawerActivity extends AppCompatActivity
       pagedEntriesControl.jlptLevel = bundle.getInt(STATE_JLPT_LEVEL);
     }
     setPagedEntriesControl(pagedEntriesControl);
+    setShowExportButton(bundle.getBoolean(STATE_SHOW_EXPORT_BUTTON));
   }
 
   private void setRecyclerViewWithNewAdapter() {
@@ -143,6 +145,7 @@ public class DrawerActivity extends AppCompatActivity
     }
     outState.putString(STATE_SEARCH_TYPE, viewModel.pagedEntriesControl.searchType);
     outState.putString(STATE_SEARCH_TERM, viewModel.pagedEntriesControl.searchTerm);
+    outState.putBoolean(STATE_SHOW_EXPORT_BUTTON, showExportButton);
     super.onSaveInstanceState(outState);
   }
 

@@ -12,6 +12,8 @@
   <string name="applies_to">Applies to: %s</string>
   <string name="list_of_words_delimiter">,\u0020</string>
   <string name="search_hint">Search the dictionary</string>
+  <string name="add_to_favorites">Add Entry to Favorites</string>
+  <string name="remove_from_favorites">Remove Entry from Favorites</string>
 
   <!-- Menu -->
   <string name="search">Search</string>

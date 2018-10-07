@@ -56,7 +56,7 @@
             android:id="@+id/def_reading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{presenter.getReading()}"
+            textInJapanese="@{presenter.getReading()}"
             android:textSize="@dimen/text_size_body"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -68,7 +68,7 @@
             android:id="@+id/def_kanji"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{presenter.getKanjiOrReading()}"
+            textInJapanese="@{presenter.getKanjiOrReading()}"
             android:textSize="@dimen/text_size_headline"
             app:layout_constraintLeft_toLeftOf="@id/def_reading"
             app:layout_constraintTop_toBottomOf="@id/def_reading"
@@ -163,6 +163,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:onClick="@{() -> presenter.toggleFavorite(context)}"
+        android:contentDescription="@{safeUnbox(presenter.entry.favorited) ? @string/remove_from_favorites : @string/add_to_favorites }"
         android:src="@{safeUnbox(presenter.entry.favorited) ? @drawable/ic_star : @drawable/ic_star_border }"
         />
 

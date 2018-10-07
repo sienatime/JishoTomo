@@ -14,6 +14,7 @@
   <android.support.constraint.ConstraintLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:focusable="true"
       android:onClick="@{() -> presenter.openDefinitionActivity(context)}">
 
     <TextView
@@ -28,7 +29,7 @@
         android:paddingEnd="16dp"
         android:paddingRight="16dp"
         android:singleLine="true"
-        android:text="@{presenter.getKanjiOrReading()}"
+        textInJapanese="@{presenter.getKanjiOrReading()}"
         android:textSize="@dimen/text_size_list_heading"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -44,7 +45,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:singleLine="true"
-        android:text="@{presenter.getReading()}"
+        textInJapanese="@{presenter.getReading()}"
         android:textSize="@dimen/text_size_body"
         app:layout_constraintBaseline_toBaselineOf="@id/li_kanji"
         app:layout_constraintBottom_toBottomOf="@+id/li_kanji"

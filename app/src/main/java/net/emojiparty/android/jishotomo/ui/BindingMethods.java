@@ -2,10 +2,13 @@ package net.emojiparty.android.jishotomo.ui;
 
 import android.databinding.BindingAdapter;
 import android.text.Html;
+import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
+import android.text.style.LocaleSpan;
 import android.view.View;
 import android.widget.TextView;
 import java.util.List;
+import java.util.Locale;
 import net.emojiparty.android.jishotomo.data.models.CrossReferencedEntry;
 
 public class BindingMethods {
@@ -36,6 +39,16 @@ public class BindingMethods {
       view.setVisibility(View.VISIBLE);
     } else {
       view.setVisibility(View.GONE);
+    }
+  }
+
+  // so that TalkBack will read these TextViews in Japanese
+  @BindingAdapter({ "textInJapanese" }) public static void setTextWithJapanese(View view, String text) {
+    if (text != null) {
+      TextView textView = (TextView) view;
+      SpannableString spannable = new SpannableString(text);
+      spannable.setSpan(new LocaleSpan(Locale.JAPANESE), 0, spannable.length(), 0);
+      textView.setText(spannable);
     }
   }
 }
