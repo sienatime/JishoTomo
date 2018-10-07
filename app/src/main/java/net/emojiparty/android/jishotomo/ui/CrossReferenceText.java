@@ -18,8 +18,9 @@ public class CrossReferenceText {
       linkTexts.add(entryLink(entry, resources));
     }
 
+    String seeAlso = resources.getString(R.string.see_also);
     String links = TextUtils.join(resources.getString(R.string.list_of_words_delimiter), linkTexts);
-    return String.format(resources.getString(R.string.see_also_format), links);
+    return String.format(resources.getString(R.string.see_also_format), seeAlso, links);
   }
 
   private static String entryLink(CrossReferencedEntry entry, Resources resources) {

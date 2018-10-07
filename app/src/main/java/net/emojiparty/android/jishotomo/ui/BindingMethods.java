@@ -1,14 +1,18 @@
 package net.emojiparty.android.jishotomo.ui;
 
+import android.content.Context;
 import android.databinding.BindingAdapter;
 import android.text.Html;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.LocaleSpan;
 import android.view.View;
 import android.widget.TextView;
 import java.util.List;
 import java.util.Locale;
+import net.emojiparty.android.jishotomo.R;
+import net.emojiparty.android.jishotomo.data.SemicolonSplit;
 import net.emojiparty.android.jishotomo.data.models.CrossReferencedEntry;
 
 public class BindingMethods {
@@ -27,9 +31,30 @@ public class BindingMethods {
 
       String text = CrossReferenceText.format(view, crossReferencedEntries);
       TextView textView = (TextView) view;
-      textView.setText(Html.fromHtml(text));
+      Spanned spanned = Html.fromHtml(text);
+      SpannableString spannableString = new SpannableString(spanned);
+      int defaultLocaleLength = view.getContext().getString(R.string.see_also).length();
+
+      spannableString.setSpan(new LocaleSpan(Locale.getDefault()), 0, defaultLocaleLength, 0);
+      spannableString.setSpan(new LocaleSpan(Locale.JAPANESE), defaultLocaleLength + 1, spannableString.length(), 0);
+      textView.setText(spannableString);
       textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
+  }
+
+  @BindingAdapter({ "appliesToText" }) public static void setAppliesToText(View view, String appliesTo) {
+    TextView textView = (TextView) view;
+    Context context = view.getContext();
+    String literalAppliesTo = context.getString(R.string.applies_to);
+    String allAppliesTo = SemicolonSplit.splitAndJoin(appliesTo);
+    String formatted = String.format(context.getString(R.string.applies_to_format), literalAppliesTo, allAppliesTo);
+
+    SpannableString spannableString = new SpannableString(formatted);
+    int defaultLocaleLength = view.getContext().getString(R.string.applies_to).length();
+
+    spannableString.setSpan(new LocaleSpan(Locale.getDefault()), 0, defaultLocaleLength, 0);
+    spannableString.setSpan(new LocaleSpan(Locale.JAPANESE), defaultLocaleLength + 1, spannableString.length(), 0);
+    textView.setText(spannableString);
   }
 
   @BindingAdapter({ "jlptPill" }) public static void setJlptPill(View view, Integer jlptLevel) {

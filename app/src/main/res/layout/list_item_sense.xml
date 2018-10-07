@@ -17,7 +17,6 @@
       android:orientation="vertical"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:focusable="true"
       android:paddingBottom="24dp"
       >
 
@@ -56,8 +55,9 @@
         android:layout_marginTop="4dp"
         android:paddingTop="16dp"
         android:lineSpacingExtra="6sp"
+        android:focusable="true"
         visibleOrGone="@{presenter.getSense().appliesTo != null}"
-        android:text='@{@string/applies_to(SemicolonSplit.splitAndJoin(presenter.getSense().appliesTo))}'
+        appliesToText="@{presenter.getSense().appliesTo}"
         android:textSize="@dimen/text_size_body"
         app:fontFamily="sans-serif"
         tools:text="Applies to: 半片"
