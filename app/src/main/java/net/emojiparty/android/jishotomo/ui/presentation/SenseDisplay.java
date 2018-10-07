@@ -1,4 +1,4 @@
-package net.emojiparty.android.jishotomo.ui;
+package net.emojiparty.android.jishotomo.ui.presentation;
 
 import android.content.Context;
 import android.content.res.Resources;

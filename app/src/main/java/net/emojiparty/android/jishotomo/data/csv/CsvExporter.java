@@ -11,7 +11,7 @@ import net.emojiparty.android.jishotomo.data.SemicolonSplit;
 import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses;
 import net.emojiparty.android.jishotomo.data.models.SenseWithCrossReferences;
 import net.emojiparty.android.jishotomo.data.room.Sense;
-import net.emojiparty.android.jishotomo.ui.SenseDisplay;
+import net.emojiparty.android.jishotomo.ui.presentation.SenseDisplay;
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl;
 
 public class CsvExporter {

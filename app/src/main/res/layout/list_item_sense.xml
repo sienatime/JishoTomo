@@ -6,7 +6,7 @@
 
   <data>
     <import type="net.emojiparty.android.jishotomo.data.SemicolonSplit"/>
-    <import type="net.emojiparty.android.jishotomo.ui.SenseDisplay"/>
+    <import type="net.emojiparty.android.jishotomo.ui.presentation.SenseDisplay"/>
     <variable
         name="presenter"
         type="net.emojiparty.android.jishotomo.data.models.SenseWithCrossReferences"
