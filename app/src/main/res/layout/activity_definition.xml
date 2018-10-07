@@ -59,6 +59,7 @@
             textInJapanese="@{presenter.getReading()}"
             android:textSize="@dimen/text_size_body"
             app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="ねこじゃらし"
             visibleOrGone="@{presenter.hasKanji()}"
@@ -71,6 +72,7 @@
             textInJapanese="@{presenter.getKanjiOrReading()}"
             android:textSize="@dimen/text_size_headline"
             app:layout_constraintLeft_toLeftOf="@id/def_reading"
+            app:layout_constraintStart_toStartOf="@id/def_reading"
             app:layout_constraintTop_toBottomOf="@id/def_reading"
             tools:text="猫じゃらし"
             />
@@ -81,7 +83,9 @@
             android:layout_height="wrap_content"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
             app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/def_kanji"
             />
 
@@ -90,6 +94,7 @@
             style="@style/divider_full_width"
             app:layout_constraintTop_toBottomOf="@id/senses_rv"
             app:layout_constraintLeft_toLeftOf="@id/def_reading"
+            app:layout_constraintStart_toStartOf="@id/def_reading"
             />
 
         <TextView
@@ -100,6 +105,7 @@
             android:paddingTop="16dp"
             app:layout_constraintTop_toBottomOf="@id/senses_rv"
             app:layout_constraintLeft_toLeftOf="@id/def_reading"
+            app:layout_constraintStart_toStartOf="@id/def_reading"
             android:text="@string/alt_kanji"
             visibleOrGone="@{presenter.hasAlternateKanji()}"
             style="@style/small_caps"
@@ -111,6 +117,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/def_alt_kanji_header"
             app:layout_constraintLeft_toLeftOf="@id/def_reading"
+            app:layout_constraintStart_toStartOf="@id/def_reading"
             textInJapanese="@{presenter.getAlternateKanji()}"
             android:textSize="@dimen/text_size_body"
             tools:text="ネコジャラシ"
@@ -125,6 +132,7 @@
             android:paddingTop="16dp"
             app:layout_constraintTop_toBottomOf="@id/def_alt_kanji"
             app:layout_constraintLeft_toLeftOf="@id/def_reading"
+            app:layout_constraintStart_toStartOf="@id/def_reading"
             android:text="@string/alt_readings"
             visibleOrGone="@{presenter.hasAlternateReadings()}"
             style="@style/small_caps"
@@ -136,6 +144,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/def_alt_readings_header"
             app:layout_constraintLeft_toLeftOf="@id/def_reading"
+            app:layout_constraintStart_toStartOf="@id/def_reading"
             textInJapanese="@{presenter.getAlternateReadings()}"
             android:textSize="@dimen/text_size_body"
             tools:text="ネコジャラシ"
@@ -149,6 +158,7 @@
             tools:text="N1"
             style="@style/dark_pill"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             />
 

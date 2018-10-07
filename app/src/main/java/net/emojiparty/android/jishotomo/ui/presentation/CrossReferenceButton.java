@@ -43,11 +43,8 @@ public class CrossReferenceButton {
     LinearLayout.LayoutParams layoutParams =
         new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
             LinearLayout.LayoutParams.WRAP_CONTENT);
-    int left = getPixelValue(0);
-    int top = getPixelValue(0);
-    int right = getPixelValue(margin);
-    int bottom = getPixelValue(0);
-    layoutParams.setMargins(left, top, right, bottom);
+    int marginInPixels = getPixelValue(margin);
+    layoutParams.setMarginEnd(marginInPixels);
     button.setLayoutParams(layoutParams);
   }
 

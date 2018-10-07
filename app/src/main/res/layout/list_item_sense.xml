@@ -41,6 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:paddingTop="16dp"
+        android:textAlignment="viewStart"
         android:lineSpacingExtra="6sp"
         android:text='@{SemicolonSplit.splitAndJoin(presenter.getSense().glosses, "\n")}'
         android:textSize="@dimen/text_size_body"
@@ -55,6 +56,7 @@
         android:layout_marginTop="4dp"
         android:paddingTop="16dp"
         android:lineSpacingExtra="6sp"
+        android:textAlignment="viewStart"
         android:focusable="true"
         visibleOrGone="@{presenter.getSense().appliesTo != null}"
         appliesToText="@{presenter.getSense().appliesTo}"
@@ -70,6 +72,7 @@
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
         android:paddingTop="8dp"
+        android:textAlignment="viewStart"
         android:textSize="@dimen/text_size_body"
         app:fontFamily="sans-serif"
         visibleOrGone="@{presenter.crossReferences.size() > 0}"
