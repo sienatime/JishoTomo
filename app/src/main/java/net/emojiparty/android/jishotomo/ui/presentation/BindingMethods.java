@@ -2,27 +2,16 @@ package net.emojiparty.android.jishotomo.ui.presentation;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
 import android.databinding.BindingAdapter;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import android.text.style.LocaleSpan;
-import android.util.TypedValue;
-import android.view.ContextThemeWrapper;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.util.List;
-import java.util.Locale;
 import net.emojiparty.android.jishotomo.R;
 import net.emojiparty.android.jishotomo.data.SemicolonSplit;
 import net.emojiparty.android.jishotomo.data.models.CrossReferencedEntry;
-import net.emojiparty.android.jishotomo.ui.activities.DefinitionActivity;
-import org.w3c.dom.Text;
-
-import static net.emojiparty.android.jishotomo.ui.activities.DefinitionActivity.ENTRY_ID_EXTRA;
 
 public class BindingMethods {
   @BindingAdapter({ "visibleOrGone" })

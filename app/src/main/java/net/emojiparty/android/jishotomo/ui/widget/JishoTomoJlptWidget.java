@@ -15,7 +15,7 @@ import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
 import net.emojiparty.android.jishotomo.ui.presentation.StringForJlptLevel;
 import net.emojiparty.android.jishotomo.ui.activities.DefinitionActivity;
 
-import static net.emojiparty.android.jishotomo.ui.activities.DefinitionActivity.ENTRY_ID_EXTRA;
+import static net.emojiparty.android.jishotomo.ui.activities.DefinitionFragment.ENTRY_ID_EXTRA;
 
 /**
  * Implementation of App Widget functionality.
