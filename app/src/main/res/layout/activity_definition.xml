@@ -24,11 +24,9 @@
 
   </android.support.design.widget.AppBarLayout>
 
-  <fragment
-      android:id="@+id/definition_fragment"
-      android:name="net.emojiparty.android.jishotomo.ui.activities.DefinitionFragment"
+  <FrameLayout
+      android:id="@+id/definition_activity_fragment_container"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      />
+      android:layout_height="match_parent" />
 
 </android.support.design.widget.CoordinatorLayout>

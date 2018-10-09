@@ -1,7 +1,6 @@
 package net.emojiparty.android.jishotomo.ui.activities;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
@@ -9,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +28,15 @@ public class DefinitionFragment extends Fragment {
   public static final int ENTRY_NOT_FOUND = -1;
   private AnalyticsLogger analyticsLogger;
 
+  public static void replaceInContainer(FragmentManager fragmentManager, int entryId,
+      int containerId) {
+    DefinitionFragment fragment = new DefinitionFragment();
+    Bundle bundle = new Bundle();
+    bundle.putInt(ENTRY_ID_EXTRA, entryId);
+    fragment.setArguments(bundle);
+    fragmentManager.beginTransaction().replace(containerId, fragment).commit();
+  }
+
   @Nullable @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
@@ -36,16 +45,16 @@ public class DefinitionFragment extends Fragment {
     root = binding.getRoot();
     FragmentActivity activity = getActivity();
     binding.setLifecycleOwner(activity);
-    setupViewModel(activity.getIntent(), binding);
+    setupViewModel(getArguments(), binding);
     analyticsLogger = ((JishoTomoApp) activity.getApplication()).getAnalyticsLogger();
     return root;
   }
 
-  private void setupViewModel(Intent intent, ViewDataBinding binding) {
+  private void setupViewModel(Bundle bundle, ViewDataBinding binding) {
     RecyclerView sensesRecyclerView = root.findViewById(R.id.senses_rv);
     final DataBindingAdapter adapter = new DataBindingAdapter(R.layout.list_item_sense);
     sensesRecyclerView.setAdapter(adapter);
-    int entryId = findEntryId(intent);
+    int entryId = findEntryId(bundle);
     if (entryId != ENTRY_NOT_FOUND) {
       EntryViewModel viewModel = ViewModelProviders.of(this,
           new EntryViewModelFactory(getActivity().getApplication(), this, entryId))
@@ -60,17 +69,10 @@ public class DefinitionFragment extends Fragment {
     }
   }
 
-  private int findEntryId(Intent intent) {
-    if (intent == null) {
+  private int findEntryId(Bundle bundle) {
+    if (bundle == null) {
       return ENTRY_NOT_FOUND;
     }
-    if (intent.hasExtra(ENTRY_ID_EXTRA)) {
-      return intent.getIntExtra(ENTRY_ID_EXTRA, ENTRY_NOT_FOUND);
-    } else if (intent.getData() != null) {
-      String id = intent.getData().getLastPathSegment();
-      return Integer.parseInt(id);
-    } else {
-      return ENTRY_NOT_FOUND;
-    }
+    return bundle.getInt(ENTRY_ID_EXTRA, ENTRY_NOT_FOUND);
   }
 }

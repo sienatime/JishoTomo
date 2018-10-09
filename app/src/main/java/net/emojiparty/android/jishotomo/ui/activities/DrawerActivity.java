@@ -21,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +48,7 @@ public class DrawerActivity extends AppCompatActivity
   private TextView toolbarTitle;
   private PagedEntriesAdapter adapter;
   private AnalyticsLogger analyticsLogger;
+  public FrameLayout fragmentContainer;
   private boolean showExportButton = false;
 
   private String STATE_SEARCH_TYPE = "state_search_type";
@@ -63,6 +65,7 @@ public class DrawerActivity extends AppCompatActivity
     analyticsLogger = ((JishoTomoApp) getApplication()).getAnalyticsLogger();
     viewModel = ViewModelProviders.of(this).get(PagedEntriesViewModel.class);
     searchResults = findViewById(R.id.search_results_rv);
+    fragmentContainer = findViewById(R.id.definition_fragment_container); // non-null on tablet
 
     setRecyclerViewWithNewAdapter();
     loadingIndicator = findViewById(R.id.loading);
@@ -97,6 +100,10 @@ public class DrawerActivity extends AppCompatActivity
   private void setRecyclerViewWithNewAdapter() {
     adapter = new PagedEntriesAdapter(R.layout.list_item_entry);
     searchResults.setAdapter(adapter);
+  }
+
+  public void transactDefinitionFragment(int entryId) {
+    DefinitionFragment.replaceInContainer(getSupportFragmentManager(), entryId, R.id.definition_fragment_container);
   }
 
   // https://developer.android.com/training/search/setup
