@@ -1,10 +1,8 @@
 package net.emojiparty.android.jishotomo.ui.presentation;
 
-import android.app.Activity;
 import android.content.Context;
 import android.databinding.BindingAdapter;
 import android.text.SpannableString;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -35,20 +33,6 @@ public class BindingMethods {
     for (int i = 0; i < crossReferencedEntries.size(); i++) {
       CrossReferencedEntry crossReferencedEntry = crossReferencedEntries.get(i);
       linearLayout.addView(crossReferenceButton.create(crossReferencedEntry));
-    }
-  }
-
-  @BindingAdapter({ "variableEllipsize" })
-  public static void variableEllipsize(View view, Context context) {
-    TextView textview = (TextView) view;
-    if (ScreenSize.isWideLayout((Activity) context)) {
-      textview.setEllipsize(null);
-      textview.setMaxLines(Integer.MAX_VALUE);
-      textview.setSingleLine(false);
-    } else {
-      textview.setEllipsize(TextUtils.TruncateAt.END);
-      textview.setMaxLines(1);
-      textview.setSingleLine(true);
     }
   }
 
