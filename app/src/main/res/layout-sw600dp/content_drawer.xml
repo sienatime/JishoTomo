@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:baselineAligned="false"
+      >
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".ui.activities.DrawerActivity"
+        tools:showIn="@layout/app_bar_drawer"
+        >
+
+      <ProgressBar
+          android:id="@+id/exporting"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+          android:layout_gravity="top"
+          android:indeterminate="false"
+          android:visibility="gone"
+          />
+
+      <ProgressBar
+          android:id="@+id/loading"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          />
+
+      <android.support.v7.widget.RecyclerView
+          android:id="@+id/search_results_rv"
+          app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/definition_fragment_container"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        />
+
+  </LinearLayout>
+</layout>

@@ -5,6 +5,7 @@
     >
 
   <data>
+    <import type="net.emojiparty.android.jishotomo.ui.presentation.EntryClickHandler"/>
     <variable
         name="presenter"
         type="net.emojiparty.android.jishotomo.data.models.SearchResultEntry"
@@ -15,7 +16,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:focusable="true"
-      android:onClick="@{() -> presenter.openDefinitionActivity(context)}">
+      android:onClick="@{() ->EntryClickHandler.open(context, presenter.id)}">
 
     <TextView
         android:id="@+id/li_kanji"
