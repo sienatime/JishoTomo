@@ -1,7 +1,6 @@
 package net.emojiparty.android.jishotomo.ui.presentation;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.view.ContextThemeWrapper;
 import android.view.View;
@@ -9,9 +8,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import net.emojiparty.android.jishotomo.R;
 import net.emojiparty.android.jishotomo.data.models.CrossReferencedEntry;
-import net.emojiparty.android.jishotomo.ui.activities.DefinitionActivity;
-
-import static net.emojiparty.android.jishotomo.ui.activities.DefinitionFragment.ENTRY_ID_EXTRA;
 
 public class CrossReferenceButton {
   private Context context;
@@ -31,9 +27,7 @@ public class CrossReferenceButton {
     button.setText(JapaneseLocaleSpan.all(crossReferencedEntry.getKanjiOrReading()));
     setMargins(button);
     button.setOnClickListener((View clickView) -> {
-      Intent intent = new Intent(context, DefinitionActivity.class);
-      intent.putExtra(ENTRY_ID_EXTRA, crossReferencedEntry.id);
-      context.startActivity(intent);
+      EntryClickHandler.open(context, crossReferencedEntry.id);
     });
     return button;
   }
