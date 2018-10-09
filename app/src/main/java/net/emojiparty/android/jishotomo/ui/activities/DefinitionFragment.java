@@ -28,12 +28,17 @@ public class DefinitionFragment extends Fragment {
   public static final int ENTRY_EMPTY = -1;
   private AnalyticsLogger analyticsLogger;
 
-  public static void replaceInContainer(FragmentManager fragmentManager, int entryId,
-      int containerId) {
+  public static DefinitionFragment instance(int entryId) {
     DefinitionFragment fragment = new DefinitionFragment();
     Bundle bundle = new Bundle();
     bundle.putInt(ENTRY_ID_EXTRA, entryId);
     fragment.setArguments(bundle);
+    return fragment;
+  }
+
+  public static void replaceInContainer(FragmentManager fragmentManager, int entryId,
+      int containerId) {
+    DefinitionFragment fragment = instance(entryId);
     fragmentManager.beginTransaction().add(containerId, fragment).addToBackStack(null).commit();
   }
 

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -110,11 +111,20 @@ public class DrawerActivity extends AppCompatActivity
     searchResults.setAdapter(adapter);
   }
 
+  private void clearDefinitionBackstack() {
+    if (fragmentContainer != null) {
+      FragmentManager fragmentManager = getSupportFragmentManager();
+      fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+      if (fragmentManager.getBackStackEntryCount() == 0) {
+        DefinitionFragment fragment = DefinitionFragment.instance(ENTRY_EMPTY);
+        fragmentManager.beginTransaction().replace(R.id.definition_fragment_container, fragment).commit();
+      }
+    }
+  }
+
   public void transactDefinitionFragment(int entryId) {
     lastEntryViewed = entryId;
-    if (fragmentContainer != null) {
-      DefinitionFragment.replaceInContainer(getSupportFragmentManager(), entryId, R.id.definition_fragment_container);
-    }
+    DefinitionFragment.replaceInContainer(getSupportFragmentManager(), entryId, R.id.definition_fragment_container);
   }
 
   // https://developer.android.com/training/search/setup
@@ -280,8 +290,7 @@ public class DrawerActivity extends AppCompatActivity
     // against the two lists when changing search types. the app was really laggy
     // when changing lists without re-instantiating the adapter.
     setRecyclerViewWithNewAdapter();
-    transactDefinitionFragment(ENTRY_EMPTY);
-
+    clearDefinitionBackstack();
     loadingIndicator.setVisibility(View.VISIBLE);
     viewModel.pagedEntriesControlLiveData.setValue(pagedEntriesControl);
     analyticsLogger.logSearchResultsOrViewItemList(pagedEntriesControl);
