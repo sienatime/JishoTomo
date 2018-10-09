@@ -101,7 +101,7 @@ public class DrawerActivity extends AppCompatActivity
     setPagedEntriesControl(pagedEntriesControl);
     setShowExportButton(bundle.getBoolean(STATE_SHOW_EXPORT_BUTTON));
     int lastEntryViewedFromBundle = bundle.getInt(STATE_LAST_ENTRY_VIEWED);
-    if (lastEntryViewed != ENTRY_EMPTY) {
+    if (lastEntryViewedFromBundle != ENTRY_EMPTY) {
       addDefinitionFragment(lastEntryViewedFromBundle);
     }
   }
