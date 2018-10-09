@@ -9,14 +9,17 @@ import static net.emojiparty.android.jishotomo.ui.activities.DefinitionFragment.
 
 public class EntryClickHandler {
   public static void open(Context context, int entryId) {
-    DrawerActivity activity = (DrawerActivity) context;
-
-    if (activity.fragmentContainer != null) {
-      activity.transactDefinitionFragment(entryId);
+    if (isDrawerActivityWithFragment(context)) {
+      ((DrawerActivity) context).transactDefinitionFragment(entryId);
     } else {
       Intent intent = new Intent(context, DefinitionActivity.class);
       intent.putExtra(ENTRY_ID_EXTRA, entryId);
       context.startActivity(intent);
     }
+  }
+
+  private static boolean isDrawerActivityWithFragment(Context context) {
+    return (context instanceof DrawerActivity)
+        && ((DrawerActivity) context).fragmentContainer != null;
   }
 }
