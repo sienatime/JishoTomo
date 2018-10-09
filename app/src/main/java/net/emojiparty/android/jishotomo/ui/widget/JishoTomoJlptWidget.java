@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.TaskStackBuilder;
 import android.view.View;
 import android.widget.RemoteViews;
 import net.emojiparty.android.jishotomo.JishoTomoApp;
@@ -12,14 +13,15 @@ import net.emojiparty.android.jishotomo.R;
 import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger;
 import net.emojiparty.android.jishotomo.data.AppRepository;
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
-import net.emojiparty.android.jishotomo.ui.presentation.StringForJlptLevel;
 import net.emojiparty.android.jishotomo.ui.activities.DefinitionActivity;
+import net.emojiparty.android.jishotomo.ui.presentation.StringForJlptLevel;
 
 import static net.emojiparty.android.jishotomo.ui.activities.DefinitionFragment.ENTRY_ID_EXTRA;
 
 /**
  * Implementation of App Widget functionality.
- * App Widget Configuration implemented in {@link JishoTomoJlptWidgetConfigureActivity JishoTomoJlptWidgetConfigureActivity}
+ * App Widget Configuration implemented in {@link JishoTomoJlptWidgetConfigureActivity
+ * JishoTomoJlptWidgetConfigureActivity}
  */
 public class JishoTomoJlptWidget extends AppWidgetProvider {
 
@@ -48,17 +50,18 @@ public class JishoTomoJlptWidget extends AppWidgetProvider {
     int jlptStringId = StringForJlptLevel.getId(selectedLevel, context);
     views.setTextViewText(R.id.widget_level, context.getString(jlptStringId));
 
-    PendingIntent appPendingIntent = openDefinitionActivity(entry, context, appWidgetId);
+    PendingIntent appPendingIntent = openDefinitionActivity(entry, context);
     views.setOnClickPendingIntent(R.id.widget_container, appPendingIntent);
     return views;
   }
 
-  private static PendingIntent openDefinitionActivity(SearchResultEntry entry, Context context,
-      int appWidgetId) {
+  private static PendingIntent openDefinitionActivity(SearchResultEntry entry, Context context) {
     Intent appIntent = new Intent(context, DefinitionActivity.class);
     appIntent.putExtra(ENTRY_ID_EXTRA, entry.id);
-    return PendingIntent.getActivity(context, appWidgetId, appIntent,
-        PendingIntent.FLAG_UPDATE_CURRENT);
+
+    return TaskStackBuilder.create(context)
+        .addNextIntentWithParentStack(appIntent)
+        .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
   }
 
   @Override public void onEnabled(Context context) {
