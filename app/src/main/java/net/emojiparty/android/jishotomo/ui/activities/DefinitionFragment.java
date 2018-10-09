@@ -34,7 +34,7 @@ public class DefinitionFragment extends Fragment {
     Bundle bundle = new Bundle();
     bundle.putInt(ENTRY_ID_EXTRA, entryId);
     fragment.setArguments(bundle);
-    fragmentManager.beginTransaction().replace(containerId, fragment).commit();
+    fragmentManager.beginTransaction().add(containerId, fragment).addToBackStack(null).commit();
   }
 
   @Nullable @Override

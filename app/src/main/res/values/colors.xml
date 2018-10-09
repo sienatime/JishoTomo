@@ -5,4 +5,5 @@
   <color name="colorAccent">#FF4081</color>
   <color name="lineGray">#dddddd</color>
   <color name="defaultTextColor">#404040</color>
+  <color name="background">#ffffff</color>
 </resources>
