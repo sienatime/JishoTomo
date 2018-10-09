@@ -15,7 +15,7 @@ public class DefinitionActivity extends AppCompatActivity {
     setContentView(R.layout.activity_definition);
     setupToolbar();
     int entryId = findEntryId(getIntent());
-    DefinitionFragment.replaceInContainer(getSupportFragmentManager(), entryId,
+    DefinitionFragment.addToContainer(getSupportFragmentManager(), entryId,
         R.id.definition_activity_fragment_container);
   }
 

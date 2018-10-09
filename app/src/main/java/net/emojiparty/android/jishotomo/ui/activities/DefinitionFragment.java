@@ -36,7 +36,7 @@ public class DefinitionFragment extends Fragment {
     return fragment;
   }
 
-  public static void replaceInContainer(FragmentManager fragmentManager, int entryId,
+  public static void addToContainer(FragmentManager fragmentManager, int entryId,
       int containerId) {
     DefinitionFragment fragment = instance(entryId);
     fragmentManager.beginTransaction().add(containerId, fragment).addToBackStack(null).commit();

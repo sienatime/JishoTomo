@@ -124,7 +124,7 @@ public class DrawerActivity extends AppCompatActivity
 
   public void transactDefinitionFragment(int entryId) {
     lastEntryViewed = entryId;
-    DefinitionFragment.replaceInContainer(getSupportFragmentManager(), entryId, R.id.definition_fragment_container);
+    DefinitionFragment.addToContainer(getSupportFragmentManager(), entryId, R.id.definition_fragment_container);
   }
 
   // https://developer.android.com/training/search/setup
