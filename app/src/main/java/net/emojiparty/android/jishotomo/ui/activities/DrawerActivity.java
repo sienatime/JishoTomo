@@ -37,7 +37,7 @@ import net.emojiparty.android.jishotomo.ui.dialogs.ExplainExportDialog;
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl;
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesViewModel;
 
-import static net.emojiparty.android.jishotomo.ui.activities.DefinitionFragment.ENTRY_NOT_FOUND;
+import static net.emojiparty.android.jishotomo.ui.activities.DefinitionFragment.ENTRY_EMPTY;
 
 public class DrawerActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener {
@@ -52,7 +52,7 @@ public class DrawerActivity extends AppCompatActivity
   private AnalyticsLogger analyticsLogger;
   public FrameLayout fragmentContainer;
   private boolean showExportButton = false;
-  private int lastEntryViewed = ENTRY_NOT_FOUND;
+  private int lastEntryViewed = ENTRY_EMPTY;
 
   private String STATE_SEARCH_TYPE = "state_search_type";
   private String STATE_SEARCH_TERM = "state_search_term";
@@ -100,7 +100,7 @@ public class DrawerActivity extends AppCompatActivity
     setPagedEntriesControl(pagedEntriesControl);
     setShowExportButton(bundle.getBoolean(STATE_SHOW_EXPORT_BUTTON));
     int lastEntryViewedFromBundle = bundle.getInt(STATE_LAST_ENTRY_VIEWED);
-    if (lastEntryViewed != ENTRY_NOT_FOUND) {
+    if (lastEntryViewed != ENTRY_EMPTY) {
       transactDefinitionFragment(lastEntryViewedFromBundle);
     }
   }

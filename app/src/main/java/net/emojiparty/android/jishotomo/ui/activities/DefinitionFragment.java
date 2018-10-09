@@ -25,7 +25,7 @@ import net.emojiparty.android.jishotomo.ui.viewmodels.EntryViewModelFactory;
 public class DefinitionFragment extends Fragment {
   private View root;
   public static final String ENTRY_ID_EXTRA = "ENTRY_ID_EXTRA";
-  public static final int ENTRY_NOT_FOUND = -1;
+  public static final int ENTRY_EMPTY = -1;
   private AnalyticsLogger analyticsLogger;
 
   public static void replaceInContainer(FragmentManager fragmentManager, int entryId,
@@ -55,7 +55,7 @@ public class DefinitionFragment extends Fragment {
     final DataBindingAdapter adapter = new DataBindingAdapter(R.layout.list_item_sense);
     sensesRecyclerView.setAdapter(adapter);
     int entryId = findEntryId(bundle);
-    if (entryId != ENTRY_NOT_FOUND) {
+    if (entryId != ENTRY_EMPTY) {
       EntryViewModel viewModel = ViewModelProviders.of(this,
           new EntryViewModelFactory(getActivity().getApplication(), this, entryId))
           .get(EntryViewModel.class);
@@ -71,8 +71,8 @@ public class DefinitionFragment extends Fragment {
 
   private int findEntryId(Bundle bundle) {
     if (bundle == null) {
-      return ENTRY_NOT_FOUND;
+      return ENTRY_EMPTY;
     }
-    return bundle.getInt(ENTRY_ID_EXTRA, ENTRY_NOT_FOUND);
+    return bundle.getInt(ENTRY_ID_EXTRA, ENTRY_EMPTY);
   }
 }
