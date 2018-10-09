@@ -66,6 +66,8 @@ public class DefinitionFragment extends Fragment {
           analyticsLogger.logViewItem(entry.entry.getId(), entry.getKanjiOrReading());
         }
       });
+    } else {
+      root.findViewById(R.id.empty).setVisibility(View.VISIBLE);
     }
   }
 

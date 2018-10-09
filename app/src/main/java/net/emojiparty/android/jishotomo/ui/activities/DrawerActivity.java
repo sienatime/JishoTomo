@@ -112,7 +112,9 @@ public class DrawerActivity extends AppCompatActivity
 
   public void transactDefinitionFragment(int entryId) {
     lastEntryViewed = entryId;
-    DefinitionFragment.replaceInContainer(getSupportFragmentManager(), entryId, R.id.definition_fragment_container);
+    if (fragmentContainer != null) {
+      DefinitionFragment.replaceInContainer(getSupportFragmentManager(), entryId, R.id.definition_fragment_container);
+    }
   }
 
   // https://developer.android.com/training/search/setup
@@ -278,6 +280,7 @@ public class DrawerActivity extends AppCompatActivity
     // against the two lists when changing search types. the app was really laggy
     // when changing lists without re-instantiating the adapter.
     setRecyclerViewWithNewAdapter();
+    transactDefinitionFragment(ENTRY_EMPTY);
 
     loadingIndicator.setVisibility(View.VISIBLE);
     viewModel.pagedEntriesControlLiveData.setValue(pagedEntriesControl);

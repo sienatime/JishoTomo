@@ -16,6 +16,7 @@
   <string name="search_hint">Search the dictionary</string>
   <string name="add_to_favorites">Add Entry to Favorites</string>
   <string name="remove_from_favorites">Remove Entry from Favorites</string>
+  <string name="select_something">No entry selected.</string>
 
   <!-- Menu -->
   <string name="search">Search</string>
