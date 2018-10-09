@@ -10,7 +10,7 @@ import static net.emojiparty.android.jishotomo.ui.activities.DefinitionFragment.
 public class EntryClickHandler {
   public static void open(Context context, int entryId) {
     if (isDrawerActivityWithFragment(context)) {
-      ((DrawerActivity) context).transactDefinitionFragment(entryId);
+      ((DrawerActivity) context).addDefinitionFragment(entryId);
     } else {
       Intent intent = new Intent(context, DefinitionActivity.class);
       intent.putExtra(ENTRY_ID_EXTRA, entryId);

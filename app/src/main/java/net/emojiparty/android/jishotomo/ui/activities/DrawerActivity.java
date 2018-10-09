@@ -102,7 +102,7 @@ public class DrawerActivity extends AppCompatActivity
     setShowExportButton(bundle.getBoolean(STATE_SHOW_EXPORT_BUTTON));
     int lastEntryViewedFromBundle = bundle.getInt(STATE_LAST_ENTRY_VIEWED);
     if (lastEntryViewed != ENTRY_EMPTY) {
-      transactDefinitionFragment(lastEntryViewedFromBundle);
+      addDefinitionFragment(lastEntryViewedFromBundle);
     }
   }
 
@@ -117,14 +117,20 @@ public class DrawerActivity extends AppCompatActivity
       fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
       if (fragmentManager.getBackStackEntryCount() == 0) {
         DefinitionFragment fragment = DefinitionFragment.instance(ENTRY_EMPTY);
-        fragmentManager.beginTransaction().replace(R.id.definition_fragment_container, fragment).commit();
+        fragmentManager.beginTransaction()
+            .replace(R.id.definition_fragment_container, fragment)
+            .commit();
       }
     }
   }
 
-  public void transactDefinitionFragment(int entryId) {
+  public void addDefinitionFragment(int entryId) {
     lastEntryViewed = entryId;
-    DefinitionFragment.addToContainer(getSupportFragmentManager(), entryId, R.id.definition_fragment_container);
+    DefinitionFragment fragment = DefinitionFragment.instance(entryId);
+    getSupportFragmentManager().beginTransaction()
+        .add(R.id.definition_fragment_container, fragment)
+        .addToBackStack(null)
+        .commit();
   }
 
   // https://developer.android.com/training/search/setup
@@ -193,7 +199,7 @@ public class DrawerActivity extends AppCompatActivity
     SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
     searchViewMenuItem = menu.findItem(R.id.menu_search);
     SearchView searchView = (SearchView) searchViewMenuItem.getActionView();
-    MenuItem exportIcon =  menu.getItem(1);
+    MenuItem exportIcon = menu.getItem(1);
     searchView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
       @Override public void onViewAttachedToWindow(View view) {
         // hide export button while search input is open

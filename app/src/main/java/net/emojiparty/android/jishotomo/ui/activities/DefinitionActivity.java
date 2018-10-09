@@ -15,8 +15,10 @@ public class DefinitionActivity extends AppCompatActivity {
     setContentView(R.layout.activity_definition);
     setupToolbar();
     int entryId = findEntryId(getIntent());
-    DefinitionFragment.addToContainer(getSupportFragmentManager(), entryId,
-        R.id.definition_activity_fragment_container);
+    DefinitionFragment fragment = DefinitionFragment.instance(entryId);
+    getSupportFragmentManager().beginTransaction()
+        .replace(R.id.definition_activity_fragment_container, fragment)
+        .commit();
   }
 
   private void setupToolbar() {
