@@ -16,6 +16,11 @@
       android:icon="@drawable/ic_menu_favorites"
       android:title="@string/favorites"/>
 
+  <item
+      android:id="@+id/nav_about"
+      android:icon="@drawable/ic_menu_about"
+      android:title="@string/about"/>
+
   <item android:title="@string/jlpt">
     <menu>
       <item

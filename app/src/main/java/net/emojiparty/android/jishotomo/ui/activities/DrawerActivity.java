@@ -256,6 +256,11 @@ public class DrawerActivity extends AppCompatActivity
     dialog.show(getSupportFragmentManager(), "export_explain");
   }
 
+  private void showAbout() {
+    Intent intent = new Intent(this, AboutAppActivity.class);
+    startActivity(intent);
+  }
+
   private void exportCsv() {
     CsvExportAsyncTask.CsvExportUiCallbacks uiCallbacks =
         new CsvExportAsyncTask.CsvExportUiCallbacks() {
@@ -336,6 +341,8 @@ public class DrawerActivity extends AppCompatActivity
       pagedEntriesControl.searchType = PagedEntriesControl.JLPT;
       pagedEntriesControl.jlptLevel = jlptIds.indexOf(id) + 1;
       setShowExportButton(true);
+    } else if (id == R.id.nav_about) {
+      showAbout();
     }
 
     if (pagedEntriesControl.searchType != null) {

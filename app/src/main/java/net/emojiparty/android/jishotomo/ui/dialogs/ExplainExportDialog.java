@@ -27,9 +27,7 @@ public class ExplainExportDialog extends DialogFragment {
         .setPositiveButton(R.string.export_yes, (DialogInterface dialog, int id) -> {
           callback.proceed();
         })
-        .setNegativeButton(R.string.export_no, (DialogInterface dialog, int id) -> {
-
-        });
+        .setNegativeButton(R.string.export_no, null);
     return builder.create();
   }
 }

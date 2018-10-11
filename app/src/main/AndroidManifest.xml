@@ -3,8 +3,9 @@
     package="net.emojiparty.android.jishotomo">
 
   <!-- https://developer.android.com/training/data-storage/files#PublicFiles -->
-  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-      android:maxSdkVersion="18" />
+  <uses-permission
+      android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+      android:maxSdkVersion="18"/>
 
   <application
       android:name=".JishoTomoApp"
@@ -73,9 +74,16 @@
         android:grantUriPermissions="true">
       <meta-data
           android:name="android.support.FILE_PROVIDER_PATHS"
-          android:resource="@xml/fileprovider" />
+          android:resource="@xml/fileprovider"/>
     </provider>
 
+    <activity
+        android:name=".ui.activities.AboutAppActivity"
+        android:parentActivityName=".ui.activities.DrawerActivity">
+      <meta-data
+          android:name="android.support.PARENT_ACTIVITY"
+          android:value="net.emojiparty.android.jishotomo.ui.activities.DrawerActivity"/>
+    </activity>
   </application>
 
 </manifest>
