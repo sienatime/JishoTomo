@@ -91,6 +91,7 @@
             app:layout_constraintLeft_toLeftOf="@id/def_reading"
             app:layout_constraintStart_toStartOf="@id/def_reading"
             app:layout_constraintTop_toBottomOf="@id/senses_rv"
+            visibleOrGone="@{presenter.hasAlternateKanji() || presenter.hasAlternateReadings() }"
             style="@style/divider_full_width"
             />
 
