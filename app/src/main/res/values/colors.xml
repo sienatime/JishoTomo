@@ -6,7 +6,7 @@
   <color name="colorAccent">#ef9a9a</color>
   <color name="secondaryLightColor">#ffcccb</color>
   <color name="secondaryDarkColor">#ba6b6c</color>
-  <color name="lineGray">#dddddd</color>
+  <color name="lineGray">#dfdfdf</color>
   <color name="defaultTextColor">#404040</color>
   <color name="background">#ffffff</color>
   <color name="ripple">#42ffffff</color>

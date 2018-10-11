@@ -30,6 +30,12 @@
     <item name="android:background">@color/lineGray</item>
   </style>
 
+  <style name="divider_full_height">
+    <item name="android:layout_width">2dp</item>
+    <item name="android:layout_height">match_parent</item>
+    <item name="android:background">@color/lineGray</item>
+  </style>
+
   <style name="small_caps">
     <item name="android:textAllCaps">true</item>
     <item name="android:textStyle">bold</item>
