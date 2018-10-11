@@ -9,6 +9,7 @@
   <color name="lineGray">#dddddd</color>
   <color name="defaultTextColor">#404040</color>
   <color name="background">#ffffff</color>
+  <color name="ripple">#42ffffff</color>
 
   <color name="primaryTextColor">#ffffff</color>
   <color name="secondaryTextColor">#000000</color>

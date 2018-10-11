@@ -16,6 +16,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:focusable="true"
+      android:background="@drawable/selected"
       android:onClick="@{() ->EntryClickHandler.open(context, presenter.id)}">
 
     <TextView
