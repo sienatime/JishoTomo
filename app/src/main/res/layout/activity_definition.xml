@@ -19,6 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
+        app:elevation="@dimen/app_bar_elevation"
         app:popupTheme="@style/AppTheme.PopupOverlay"
         />
 
