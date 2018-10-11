@@ -11,6 +11,7 @@
     android:paddingRight="16dp"
     android:paddingStart="16dp"
     android:paddingTop="24dp"
+    android:background="@color/background"
     >
 
   <TextView
