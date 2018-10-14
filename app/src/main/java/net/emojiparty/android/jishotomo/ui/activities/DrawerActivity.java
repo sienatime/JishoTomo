@@ -66,6 +66,7 @@ public class DrawerActivity extends AppCompatActivity
     setContentView(R.layout.activity_drawer);
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
+    getSupportActionBar().setDisplayShowTitleEnabled(false); // I handle the title separately
 
     analyticsLogger = ((JishoTomoApp) getApplication()).getAnalyticsLogger();
     viewModel = ViewModelProviders.of(this).get(PagedEntriesViewModel.class);
