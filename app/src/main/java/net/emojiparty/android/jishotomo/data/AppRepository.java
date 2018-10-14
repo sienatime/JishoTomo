@@ -47,9 +47,24 @@ public class AppRepository {
     return liveData;
   }
 
+  private boolean isKana(int codePoint) {
+    return codePoint >= 12352 && codePoint <= 12543;
+  }
+
+  private boolean isCJK(int codePoint) {
+    return codePoint >= 19968;
+  }
+
   public LiveData<PagedList<SearchResultEntry>> search(String term) {
+    int unicodeCodePoint = Character.codePointAt(term, 0);
     String formattedQuery = String.format("%%%s%%", term);
-    return new LivePagedListBuilder<>(entryDao.search(formattedQuery), PAGE_SIZE).build();
+    if (isKana(unicodeCodePoint)) {
+      return new LivePagedListBuilder<>(entryDao.searchByReading(formattedQuery), PAGE_SIZE).build();
+    } else if (isCJK(unicodeCodePoint)) {
+      return new LivePagedListBuilder<>(entryDao.searchByKanji(formattedQuery), PAGE_SIZE).build();
+    } else {
+      return new LivePagedListBuilder<>(entryDao.searchByGloss(formattedQuery), PAGE_SIZE).build();
+    }
   }
 
   public LiveData<PagedList<SearchResultEntry>> browse() {

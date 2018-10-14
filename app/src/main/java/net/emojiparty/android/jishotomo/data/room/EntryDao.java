@@ -20,8 +20,14 @@ public interface EntryDao {
   @Query("SELECT id, primary_kanji, primary_reading FROM entries ORDER BY id ASC")
   DataSource.Factory<Integer, SearchResultEntry> browse();
 
-  @Query("SELECT id, primary_kanji, primary_reading FROM entries WHERE primary_kanji LIKE :term")
-  DataSource.Factory<Integer, SearchResultEntry> search(String term);
+  @Query("SELECT id, primary_kanji, primary_reading FROM entries WHERE primary_kanji LIKE :term LIMIT 20")
+  DataSource.Factory<Integer, SearchResultEntry> searchByKanji(String term);
+
+  @Query("SELECT id, primary_kanji, primary_reading FROM entries WHERE primary_reading LIKE :term LIMIT 20")
+  DataSource.Factory<Integer, SearchResultEntry> searchByReading(String term);
+
+  @Query("SELECT entries.id, entries.primary_kanji, entries.primary_reading FROM entries JOIN senses ON senses.entry_id = entries.id WHERE senses.glosses LIKE :term LIMIT 20")
+  DataSource.Factory<Integer, SearchResultEntry> searchByGloss(String term);
 
   @Query("SELECT id, primary_kanji, primary_reading FROM entries WHERE favorited = 1")
   DataSource.Factory<Integer, SearchResultEntry> getFavorites();
