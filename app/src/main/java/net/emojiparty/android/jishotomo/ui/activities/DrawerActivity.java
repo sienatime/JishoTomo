@@ -331,7 +331,6 @@ public class DrawerActivity extends AppCompatActivity
 
     if (id == R.id.nav_search) {
       searchViewMenuItem.expandActionView();
-      setShowExportButton(false);
     } else if (id == R.id.nav_browse) {
       pagedEntriesControl.searchType = PagedEntriesControl.BROWSE;
       setShowExportButton(false);
