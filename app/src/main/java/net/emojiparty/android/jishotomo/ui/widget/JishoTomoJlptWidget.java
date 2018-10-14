@@ -50,18 +50,18 @@ public class JishoTomoJlptWidget extends AppWidgetProvider {
     int jlptStringId = StringForJlptLevel.getId(selectedLevel, context);
     views.setTextViewText(R.id.widget_level, context.getString(jlptStringId));
 
-    PendingIntent appPendingIntent = openDefinitionActivity(entry, context);
+    PendingIntent appPendingIntent = openDefinitionActivity(entry, context, appWidgetId);
     views.setOnClickPendingIntent(R.id.widget_container, appPendingIntent);
     return views;
   }
 
-  private static PendingIntent openDefinitionActivity(SearchResultEntry entry, Context context) {
+  private static PendingIntent openDefinitionActivity(SearchResultEntry entry, Context context, int appWidgetId) {
     Intent appIntent = new Intent(context, DefinitionActivity.class);
     appIntent.putExtra(ENTRY_ID_EXTRA, entry.id);
 
     return TaskStackBuilder.create(context)
         .addNextIntentWithParentStack(appIntent)
-        .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        .getPendingIntent(appWidgetId, PendingIntent.FLAG_UPDATE_CURRENT);
   }
 
   @Override public void onEnabled(Context context) {
