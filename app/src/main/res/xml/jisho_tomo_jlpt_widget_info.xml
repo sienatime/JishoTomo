@@ -5,7 +5,7 @@
     android:initialLayout="@layout/jisho_tomo_jlpt_widget"
     android:minHeight="110dp"
     android:minWidth="110dp"
-    android:previewImage="@drawable/example_appwidget_preview"
+    android:previewImage="@drawable/jishotomowidget"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="86400000"
     android:widgetCategory="home_screen">

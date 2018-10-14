@@ -13,6 +13,7 @@
   <dimen name="text_size_headline">36sp</dimen>
 
   <dimen name="widget_internal_padding">6dp</dimen>
+  <dimen name="widget_jlpt_level_padding">36dp</dimen>
 
   <!--
 Refer to App Widget Documentation for margin information

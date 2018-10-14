@@ -27,32 +27,33 @@
 
   <TextView
       android:id="@+id/widget_reading"
-      android:layout_below="@id/widget_toolbar"
-      android:layout_width="wrap_content"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:paddingLeft="@dimen/widget_internal_padding"
-      android:paddingRight="@dimen/widget_internal_padding"
-      android:paddingTop="4dp"
+      android:layout_below="@id/widget_toolbar"
       android:ellipsize="end"
       android:maxLines="1"
+      android:paddingLeft="@dimen/widget_internal_padding"
+      android:paddingRight="@dimen/widget_jlpt_level_padding"
+      android:paddingTop="4dp"
       android:singleLine="true"
       android:textColor="@color/defaultTextColor"
       android:textSize="14sp"
-      tools:text="みなみ"
+      tools:text="フィルターフィルター"
+      android:visibility="gone"
       />
   <TextView
       android:id="@+id/widget_kanji"
-      android:layout_below="@id/widget_reading"
-      android:layout_width="wrap_content"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:paddingLeft="@dimen/widget_internal_padding"
-      android:paddingRight="@dimen/widget_internal_padding"
-      android:textColor="@color/defaultTextColor"
+      android:layout_below="@id/widget_reading"
       android:ellipsize="end"
       android:maxLines="1"
+      android:paddingLeft="@dimen/widget_internal_padding"
+      android:paddingRight="@dimen/widget_jlpt_level_padding"
       android:singleLine="true"
-      android:textSize="20sp"
-      tools:text="南"
+      android:textColor="@color/defaultTextColor"
+      android:textSize="22sp"
+      tools:text="フィルター"
       />
   <TextView
       android:id="@+id/widget_gloss"
@@ -63,7 +64,7 @@
       android:paddingRight="@dimen/widget_internal_padding"
       android:textColor="@color/defaultTextColor"
       android:textSize="14sp"
-      tools:text="south"
+      tools:text="south of the border, west of the sun"
       />
 
   <TextView
