@@ -19,6 +19,7 @@
       android:textSize="@dimen/text_size_body"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:textAlignment="viewStart"
       android:text="@string/about_app"
       />
 
