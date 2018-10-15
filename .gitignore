@@ -15,4 +15,5 @@
 /captures
 .externalNativeBuild
 keystore
+keystore.properties
 /app/release
