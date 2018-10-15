@@ -63,9 +63,10 @@ public class BindingMethods {
   // so that TalkBack will read these TextViews in Japanese
   @BindingAdapter({ "textInJapanese" }) public static void setTextWithJapanese(View view,
       String text) {
-    if (text != null) {
-      TextView textView = (TextView) view;
-      textView.setText(JapaneseLocaleSpan.all(text));
+    if (text == null) {
+      text = "";
     }
+    TextView textView = (TextView) view;
+    textView.setText(JapaneseLocaleSpan.all(text));
   }
 }
