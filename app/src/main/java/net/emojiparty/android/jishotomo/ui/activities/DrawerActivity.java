@@ -120,7 +120,7 @@ public class DrawerActivity extends AppCompatActivity
         DefinitionFragment fragment = DefinitionFragment.instance(ENTRY_EMPTY);
         fragmentManager.beginTransaction()
             .replace(R.id.definition_fragment_container, fragment)
-            .commit();
+            .commitAllowingStateLoss();
       }
     }
   }
