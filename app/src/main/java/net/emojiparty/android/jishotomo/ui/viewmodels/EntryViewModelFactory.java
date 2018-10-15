@@ -17,6 +17,7 @@ public class EntryViewModelFactory extends ViewModelProvider.NewInstanceFactory 
     this.entryId = entryId;
   }
 
+  @SuppressWarnings("unchecked")
   @NonNull @Override public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
     return (T) new EntryViewModel(application, lifecycleOwner, entryId);
   }
