@@ -69,7 +69,7 @@
     <!-- https://developer.android.com/reference/android/support/v4/content/FileProvider -->
     <provider
         android:name="android.support.v4.content.FileProvider"
-        android:authorities="net.emojiparty.fileprovider"
+        android:authorities="@string/fileprovider_package"
         android:exported="false"
         android:grantUriPermissions="true">
       <meta-data

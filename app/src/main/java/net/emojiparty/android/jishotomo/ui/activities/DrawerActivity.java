@@ -277,7 +277,7 @@ public class DrawerActivity extends AppCompatActivity
             exportIndicator.setVisibility(View.GONE);
             File csv = new File(CsvExporter.fileLocation(DrawerActivity.this));
             Uri csvUri =
-                FileProvider.getUriForFile(DrawerActivity.this, "net.emojiparty.fileprovider", csv);
+                FileProvider.getUriForFile(DrawerActivity.this, getString(R.string.fileprovider_package), csv);
             Intent shareIntent = new Intent();
             shareIntent.setAction(Intent.ACTION_SEND);
             shareIntent.putExtra(Intent.EXTRA_STREAM, csvUri);

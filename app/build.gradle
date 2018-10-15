@@ -3,6 +3,10 @@ apply plugin: 'io.fabric'
 
 sourceCompatibility = 1.8
 
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
   compileSdkVersion 28
   defaultConfig {
@@ -13,10 +17,23 @@ android {
     versionName "1.0"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
+  signingConfigs {
+    config {
+      keyAlias keystoreProperties['keyAlias']
+      keyPassword keystoreProperties['keyPassword']
+      storeFile file(keystoreProperties['storeFile'])
+      storePassword keystoreProperties['storePassword']
+    }
+  }
   buildTypes {
     release {
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+      signingConfig signingConfigs.config
+    }
+    debug {
+      applicationIdSuffix ".debug"
+      debuggable true
     }
   }
   dataBinding {
