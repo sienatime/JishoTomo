@@ -21,12 +21,14 @@ import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
 
   @Transaction @Query(
       "SELECT entries.id, entries.primary_kanji, entries.primary_reading FROM entries "
-          + "JOIN entriesFts ON (entries.id = entriesFts.docid) WHERE entriesFts MATCH :term LIMIT 20")
+          + "JOIN entriesFts ON (entries.id = entriesFts.docid) WHERE entriesFts MATCH :term")
   DataSource.Factory<Integer, SearchResultEntry> searchByJapaneseTerm(String term);
 
-  @Transaction
-  @Query("SELECT entries.id, entries.primary_kanji, entries.primary_reading FROM entries JOIN senses ON senses.entry_id = entries.id WHERE senses.glosses LIKE :term LIMIT 20")
-  DataSource.Factory<Integer, SearchResultEntry> searchByGloss(String term);
+  @Transaction @Query(
+      "SELECT entries.id, entries.primary_kanji, entries.primary_reading FROM entries "
+          + "JOIN senses ON senses.entry_id = entries.id "
+          + "JOIN sensesFts ON (senses.id = sensesFts.docid) WHERE sensesFts MATCH :term")
+  DataSource.Factory<Integer, SearchResultEntry> searchByEnglishTerm(String term);
 
   @Transaction @Query("SELECT id, primary_kanji, primary_reading FROM entries WHERE favorited = 1")
   DataSource.Factory<Integer, SearchResultEntry> getFavorites();
