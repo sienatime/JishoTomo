@@ -57,11 +57,9 @@ public class AppRepository {
 
   public LiveData<PagedList<SearchResultEntry>> search(String term) {
     int unicodeCodePoint = Character.codePointAt(term, 0);
-    String formattedQuery = String.format("%%%s%%", term);
-    if (isKana(unicodeCodePoint)) {
-      return new LivePagedListBuilder<>(entryDao.searchByReading(formattedQuery), PAGE_SIZE).build();
-    } else if (isCJK(unicodeCodePoint)) {
-      return new LivePagedListBuilder<>(entryDao.searchByKanji(formattedQuery), PAGE_SIZE).build();
+    String formattedQuery = String.format("*%s*", term);
+    if (isKana(unicodeCodePoint) || isCJK(unicodeCodePoint)) {
+      return new LivePagedListBuilder<>(entryDao.searchByJapaneseTerm(formattedQuery), PAGE_SIZE).build();
     } else {
       return new LivePagedListBuilder<>(entryDao.searchByGloss(formattedQuery), PAGE_SIZE).build();
     }

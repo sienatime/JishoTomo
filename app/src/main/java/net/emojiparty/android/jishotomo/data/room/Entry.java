@@ -1,10 +1,10 @@
 package net.emojiparty.android.jishotomo.data.room;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
-import androidx.annotation.NonNull;
 import java.util.List;
 import net.emojiparty.android.jishotomo.data.SemicolonSplit;
 

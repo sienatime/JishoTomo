@@ -24,6 +24,12 @@ import net.emojiparty.android.jishotomo.data.room.SenseDao;
             database.execSQL("ALTER TABLE entries ADD COLUMN favorited INTEGER DEFAULT 0");
           }
         })
+        .addMigrations(new Migration(3, 4) {
+          @Override public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("CREATE VIRTUAL TABLE IF NOT EXISTS `entriesFts` USING FTS4(`primary_kanji`, `primary_reading`, `other_kanji`, `other_readings`, content=`entries`)");
+            database.execSQL("INSERT INTO entriesFts(entriesFts) VALUES ('rebuild')");
+          }
+        })
         .build();
   }
 
