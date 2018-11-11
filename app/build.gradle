@@ -73,8 +73,8 @@ dependencies {
   annotationProcessor "com.google.dagger:dagger-compiler:2.13"
 
   // Firebase Core and Crashlytics: Analytics, Crash Reporting
-  implementation 'com.google.firebase:firebase-core:16.0.3'
-  implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
+  implementation 'com.google.firebase:firebase-core:16.0.5'
+  implementation 'com.crashlytics.sdk.android:crashlytics:2.9.6'
 
   // CSV export
   implementation("com.opencsv:opencsv:4.0") {
