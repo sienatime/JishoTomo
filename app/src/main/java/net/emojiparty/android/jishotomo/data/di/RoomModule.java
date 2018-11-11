@@ -1,9 +1,9 @@
 package net.emojiparty.android.jishotomo.data.di;
 
 import android.app.Application;
-import android.arch.persistence.db.SupportSQLiteDatabase;
-import android.arch.persistence.room.migration.Migration;
-import android.support.annotation.NonNull;
+import androidx.sqlite.db.SupportSQLiteDatabase;
+import androidx.room.migration.Migration;
+import androidx.annotation.NonNull;
 import com.huma.room_for_asset.RoomAsset;
 import dagger.Module;
 import dagger.Provides;

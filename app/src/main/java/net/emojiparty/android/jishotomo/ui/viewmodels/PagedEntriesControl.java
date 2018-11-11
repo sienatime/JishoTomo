@@ -1,6 +1,6 @@
 package net.emojiparty.android.jishotomo.ui.viewmodels;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 public class PagedEntriesControl {
   public String searchType;

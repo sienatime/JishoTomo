@@ -1,6 +1,6 @@
 package net.emojiparty.android.jishotomo.data.models;
 
-import android.arch.persistence.room.ColumnInfo;
+import androidx.room.ColumnInfo;
 
 public class PrimaryOnlyEntry {
   public int id;

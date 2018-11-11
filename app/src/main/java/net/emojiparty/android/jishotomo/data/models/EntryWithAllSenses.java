@@ -1,8 +1,8 @@
 package net.emojiparty.android.jishotomo.data.models;
 
-import android.arch.persistence.room.Embedded;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.Relation;
+import androidx.room.Embedded;
+import androidx.room.Ignore;
+import androidx.room.Relation;
 import android.content.Context;
 import java.util.List;
 import net.emojiparty.android.jishotomo.JishoTomoApp;

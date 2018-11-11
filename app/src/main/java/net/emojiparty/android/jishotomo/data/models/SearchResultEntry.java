@@ -1,6 +1,6 @@
 package net.emojiparty.android.jishotomo.data.models;
 
-import android.arch.persistence.room.Relation;
+import androidx.room.Relation;
 import java.util.List;
 import net.emojiparty.android.jishotomo.data.SemicolonSplit;
 import net.emojiparty.android.jishotomo.data.room.Sense;

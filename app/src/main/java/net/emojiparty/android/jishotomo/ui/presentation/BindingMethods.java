@@ -1,7 +1,7 @@
 package net.emojiparty.android.jishotomo.ui.presentation;
 
 import android.content.Context;
-import android.databinding.BindingAdapter;
+import androidx.databinding.BindingAdapter;
 import android.text.SpannableString;
 import android.view.View;
 import android.widget.LinearLayout;

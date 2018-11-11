@@ -68,7 +68,7 @@
     <!-- https://guides.codepath.com/android/Sharing-Content-with-Intents -->
     <!-- https://developer.android.com/reference/android/support/v4/content/FileProvider -->
     <provider
-        android:name="android.support.v4.content.FileProvider"
+        android:name="androidx.core.content.FileProvider"
         android:authorities="@string/fileprovider_package"
         android:exported="false"
         android:grantUriPermissions="true">
