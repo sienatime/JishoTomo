@@ -172,9 +172,9 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:elevation="@dimen/fab_elevation"
-        android:contentDescription="@{safeUnbox(presenter.entry.favorited) ? @string/remove_from_favorites : @string/add_to_favorites }"
+        android:contentDescription="@{presenter.entry.isFavorited() ? @string/remove_from_favorites : @string/add_to_favorites }"
         android:onClick="@{() -> presenter.toggleFavorite(context)}"
-        android:src="@{safeUnbox(presenter.entry.favorited) ? @drawable/ic_star : @drawable/ic_star_border }"
+        android:src="@{presenter.entry.isFavorited() ? @drawable/ic_star : @drawable/ic_star_border }"
         />
   </FrameLayout>
 

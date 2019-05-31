@@ -30,10 +30,10 @@ import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
           + "JOIN sensesFts ON (senses.id = sensesFts.docid) WHERE sensesFts MATCH :term")
   DataSource.Factory<Integer, SearchResultEntry> searchByEnglishTerm(String term);
 
-  @Transaction @Query("SELECT id, primary_kanji, primary_reading FROM entries WHERE favorited = 1")
+  @Transaction @Query("SELECT id, primary_kanji, primary_reading FROM entries WHERE favorited IS NOT NULL ORDER BY favorited DESC")
   DataSource.Factory<Integer, SearchResultEntry> getFavorites();
 
-  @Transaction @Query("SELECT * FROM entries WHERE favorited = 1")
+  @Transaction @Query("SELECT * FROM entries WHERE favorited IS NOT NULL ORDER BY favorited DESC")
   List<EntryWithAllSenses> getAllFavorites();
 
   @Transaction @Query("SELECT * FROM entries WHERE jlpt_level = :level ORDER BY id ASC")

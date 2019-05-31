@@ -8,6 +8,7 @@ import androidx.paging.PagedList;
 import android.os.AsyncTask;
 import androidx.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import javax.inject.Inject;
@@ -104,7 +105,7 @@ public class AppRepository {
 
   public void toggleFavorite(Entry entry) {
     AsyncTask.execute(() -> {
-      entry.setFavorited(!entry.getFavorited());
+      entry.toggleFavorited();
       entryDao.updateEntry(entry);
     });
   }

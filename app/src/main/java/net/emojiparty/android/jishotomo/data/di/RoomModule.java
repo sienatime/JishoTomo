@@ -21,7 +21,7 @@ import net.emojiparty.android.jishotomo.data.room.SenseDao;
     db = RoomAsset.databaseBuilder(application, AppDatabase.class, "jishotomo.db")
         .addMigrations(new Migration(2, 3) {
           @Override public void migrate(@NonNull SupportSQLiteDatabase database) {
-            database.execSQL("ALTER TABLE entries ADD COLUMN favorited INTEGER DEFAULT 0");
+            database.execSQL("ALTER TABLE entries ADD COLUMN favorited INTEGER");
           }
         })
         .addMigrations(new Migration(3, 4) {

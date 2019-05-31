@@ -5,6 +5,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
+
+import java.util.Date;
 import java.util.List;
 import net.emojiparty.android.jishotomo.data.SemicolonSplit;
 
@@ -30,7 +32,7 @@ public class Entry {
   @ColumnInfo(name = "jlpt_level")
   private Integer jlptLevel;
 
-  private Boolean favorited;
+  private Date favorited;
 
   public int getId() {
     return id;
@@ -88,11 +90,23 @@ public class Entry {
     return SemicolonSplit.split(otherKanji);
   }
 
-  public Boolean getFavorited() {
+  public Date getFavorited() {
     return favorited;
   }
 
-  public void setFavorited(Boolean favorited) {
+  public void setFavorited(Date favorited) {
     this.favorited = favorited;
+  }
+
+  public boolean isFavorited() {
+    return getFavorited() != null;
+  }
+
+  public void toggleFavorited() {
+    if (this.isFavorited()) {
+      this.setFavorited(null);
+    } else {
+      this.setFavorited(new Date());
+    }
   }
 }

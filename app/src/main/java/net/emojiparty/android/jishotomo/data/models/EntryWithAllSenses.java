@@ -61,7 +61,7 @@ public class EntryWithAllSenses {
   public void toggleFavorite(Context context) {
     getAppRepository().toggleFavorite(getEntry());
     getAnalyticsLogger(context).logToggleFavoriteEvent(entry.getId(), getKanjiOrReading(),
-        !entry.getFavorited());
+        !entry.isFavorited());
   }
 
   private AppRepository getAppRepository() {
