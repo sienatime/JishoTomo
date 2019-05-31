@@ -9,25 +9,30 @@ import androidx.fragment.app.DialogFragment;
 import androidx.appcompat.app.AlertDialog;
 import net.emojiparty.android.jishotomo.R;
 
-public class ExplainExportDialog extends DialogFragment {
-  private OnExport callback;
+public class CallbackDialog extends DialogFragment {
+  private OnConfirm callback;
+  private int confirmText;
+  private int dialogText;
 
-  public interface OnExport {
+  public CallbackDialog(OnConfirm callback, int dialogText, int confirmText) {
+    this.callback = callback;
+    this.dialogText = dialogText;
+    this.confirmText = confirmText;
+  }
+
+  public interface OnConfirm {
     void proceed();
   }
 
-  public void setCallback(OnExport callback) {
-    this.callback = callback;
-  }
 
   // https://developer.android.com/guide/topics/ui/dialogs
   @NonNull @Override public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-    builder.setMessage(R.string.export_instructions)
-        .setPositiveButton(R.string.export_yes, (DialogInterface dialog, int id) -> {
+    builder.setMessage(dialogText)
+        .setPositiveButton(confirmText, (DialogInterface dialog, int id) -> {
           callback.proceed();
         })
-        .setNegativeButton(R.string.export_no, null);
+        .setNegativeButton(R.string.cancel, null);
     return builder.create();
   }
 }

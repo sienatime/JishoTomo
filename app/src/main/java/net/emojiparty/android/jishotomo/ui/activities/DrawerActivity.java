@@ -34,7 +34,7 @@ import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger;
 import net.emojiparty.android.jishotomo.data.csv.CsvExporter;
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
 import net.emojiparty.android.jishotomo.ui.adapters.PagedEntriesAdapter;
-import net.emojiparty.android.jishotomo.ui.dialogs.ExplainExportDialog;
+import net.emojiparty.android.jishotomo.ui.dialogs.CallbackDialog;
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl;
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesViewModel;
 
@@ -252,8 +252,11 @@ public class DrawerActivity extends AppCompatActivity
   }
 
   private void explainCsvExport() {
-    ExplainExportDialog dialog = new ExplainExportDialog();
-    dialog.setCallback(this::checkForPermissionThenExport);
+    CallbackDialog dialog = new CallbackDialog(
+            this::checkForPermissionThenExport,
+            R.string.export_instructions,
+            R.string.export_yes
+    );
     dialog.show(getSupportFragmentManager(), "export_explain");
   }
 
