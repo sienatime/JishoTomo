@@ -21,16 +21,10 @@ import net.emojiparty.android.jishotomo.ui.dialogs.CallbackDialog;
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl;
 
 public class FavoritesMenu {
-  private FragmentActivity activity;
   private AnalyticsLogger analyticsLogger;
-  private ProgressBar exportIndicator;
-  private PagedEntriesControl pagedEntriesControl;
 
-  public FavoritesMenu(FragmentActivity activity, PagedEntriesControl pagedEntriesControl) {
-    this.activity = activity;
-    this.pagedEntriesControl = pagedEntriesControl;
-    analyticsLogger = ((JishoTomoApp) activity.getApplication()).getAnalyticsLogger();
-    exportIndicator = activity.findViewById(R.id.exporting);
+  public FavoritesMenu(JishoTomoApp app) {
+    analyticsLogger = app.getAnalyticsLogger();
   }
 
   public static void setButtonVisibility(Menu menu, boolean visible) {
@@ -40,7 +34,7 @@ public class FavoritesMenu {
     unfavoriteAllIcon.setVisible(visible);
   }
 
-  public void explainUnfavoriteAll() {
+  public void explainUnfavoriteAll(FragmentActivity activity) {
     CallbackDialog dialog = new CallbackDialog(
         this::unfavoriteAll,
         R.string.explain_unfavorite_all,
@@ -54,9 +48,9 @@ public class FavoritesMenu {
     analyticsLogger.logUnfavoriteAll();
   }
 
-  public void explainCsvExport() {
+  public void explainCsvExport(FragmentActivity activity, PagedEntriesControl pagedEntriesControl) {
     CallbackDialog dialog = new CallbackDialog(
-        this::checkForPermissionThenExport,
+        () -> checkForPermissionThenExport(activity, pagedEntriesControl),
         R.string.export_instructions,
         R.string.export_yes
     );
@@ -69,16 +63,18 @@ public class FavoritesMenu {
     return Environment.MEDIA_MOUNTED.equals(state);
   }
 
-  private void checkForPermissionThenExport() {
+  private void checkForPermissionThenExport(FragmentActivity activity, PagedEntriesControl pagedEntriesControl) {
     if (!isExternalStorageWritable()) {
       Toast.makeText(activity, R.string.no_external_storage, Toast.LENGTH_LONG).show();
       return;
     }
 
-    exportCsv();
+    exportCsv(activity, pagedEntriesControl);
   }
 
-  private void exportCsv() {
+  private void exportCsv(FragmentActivity activity, PagedEntriesControl pagedEntriesControl) {
+    ProgressBar exportIndicator = activity.findViewById(R.id.exporting);
+
     CsvExportAsyncTask.CsvExportUiCallbacks uiCallbacks =
         new CsvExportAsyncTask.CsvExportUiCallbacks() {
           @Override public void onProgressUpdate(Integer progress) {

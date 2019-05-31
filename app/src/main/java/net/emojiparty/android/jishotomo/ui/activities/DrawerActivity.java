@@ -224,12 +224,12 @@ public class DrawerActivity extends AppCompatActivity
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
-    FavoritesMenu favoritesMenu = new FavoritesMenu(this, viewModel.pagedEntriesControl);
+    FavoritesMenu favoritesMenu = new FavoritesMenu((JishoTomoApp) getApplication());
     if (item.getItemId() == R.id.menu_export) {
-      favoritesMenu.explainCsvExport();
+      favoritesMenu.explainCsvExport(this, viewModel.pagedEntriesControl);
       return true;
     } else if (item.getItemId() == R.id.menu_remove_all_favorites) {
-      favoritesMenu.explainUnfavoriteAll();
+      favoritesMenu.explainUnfavoriteAll(this);
       return true;
     }
 
