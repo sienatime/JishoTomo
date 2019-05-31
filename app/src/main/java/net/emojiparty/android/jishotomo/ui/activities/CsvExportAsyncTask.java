@@ -16,7 +16,7 @@ public class CsvExportAsyncTask extends AsyncTask<Context, Integer, Void> {
   private CsvExportUiCallbacks uiCallbacks;
   private PagedEntriesControl pagedEntriesControl;
 
-  CsvExportAsyncTask(CsvExportUiCallbacks uiCallbacks, PagedEntriesControl pagedEntriesControl) {
+  public CsvExportAsyncTask(CsvExportUiCallbacks uiCallbacks, PagedEntriesControl pagedEntriesControl) {
     super();
     this.uiCallbacks = uiCallbacks;
     this.pagedEntriesControl = pagedEntriesControl;

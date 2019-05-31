@@ -15,6 +15,7 @@ public class AnalyticsLogger {
   private final String EVENT_UPDATED_WIDGET = "updated_widget";
   private final String EVENT_CSV_SUCCESS = "csv_success";
   private final String EVENT_CSV_FAILED = "csv_failed";
+  private final String EVENT_UNFAVORITE_ALL = "unfavorite_all";
   private final String PARAM_JLPT_LEVEL = "jlpt_level";
 
   public AnalyticsLogger(Context context) {
@@ -68,6 +69,10 @@ public class AnalyticsLogger {
 
   public void logCsvFailed() {
     firebaseAnalytics.logEvent(EVENT_CSV_FAILED,  new Bundle());
+  }
+
+  public void logUnfavoriteAll() {
+    firebaseAnalytics.logEvent(EVENT_UNFAVORITE_ALL,  new Bundle());
   }
 
   private Bundle entryBundle(int entryId, String expression) {

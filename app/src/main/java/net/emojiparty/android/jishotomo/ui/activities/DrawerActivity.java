@@ -1,41 +1,34 @@
 package net.emojiparty.android.jishotomo.ui.activities;
 
 import android.app.SearchManager;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.paging.PagedList;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import com.google.android.material.navigation.NavigationView;
-import androidx.fragment.app.FragmentManager;
-import androidx.core.content.FileProvider;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-import java.io.File;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.paging.PagedList;
+import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.navigation.NavigationView;
 import java.util.ArrayList;
 import net.emojiparty.android.jishotomo.JishoTomoApp;
 import net.emojiparty.android.jishotomo.R;
 import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger;
-import net.emojiparty.android.jishotomo.data.AppRepository;
-import net.emojiparty.android.jishotomo.data.csv.CsvExporter;
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
 import net.emojiparty.android.jishotomo.ui.adapters.PagedEntriesAdapter;
-import net.emojiparty.android.jishotomo.ui.dialogs.CallbackDialog;
+import net.emojiparty.android.jishotomo.ui.presentation.FavoritesMenu;
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl;
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesViewModel;
 
@@ -46,20 +39,17 @@ public class DrawerActivity extends AppCompatActivity
 
   private PagedEntriesViewModel viewModel;
   private ProgressBar loadingIndicator;
-  private ProgressBar exportIndicator;
   private MenuItem searchViewMenuItem;
   private RecyclerView searchResults;
   private TextView toolbarTitle;
   private PagedEntriesAdapter adapter;
   private AnalyticsLogger analyticsLogger;
   public FrameLayout fragmentContainer;
-  private boolean showExportButton = false;
   private int lastEntryViewed = ENTRY_EMPTY;
 
   private String STATE_SEARCH_TYPE = "state_search_type";
   private String STATE_SEARCH_TERM = "state_search_term";
   private String STATE_JLPT_LEVEL = "state_jlpt_level";
-  private String STATE_SHOW_EXPORT_BUTTON = "state_show_export_button";
   private String STATE_LAST_ENTRY_VIEWED = "state_last_entry_viewed";
 
   @Override protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +66,6 @@ public class DrawerActivity extends AppCompatActivity
 
     setRecyclerViewWithNewAdapter();
     loadingIndicator = findViewById(R.id.loading);
-    exportIndicator = findViewById(R.id.exporting);
     toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
     if (savedInstanceState == null) {
       searchIntent(getIntent());
@@ -101,7 +90,6 @@ public class DrawerActivity extends AppCompatActivity
       pagedEntriesControl.jlptLevel = bundle.getInt(STATE_JLPT_LEVEL);
     }
     setPagedEntriesControl(pagedEntriesControl);
-    setShowExportButton(bundle.getBoolean(STATE_SHOW_EXPORT_BUTTON));
     int lastEntryViewedFromBundle = bundle.getInt(STATE_LAST_ENTRY_VIEWED);
     if (lastEntryViewedFromBundle != ENTRY_EMPTY) {
       addDefinitionFragment(lastEntryViewedFromBundle);
@@ -181,7 +169,6 @@ public class DrawerActivity extends AppCompatActivity
     }
     outState.putString(STATE_SEARCH_TYPE, viewModel.pagedEntriesControl.searchType);
     outState.putString(STATE_SEARCH_TERM, viewModel.pagedEntriesControl.searchTerm);
-    outState.putBoolean(STATE_SHOW_EXPORT_BUTTON, showExportButton);
     outState.putInt(STATE_LAST_ENTRY_VIEWED, lastEntryViewed);
     super.onSaveInstanceState(outState);
   }
@@ -195,27 +182,36 @@ public class DrawerActivity extends AppCompatActivity
     }
   }
 
+  @Override public boolean onPrepareOptionsMenu(Menu menu) {
+    if (viewModel.pagedEntriesControl.searchType.equals(PagedEntriesControl.FAVORITES)) {
+      FavoritesMenu.setButtonVisibility(menu, true);
+    } else {
+      FavoritesMenu.setButtonVisibility(menu, false);
+    }
+
+    return true;
+  }
+
   @Override public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.drawer, menu);
 
     SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
     searchViewMenuItem = menu.findItem(R.id.menu_search);
     SearchView searchView = (SearchView) searchViewMenuItem.getActionView();
-    MenuItem exportIcon = menu.getItem(1);
     searchView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
       @Override public void onViewAttachedToWindow(View view) {
-        // hide export button while search input is open
-        exportIcon.setVisible(false);
+        // hide other buttons while search input is open
+        FavoritesMenu.setButtonVisibility(menu, false);
       }
 
       @Override public void onViewDetachedFromWindow(View view) {
         if (viewModel.pagedEntriesControl.searchType.equals(PagedEntriesControl.SEARCH)) {
-          // we performed a search, so hide the button
+          // we performed a search, so hide the other buttons
           // (have to do this here because calling invalidateOptionsMenu while search input is open
           // makes the search input close)
-          setShowExportButton(false);
+          FavoritesMenu.setButtonVisibility(menu, false);
         } else {
-          // refresh export visibility based on current state, since
+          // refresh other menu buttons visibility based on current state, since
           // we hid the button when we opened the search input
           invalidateOptionsMenu();
         }
@@ -223,97 +219,26 @@ public class DrawerActivity extends AppCompatActivity
     });
     searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
     searchView.setIconifiedByDefault(false);
-    exportIcon.setVisible(showExportButton);
 
     return true;
   }
 
-  // https://developer.android.com/training/data-storage/files#InternalVsExternalStorage
-  private boolean isExternalStorageWritable() {
-    String state = Environment.getExternalStorageState();
-    return Environment.MEDIA_MOUNTED.equals(state);
-  }
-
-  private void checkForPermissionThenExport() {
-    if (!isExternalStorageWritable()) {
-      Toast.makeText(this, R.string.no_external_storage, Toast.LENGTH_LONG).show();
-      return;
-    }
-
-    exportCsv();
-  }
-
   @Override public boolean onOptionsItemSelected(MenuItem item) {
+    FavoritesMenu favoritesMenu = new FavoritesMenu(this, viewModel.pagedEntriesControl);
     if (item.getItemId() == R.id.menu_export) {
-      explainCsvExport();
+      favoritesMenu.explainCsvExport();
       return true;
     } else if (item.getItemId() == R.id.menu_remove_all_favorites) {
-      explainUnfavoriteAll();
+      favoritesMenu.explainUnfavoriteAll();
       return true;
     }
 
     return super.onOptionsItemSelected(item);
   }
 
-  private void explainUnfavoriteAll() {
-    CallbackDialog dialog = new CallbackDialog(
-            this::unfavoriteAll,
-            R.string.explain_unfavorite_all,
-            R.string.okay
-    );
-    dialog.show(getSupportFragmentManager(), "unfavorite_all_explain");
-  }
-
-  private void unfavoriteAll() {
-    new AppRepository().unfavoriteAll();
-  }
-
-  private void explainCsvExport() {
-    CallbackDialog dialog = new CallbackDialog(
-            this::checkForPermissionThenExport,
-            R.string.export_instructions,
-            R.string.export_yes
-    );
-    dialog.show(getSupportFragmentManager(), "export_explain");
-  }
-
   private void showAbout() {
     Intent intent = new Intent(this, AboutAppActivity.class);
     startActivity(intent);
-  }
-
-  private void exportCsv() {
-    CsvExportAsyncTask.CsvExportUiCallbacks uiCallbacks =
-        new CsvExportAsyncTask.CsvExportUiCallbacks() {
-          @Override public void onProgressUpdate(Integer progress) {
-            exportIndicator.setProgress(progress);
-          }
-
-          @Override public void onPreExecute() {
-            exportIndicator.setVisibility(View.VISIBLE);
-          }
-
-          @Override public void onPostExecute() {
-            exportIndicator.setVisibility(View.GONE);
-            File csv = new File(CsvExporter.fileLocation(DrawerActivity.this));
-            Uri csvUri =
-                FileProvider.getUriForFile(DrawerActivity.this, getString(R.string.fileprovider_package), csv);
-            Intent shareIntent = new Intent();
-            shareIntent.setAction(Intent.ACTION_SEND);
-            shareIntent.putExtra(Intent.EXTRA_STREAM, csvUri);
-            shareIntent.setType("text/csv");
-            startActivity(Intent.createChooser(shareIntent, getString(R.string.share_csv)));
-            analyticsLogger.logCsvSuccess();
-          }
-
-          @Override public void onCanceled() {
-            exportIndicator.setVisibility(View.GONE);
-            Toast.makeText(DrawerActivity.this, R.string.csv_failed, Toast.LENGTH_SHORT).show();
-            analyticsLogger.logCsvSuccess();
-          }
-        };
-
-    new CsvExportAsyncTask(uiCallbacks, viewModel.pagedEntriesControl).execute(DrawerActivity.this);
   }
 
   private void setPagedEntriesControl(PagedEntriesControl pagedEntriesControl) {
@@ -325,6 +250,7 @@ public class DrawerActivity extends AppCompatActivity
     clearDefinitionBackstack();
     loadingIndicator.setVisibility(View.VISIBLE);
     viewModel.pagedEntriesControlLiveData.setValue(pagedEntriesControl);
+    invalidateOptionsMenu();
     analyticsLogger.logSearchResultsOrViewItemList(pagedEntriesControl);
   }
 
@@ -338,11 +264,6 @@ public class DrawerActivity extends AppCompatActivity
     return ids;
   }
 
-  private void setShowExportButton(boolean show) {
-    showExportButton = show;
-    invalidateOptionsMenu();
-  }
-
   @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
     int id = item.getItemId();
 
@@ -353,14 +274,11 @@ public class DrawerActivity extends AppCompatActivity
       searchViewMenuItem.expandActionView();
     } else if (id == R.id.nav_browse) {
       pagedEntriesControl.searchType = PagedEntriesControl.BROWSE;
-      setShowExportButton(false);
     } else if (id == R.id.nav_favorites) {
       pagedEntriesControl.searchType = PagedEntriesControl.FAVORITES;
-      setShowExportButton(true);
     } else if (jlptIds.indexOf(id) > -1) {
       pagedEntriesControl.searchType = PagedEntriesControl.JLPT;
       pagedEntriesControl.jlptLevel = jlptIds.indexOf(id) + 1;
-      setShowExportButton(true);
     } else if (id == R.id.nav_about) {
       showAbout();
     }
