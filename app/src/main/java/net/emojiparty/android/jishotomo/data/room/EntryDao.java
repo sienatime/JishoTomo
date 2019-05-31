@@ -36,6 +36,9 @@ import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
   @Transaction @Query("SELECT * FROM entries WHERE favorited IS NOT NULL ORDER BY favorited DESC")
   List<EntryWithAllSenses> getAllFavorites();
 
+  @Query("UPDATE entries SET favorited = null WHERE favorited IS NOT NULL ")
+  int unfavoriteAll();
+
   @Transaction @Query("SELECT * FROM entries WHERE jlpt_level = :level ORDER BY id ASC")
   List<EntryWithAllSenses> getAllByJlptLevel(Integer level);
 

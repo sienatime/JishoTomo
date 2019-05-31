@@ -13,4 +13,10 @@
       android:title="@string/export"
       android:icon="@drawable/ic_file_download"
       app:showAsAction="ifRoom"/>
+
+  <item
+      android:id="@+id/menu_remove_all_favorites"
+      android:title="@string/remove_all_favorites"
+      android:icon="@drawable/ic_clear_all"
+      app:showAsAction="ifRoom"/>
 </menu>

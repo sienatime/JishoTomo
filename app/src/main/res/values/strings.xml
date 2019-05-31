@@ -30,6 +30,7 @@
   <string name="jlpt_n4">N4</string>
   <string name="jlpt_n5">N5</string>
   <string name="export">Export to CSV</string>
+  <string name="remove_all_favorites">Remove All Favorites</string>
   <string name="about">About</string>
 
   <!-- Widget -->
@@ -49,6 +50,9 @@
   <string name="csv_successful">CSV export successful!</string>
   <string name="csv_failed">CSV export failed.</string>
   <string name="share_csv">Share Exported CSV</string>
+
+  <string name="explain_unfavorite_all">This will remove all of your favorites. This cannot be undone. Continue?</string>
+  <string name="okay">OK</string>
 
   <string name="about_app">Jisho Tomo was created as part of the Android Developer Nanodegree program by Udacity and Google. The
     code is open source and available on <a href="https://github.com/sienatime/jishotomo">GitHub</a>.\n\nThis

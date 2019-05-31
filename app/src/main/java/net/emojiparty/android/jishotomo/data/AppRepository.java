@@ -110,6 +110,12 @@ public class AppRepository {
     });
   }
 
+  public void unfavoriteAll() {
+    AsyncTask.execute(() -> {
+      entryDao.unfavoriteAll();
+    });
+  }
+
   private void setCrossReferences(EntryWithAllSenses entry,
       MutableLiveData<EntryWithAllSenses> liveData) {
     senseDao.getCrossReferencedEntries(entry.getEntry().getId())

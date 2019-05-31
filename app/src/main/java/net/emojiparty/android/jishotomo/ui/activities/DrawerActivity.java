@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import net.emojiparty.android.jishotomo.JishoTomoApp;
 import net.emojiparty.android.jishotomo.R;
 import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger;
+import net.emojiparty.android.jishotomo.data.AppRepository;
 import net.emojiparty.android.jishotomo.data.csv.CsvExporter;
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
 import net.emojiparty.android.jishotomo.ui.adapters.PagedEntriesAdapter;
@@ -246,9 +247,25 @@ public class DrawerActivity extends AppCompatActivity
     if (item.getItemId() == R.id.menu_export) {
       explainCsvExport();
       return true;
+    } else if (item.getItemId() == R.id.menu_remove_all_favorites) {
+      explainUnfavoriteAll();
+      return true;
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  private void explainUnfavoriteAll() {
+    CallbackDialog dialog = new CallbackDialog(
+            this::unfavoriteAll,
+            R.string.explain_unfavorite_all,
+            R.string.okay
+    );
+    dialog.show(getSupportFragmentManager(), "unfavorite_all_explain");
+  }
+
+  private void unfavoriteAll() {
+    new AppRepository().unfavoriteAll();
   }
 
   private void explainCsvExport() {
