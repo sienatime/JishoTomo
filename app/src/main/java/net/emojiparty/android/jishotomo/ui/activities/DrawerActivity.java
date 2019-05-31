@@ -146,6 +146,7 @@ public class DrawerActivity extends AppCompatActivity
     viewModel.entries.observe(this, (PagedList<SearchResultEntry> entries) -> {
       loadingIndicator.setVisibility(View.INVISIBLE);
       adapter.submitList(entries);
+      invalidateOptionsMenu();
     });
   }
 
@@ -183,7 +184,7 @@ public class DrawerActivity extends AppCompatActivity
   }
 
   @Override public boolean onPrepareOptionsMenu(Menu menu) {
-    if (viewModel.pagedEntriesControl.searchType.equals(PagedEntriesControl.FAVORITES)) {
+    if (viewModel.pagedEntriesControl.searchType.equals(PagedEntriesControl.FAVORITES) && adapter.getItemCount() > 0) {
       FavoritesMenu.setButtonVisibility(menu, true);
     } else {
       FavoritesMenu.setButtonVisibility(menu, false);
