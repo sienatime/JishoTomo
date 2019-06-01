@@ -35,6 +35,7 @@ import net.emojiparty.android.jishotomo.data.room.SenseDao;
         .build();
   }
 
+  // this is needed in order to provide the DAOs
   @Singleton @Provides AppDatabase providesRoomDatabase() {
     return db;
   }

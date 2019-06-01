@@ -1,14 +1,13 @@
 package net.emojiparty.android.jishotomo.data;
 
+import android.os.AsyncTask;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
-import android.os.AsyncTask;
-import androidx.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import javax.inject.Inject;
@@ -22,7 +21,6 @@ import net.emojiparty.android.jishotomo.data.room.EntryDao;
 import net.emojiparty.android.jishotomo.data.room.SenseDao;
 
 public class AppRepository {
-  private LifecycleOwner lifecycleOwner;
   private final int PAGE_SIZE = 20;
   @Inject public EntryDao entryDao;
   @Inject public SenseDao senseDao;
@@ -31,17 +29,12 @@ public class AppRepository {
     JishoTomoApp.getAppComponent().inject(this);
   }
 
-  public AppRepository(LifecycleOwner lifecycleOwner) {
-    this.lifecycleOwner = lifecycleOwner;
-    JishoTomoApp.getAppComponent().inject(this);
-  }
-
-  public MutableLiveData<EntryWithAllSenses> getEntryWithAllSenses(int entryId) {
+  public MutableLiveData<EntryWithAllSenses> getEntryWithAllSenses(int entryId, LifecycleOwner lifecycleOwner) {
     MutableLiveData<EntryWithAllSenses> liveData = new MutableLiveData<>();
 
     entryDao.getEntryById(entryId).observe(lifecycleOwner, (@Nullable EntryWithAllSenses entry) -> {
       if (entry != null) {
-        setCrossReferences(entry, liveData);
+        setCrossReferences(entry, liveData, lifecycleOwner);
       }
     });
 
@@ -117,7 +110,7 @@ public class AppRepository {
   }
 
   private void setCrossReferences(EntryWithAllSenses entry,
-      MutableLiveData<EntryWithAllSenses> liveData) {
+      MutableLiveData<EntryWithAllSenses> liveData, LifecycleOwner lifecycleOwner) {
     senseDao.getCrossReferencedEntries(entry.getEntry().getId())
         .observe(lifecycleOwner, (@Nullable List<CrossReferencedEntry> crossReferencedEntries) -> {
           if (crossReferencedEntries != null) {
