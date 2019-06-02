@@ -46,6 +46,10 @@ import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
   @Query("SELECT id, primary_kanji, primary_reading FROM entries WHERE jlpt_level = :level ORDER BY id ASC")
   DataSource.Factory<Integer, SearchResultEntry> findByJlptLevel(Integer level);
 
+  // used for tests
+  @Query("SELECT * FROM entries WHERE primary_kanji = :kanji LIMIT 1")
+  Entry getEntryByKanji(String kanji);
+
   // WIDGET
 
   @Transaction

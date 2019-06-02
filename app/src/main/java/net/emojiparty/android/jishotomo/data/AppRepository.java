@@ -109,6 +109,17 @@ public class AppRepository {
     });
   }
 
+  public interface OnEntryLoaded {
+    void success(Entry entry);
+  }
+
+  public void getEntryByKanji(String kanji, OnEntryLoaded callback) {
+    AsyncTask.execute(() -> {
+      Entry entry = entryDao.getEntryByKanji(kanji);
+      callback.success(entry);
+    });
+  }
+
   private void setCrossReferences(EntryWithAllSenses entry,
       MutableLiveData<EntryWithAllSenses> liveData, LifecycleOwner lifecycleOwner) {
     senseDao.getCrossReferencedEntries(entry.getEntry().getId())
