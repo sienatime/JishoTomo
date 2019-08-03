@@ -28,6 +28,7 @@ import net.emojiparty.android.jishotomo.R;
 import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger;
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
 import net.emojiparty.android.jishotomo.ui.adapters.PagedEntriesAdapter;
+import net.emojiparty.android.jishotomo.ui.presentation.MenuButtons;
 import net.emojiparty.android.jishotomo.ui.presentation.FavoritesMenu;
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl;
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesViewModel;
@@ -138,6 +139,7 @@ public class DrawerActivity extends AppCompatActivity
   }
 
   @Override protected void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
     searchIntent(intent);
   }
 
@@ -184,11 +186,10 @@ public class DrawerActivity extends AppCompatActivity
   }
 
   @Override public boolean onPrepareOptionsMenu(Menu menu) {
-    if (viewModel.pagedEntriesControl.searchType.equals(PagedEntriesControl.FAVORITES) && adapter.getItemCount() > 0) {
-      FavoritesMenu.setButtonVisibility(menu, true);
-    } else {
-      FavoritesMenu.setButtonVisibility(menu, false);
-    }
+    boolean hasFavorites = viewModel.pagedEntriesControl.searchType.equals(PagedEntriesControl.FAVORITES) && adapter.getItemCount() > 0;
+    boolean isJlpt = viewModel.pagedEntriesControl.searchType.equals(PagedEntriesControl.JLPT);
+    MenuButtons.setExportVisibility(menu, hasFavorites || isJlpt);
+    MenuButtons.setUnfavoriteAllVisibility(menu, hasFavorites);
 
     return true;
   }
@@ -202,7 +203,7 @@ public class DrawerActivity extends AppCompatActivity
     searchView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
       @Override public void onViewAttachedToWindow(View view) {
         // hide other buttons while search input is open
-        FavoritesMenu.setButtonVisibility(menu, false);
+        MenuButtons.hideExtraButtons(menu);
       }
 
       @Override public void onViewDetachedFromWindow(View view) {
@@ -210,7 +211,7 @@ public class DrawerActivity extends AppCompatActivity
           // we performed a search, so hide the other buttons
           // (have to do this here because calling invalidateOptionsMenu while search input is open
           // makes the search input close)
-          FavoritesMenu.setButtonVisibility(menu, false);
+          MenuButtons.hideExtraButtons(menu);
         } else {
           // refresh other menu buttons visibility based on current state, since
           // we hid the button when we opened the search input

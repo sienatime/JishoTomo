@@ -4,9 +4,9 @@ import android.widget.EditText;
 import androidx.arch.core.executor.testing.CountingTaskExecutorRule;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.runner.AndroidJUnit4;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import net.emojiparty.android.jishotomo.data.AppRepository;
@@ -160,8 +160,7 @@ public class DrawerActivityInstrumentedTests {
   public void itShowsSearchAndExportMenuItems () {
     clickDrawerItem(R.id.nav_jlptn1);
     onView(withId(R.id.menu_search)).check(matches(isDisplayed()));
-    // TODO: fix this
-    //onView(withId(R.id.menu_export)).check(matches(isDisplayed()));
+    onView(withId(R.id.menu_export)).check(matches(isDisplayed()));
     onView(withId(R.id.menu_remove_all_favorites)).check(doesNotExist());
   }
 

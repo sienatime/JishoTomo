@@ -1,9 +1,9 @@
 package net.emojiparty.android.jishotomo;
 
 import android.content.Intent;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.runner.AndroidJUnit4;
 import net.emojiparty.android.jishotomo.data.AppRepository;
 import net.emojiparty.android.jishotomo.data.room.Entry;
 import net.emojiparty.android.jishotomo.ui.activities.DefinitionActivity;

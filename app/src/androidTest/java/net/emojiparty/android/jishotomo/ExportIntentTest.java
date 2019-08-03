@@ -5,8 +5,8 @@ import android.app.Instrumentation;
 import android.content.Intent;
 import androidx.arch.core.executor.testing.CountingTaskExecutorRule;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.runner.AndroidJUnit4;
 import net.emojiparty.android.jishotomo.data.AppRepository;
 import net.emojiparty.android.jishotomo.ui.activities.DrawerActivity;
 import org.junit.After;
@@ -68,6 +68,12 @@ public class ExportIntentTest {
 
   @Test
   public void itCanExportJlptListToCsv() {
-    // TODO
+    clickDrawerItem(R.id.nav_jlptn1);
+    onView(withText("明白")).check(matches(isDisplayed()));
+    onView(withId(R.id.menu_export)).perform(click());
+    onView(withText("PROCEED"))
+        .inRoot(isDialog())
+        .check(matches(isDisplayed()));
+    onView(withText("PROCEED")).perform(click());
   }
 }

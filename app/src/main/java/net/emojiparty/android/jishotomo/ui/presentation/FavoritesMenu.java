@@ -3,8 +3,6 @@ package net.emojiparty.android.jishotomo.ui.presentation;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -25,13 +23,6 @@ public class FavoritesMenu {
 
   public FavoritesMenu(JishoTomoApp app) {
     analyticsLogger = app.getAnalyticsLogger();
-  }
-
-  public static void setButtonVisibility(Menu menu, boolean visible) {
-    MenuItem exportIcon = menu.getItem(1);
-    MenuItem unfavoriteAllIcon = menu.getItem(2);
-    exportIcon.setVisible(visible);
-    unfavoriteAllIcon.setVisible(visible);
   }
 
   public void explainUnfavoriteAll(FragmentActivity activity) {
