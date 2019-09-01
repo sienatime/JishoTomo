@@ -7,11 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import net.emojiparty.android.jishotomo.data.AppRepository;
-import net.emojiparty.android.jishotomo.data.SemicolonSplit;
 import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses;
-import net.emojiparty.android.jishotomo.data.models.SenseWithCrossReferences;
-import net.emojiparty.android.jishotomo.data.room.Sense;
-import net.emojiparty.android.jishotomo.ui.presentation.SenseDisplay;
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl;
 
 public class CsvExporter {
@@ -25,12 +21,10 @@ public class CsvExporter {
     return (context.getExternalFilesDir("csv_export") + "/jisho_tomo_export.csv");
   }
 
-  private SenseDisplay senseDisplay;
   private Context context;
   private ExportCallback callback;
 
   public CsvExporter(Context context) {
-    this.senseDisplay = new SenseDisplay(context);
     this.context = context;
   }
 
@@ -55,8 +49,7 @@ public class CsvExporter {
       int totalCount = entries.size();
       for (int i = 0; i < totalCount; i++) {
         EntryWithAllSenses entry = entries.get(i);
-        writer.writeNext(
-            new String[] { entry.getKanjiOrReading(), meaning(entry), reading(entry) });
+        writer.writeNext(new CsvEntry(entry, context).toArray());
         callback.onUpdateProgress((i + 1) * 100 / totalCount);
       }
       writer.close();
@@ -79,47 +72,13 @@ public class CsvExporter {
     }
   }
 
-  private String meaning(EntryWithAllSenses entry) {
-    StringBuilder builder = new StringBuilder();
-    int numberOfSenses = entry.getSenses().size();
-    for (int i = 0; i < numberOfSenses; i++) {
-      SenseWithCrossReferences sense = entry.getSenses().get(i);
-
-      appendPartsOfSpeech(builder, sense.getSense());
-      if (numberOfSenses > 1) {
-        int index = i + 1;
-        builder.append(index);
-        builder.append(". ");
-      }
-      builder.append(SemicolonSplit.splitAndJoin(sense.getSense().getGlosses()));
-      builder.append("<br/>");
-    }
-    return builder.toString();
-  }
-
-  private void appendPartsOfSpeech(StringBuilder builder, Sense sense) {
-    if (sense.getPartsOfSpeech() != null) {
-      builder.append(senseDisplay.formatPartsOfSpeech(sense));
-      builder.append("<br/>");
-    }
-  }
-
-  private String reading(EntryWithAllSenses entry) {
-    if (entry.hasKanji()) {
-      return String.format("%s[%s]", entry.entry.getPrimaryKanji(),
-          entry.entry.getPrimaryReading());
-    } else {
-      return entry.entry.getPrimaryReading();
-    }
-  }
-
   private CSVWriter semicolonSeparatedWriter(String csv) throws IOException {
     return new CSVWriter(new FileWriter(csv), ';', CSVWriter.NO_QUOTE_CHARACTER,
         CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END);
   }
 
   class CsvForbiddenExportTypeException extends RuntimeException {
-    public CsvForbiddenExportTypeException(String message) {
+    CsvForbiddenExportTypeException(String message) {
       super(message);
     }
   }
