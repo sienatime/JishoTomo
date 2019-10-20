@@ -13,7 +13,7 @@ android {
   compileSdkVersion 28
   defaultConfig {
     applicationId "net.emojiparty.android.jishotomo"
-    minSdkVersion 17
+    minSdkVersion 21
     targetSdkVersion 28
     versionCode 1
     versionName "1.0"
@@ -52,8 +52,8 @@ android {
 
 dependencies {
   implementation fileTree(include: ['*.jar'], dir: 'libs')
-  implementation 'androidx.appcompat:appcompat:1.0.2'
-  implementation 'com.google.android.material:material:1.1.0-alpha09'
+  implementation 'androidx.appcompat:appcompat:1.1.0'
+  implementation 'com.google.android.material:material:1.1.0-beta01'
   implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
   testImplementation 'junit:junit:4.12'
   androidTestImplementation 'androidx.test:runner:1.2.0'
@@ -65,17 +65,17 @@ dependencies {
   implementation 'androidx.test.espresso:espresso-idling-resource:3.2.0'
 
   // ViewModel and LiveData
-  implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
-  annotationProcessor "androidx.lifecycle:lifecycle-compiler:2.0.0"
+  implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
+  implementation 'androidx.lifecycle:lifecycle-common-java8:2.1.0'
   // Room
-  implementation 'androidx.room:room-runtime:2.2.0-beta01'
-  annotationProcessor "androidx.room:room-compiler:2.2.0-beta01"
+  implementation 'androidx.room:room-runtime:2.2.0'
+  annotationProcessor "androidx.room:room-compiler:2.2.0"
   // Paging
   implementation 'androidx.paging:paging-runtime:2.1.0'
   // Test helpers for LiveData
-  androidTestImplementation 'androidx.arch.core:core-testing:2.0.1'
+  androidTestImplementation 'androidx.arch.core:core-testing:2.1.0'
   // Test helpers for Room
-  testImplementation 'androidx.room:room-testing:2.2.0-beta01'
+  testImplementation 'androidx.room:room-testing:2.2.0'
   implementation 'com.github.humazed:RoomAsset:1.0.3'
 
   // Dagger 2
@@ -91,8 +91,8 @@ dependencies {
   implementation("com.opencsv:opencsv:4.0") {
     exclude group: 'commons-logging', module: 'commons-logging'
   }
-  implementation "androidx.core:core-ktx:1.2.0-alpha03"
-  implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0"
+  implementation "androidx.core:core-ktx:1.2.0-beta01"
+  implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0"
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
