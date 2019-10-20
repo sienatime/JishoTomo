@@ -1,10 +1,10 @@
 package net.emojiparty.android.jishotomo.data.di;
 
 import android.app.Application;
-import androidx.sqlite.db.SupportSQLiteDatabase;
-import androidx.room.migration.Migration;
 import androidx.annotation.NonNull;
-import com.huma.room_for_asset.RoomAsset;
+import androidx.room.Room;
+import androidx.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;
@@ -18,13 +18,14 @@ import net.emojiparty.android.jishotomo.data.room.SenseDao;
   private AppDatabase db;
 
   @Singleton public RoomModule(Application application) {
-    db = RoomAsset.databaseBuilder(application, AppDatabase.class, "jishotomo.db")
-        .addMigrations(new Migration(2, 3) {
+    final String databaseName = "jishotomo.db";
+    db = Room.databaseBuilder(application, AppDatabase.class, databaseName).createFromAsset("databases/" + databaseName)
+        .addMigrations(new Migration(1, 2) {
           @Override public void migrate(@NonNull SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE entries ADD COLUMN favorited INTEGER");
           }
         })
-        .addMigrations(new Migration(3, 4) {
+        .addMigrations(new Migration(2, 3) {
           @Override public void migrate(@NonNull SupportSQLiteDatabase database) {
             database.execSQL("CREATE VIRTUAL TABLE IF NOT EXISTS `entriesFts` USING FTS4(`primary_kanji`, `primary_reading`, `other_kanji`, `other_readings`, content=`entries`)");
             database.execSQL("CREATE VIRTUAL TABLE IF NOT EXISTS `sensesFts` USING FTS4(`glosses`, content=`senses`)");

@@ -76,7 +76,6 @@ dependencies {
   androidTestImplementation 'androidx.arch.core:core-testing:2.1.0'
   // Test helpers for Room
   testImplementation 'androidx.room:room-testing:2.2.0'
-  implementation 'com.github.humazed:RoomAsset:1.0.3'
 
   // Dagger 2
   implementation "com.google.dagger:dagger-android-support:2.13"
