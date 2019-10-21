@@ -30,6 +30,7 @@ import net.emojiparty.android.jishotomo.data.models.SearchResultEntry;
 import net.emojiparty.android.jishotomo.ui.adapters.PagedEntriesAdapter;
 import net.emojiparty.android.jishotomo.ui.presentation.MenuButtons;
 import net.emojiparty.android.jishotomo.ui.presentation.FavoritesMenu;
+import net.emojiparty.android.jishotomo.ui.presentation.StringForJlptLevel;
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl;
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesViewModel;
 
@@ -189,7 +190,7 @@ public class DrawerActivity extends AppCompatActivity
     navigationView.setNavigationItemSelectedListener(this);
   }
 
-  @Override protected void onSaveInstanceState(Bundle outState) {
+  @Override protected void onSaveInstanceState(@NonNull Bundle outState) {
     if (viewModel.pagedEntriesControl.jlptLevel != null) {
       outState.putInt(STATE_JLPT_LEVEL, viewModel.pagedEntriesControl.jlptLevel);
     }
@@ -325,8 +326,7 @@ public class DrawerActivity extends AppCompatActivity
       case PagedEntriesControl.FAVORITES:
         return R.string.favorites;
       case PagedEntriesControl.JLPT:
-        return getResources().getIdentifier(
-            "jlpt_n" + String.valueOf(pagedEntriesControl.jlptLevel), "string", getPackageName());
+        return StringForJlptLevel.getId(pagedEntriesControl.jlptLevel, this);
       case PagedEntriesControl.SEARCH:
         return R.string.search_results;
       default:

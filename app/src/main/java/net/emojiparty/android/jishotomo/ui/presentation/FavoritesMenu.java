@@ -14,7 +14,7 @@ import net.emojiparty.android.jishotomo.R;
 import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger;
 import net.emojiparty.android.jishotomo.data.AppRepository;
 import net.emojiparty.android.jishotomo.data.csv.CsvExporter;
-import net.emojiparty.android.jishotomo.ui.activities.CsvExportAsyncTask;
+import net.emojiparty.android.jishotomo.ui.csv.CsvExportAsyncTask;
 import net.emojiparty.android.jishotomo.ui.dialogs.CallbackDialog;
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl;
 

@@ -1,18 +1,17 @@
 package net.emojiparty.android.jishotomo.ui.activities;
 
-import androidx.lifecycle.ViewModelProviders;
-import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ViewDataBinding;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ViewDataBinding;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
 import net.emojiparty.android.jishotomo.BR;
 import net.emojiparty.android.jishotomo.JishoTomoApp;
 import net.emojiparty.android.jishotomo.R;
@@ -34,12 +33,6 @@ public class DefinitionFragment extends Fragment {
     bundle.putInt(ENTRY_ID_EXTRA, entryId);
     fragment.setArguments(bundle);
     return fragment;
-  }
-
-  public static void addToContainer(FragmentManager fragmentManager, int entryId,
-      int containerId) {
-    DefinitionFragment fragment = instance(entryId);
-    fragmentManager.beginTransaction().add(containerId, fragment).addToBackStack(null).commit();
   }
 
   @Nullable @Override

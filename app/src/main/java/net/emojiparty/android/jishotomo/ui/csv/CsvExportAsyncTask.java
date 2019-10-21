@@ -1,4 +1,4 @@
-package net.emojiparty.android.jishotomo.ui.activities;
+package net.emojiparty.android.jishotomo.ui.csv;
 
 import android.content.Context;
 import android.os.AsyncTask;
