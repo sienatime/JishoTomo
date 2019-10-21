@@ -8,6 +8,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;
+import net.emojiparty.android.jishotomo.Environment;
 import net.emojiparty.android.jishotomo.data.room.AppDatabase;
 import net.emojiparty.android.jishotomo.data.room.EntryDao;
 import net.emojiparty.android.jishotomo.data.room.SenseDao;
@@ -16,10 +17,10 @@ import net.emojiparty.android.jishotomo.data.room.SenseDao;
 
 @Module public class RoomModule {
   private AppDatabase db;
+  private final String databaseFileName = "jishotomo.db";
 
   @Singleton public RoomModule(Application application) {
-    final String databaseName = "jishotomo.db";
-    db = Room.databaseBuilder(application, AppDatabase.class, databaseName).createFromAsset("databases/" + databaseName)
+    db = Room.databaseBuilder(application, AppDatabase.class, databaseName()).createFromAsset("databases/" + databaseFileName)
         .addMigrations(new Migration(1, 2) {
           @Override public void migrate(@NonNull SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE entries ADD COLUMN favorited INTEGER");
@@ -47,5 +48,13 @@ import net.emojiparty.android.jishotomo.data.room.SenseDao;
 
   @Singleton @Provides SenseDao providesSenseDao(AppDatabase db) {
     return db.senseDao();
+  }
+
+  private String databaseName() {
+    if (Environment.isTest()) {
+      return "jishotomo_test.db";
+    } else {
+      return databaseFileName;
+    }
   }
 }
