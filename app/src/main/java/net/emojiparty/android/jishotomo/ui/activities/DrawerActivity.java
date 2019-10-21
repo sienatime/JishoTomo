@@ -40,6 +40,7 @@ public class DrawerActivity extends AppCompatActivity
 
   private PagedEntriesViewModel viewModel;
   private ProgressBar loadingIndicator;
+  private TextView noResults;
   private MenuItem searchViewMenuItem;
   private RecyclerView searchResults;
   private TextView toolbarTitle;
@@ -67,6 +68,7 @@ public class DrawerActivity extends AppCompatActivity
 
     setRecyclerViewWithNewAdapter();
     loadingIndicator = findViewById(R.id.loading);
+    noResults = findViewById(R.id.no_results);
     toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
     if (savedInstanceState == null) {
       searchIntent(getIntent());
@@ -148,8 +150,29 @@ public class DrawerActivity extends AppCompatActivity
     viewModel.entries.observe(this, (PagedList<SearchResultEntry> entries) -> {
       loadingIndicator.setVisibility(View.INVISIBLE);
       adapter.submitList(entries);
+      setNoResultsText(entries.size());
       invalidateOptionsMenu();
     });
+  }
+
+  private void setNoResultsText(int size) {
+    if (size == 0) {
+      noResults.setVisibility(View.VISIBLE);
+      noResults.setText(noResultsText());
+    } else {
+      noResults.setVisibility(View.GONE);
+    }
+  }
+
+  private String noResultsText() {
+    switch (viewModel.pagedEntriesControl.searchType) {
+      case PagedEntriesControl.FAVORITES:
+        return getString(R.string.no_favorites);
+      case PagedEntriesControl.SEARCH:
+        return String.format(getString(R.string.no_search_results), viewModel.pagedEntriesControl.searchTerm);
+      default:
+        return getString(R.string.nothing_here);
+    }
   }
 
   private void setupDrawer(Toolbar toolbar) {
@@ -250,6 +273,7 @@ public class DrawerActivity extends AppCompatActivity
     // when changing lists without re-instantiating the adapter.
     setRecyclerViewWithNewAdapter();
     clearDefinitionBackstack();
+    noResults.setVisibility(View.GONE);
     loadingIndicator.setVisibility(View.VISIBLE);
     viewModel.pagedEntriesControlLiveData.setValue(pagedEntriesControl);
     invalidateOptionsMenu();

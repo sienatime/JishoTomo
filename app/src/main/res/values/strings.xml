@@ -17,6 +17,9 @@
   <string name="add_to_favorites">Add Entry to Favorites</string>
   <string name="remove_from_favorites">Remove Entry from Favorites</string>
   <string name="select_something">No entry selected.</string>
+  <string name="no_favorites">You have no favorite entries. Tap the star on an entry to favorite it.</string>
+  <string name="no_search_results">No results found for \"%s\". Try a different search.</string>
+  <string name="nothing_here">Whoops, there is nothing here.</string>
 
   <!-- Menu -->
   <string name="search">Search</string>

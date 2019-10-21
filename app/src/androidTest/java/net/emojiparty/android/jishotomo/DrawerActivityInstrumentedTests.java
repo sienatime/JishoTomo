@@ -33,6 +33,7 @@ import static net.emojiparty.android.jishotomo.utils.JishoTomoTestUtils.clickDra
 import static net.emojiparty.android.jishotomo.utils.JishoTomoTestUtils.openDrawer;
 import static net.emojiparty.android.jishotomo.utils.RecyclerViewItemCountAssertion.withItemCount;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.not;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -86,6 +87,7 @@ public class DrawerActivityInstrumentedTests {
     performSearch("朝");
     onView(withText("あさ")).check(matches(isDisplayed()));
     onView(withText("morning")).check(matches(isDisplayed()));
+    onView(withId(R.id.no_results)).check(matches(not(isDisplayed())));
   }
 
   @Test
@@ -95,6 +97,15 @@ public class DrawerActivityInstrumentedTests {
     performSearch("朝");
     onView(withText("あさ")).check(matches(isDisplayed()));
     onView(withText("morning")).check(matches(isDisplayed()));
+  }
+
+  @Test
+  public void itCanPerformASearchWithNoResults() throws Throwable {
+    String searchTerm = "alkdsjflksdjlf";
+    clickDrawerItem(R.id.nav_search);
+
+    performSearch(searchTerm, false);
+    onView(withId(R.id.no_results)).check(matches(withText("No results found for \"" + searchTerm + "\". Try a different search.")));
   }
 
   // DRAWER
@@ -125,6 +136,7 @@ public class DrawerActivityInstrumentedTests {
     onView(withId(R.id.menu_search)).check(matches(isDisplayed()));
     onView(withId(R.id.menu_export)).check(matches(isDisplayed()));
     onView(withId(R.id.menu_remove_all_favorites)).check(matches(isDisplayed()));
+    onView(withId(R.id.no_results)).check(matches(not(isDisplayed())));
   }
 
   @Test
@@ -133,6 +145,7 @@ public class DrawerActivityInstrumentedTests {
     onView(withId(R.id.menu_search)).check(matches(isDisplayed()));
     onView(withId(R.id.menu_export)).check(doesNotExist());
     onView(withId(R.id.menu_remove_all_favorites)).check(doesNotExist());
+    onView(withId(R.id.no_results)).check(matches(withText(R.string.no_favorites)));
   }
 
   @Test
@@ -144,6 +157,7 @@ public class DrawerActivityInstrumentedTests {
     onView(withText("OK")).perform(click());
     drain();
     onView(withId(R.id.search_results_rv)).check(withItemCount(0));
+    onView(withId(R.id.no_results)).check(matches(withText(R.string.no_favorites)));
   }
 
   // ABOUT
@@ -171,9 +185,15 @@ public class DrawerActivityInstrumentedTests {
   }
 
   private void performSearch(String searchTerm) throws Throwable {
+    performSearch(searchTerm, true);
+  }
+
+  private void performSearch(String searchTerm, boolean resultsExpected) throws Throwable {
     onView(isAssignableFrom(EditText.class)).perform(replaceText(searchTerm),
         pressImeActionButton());
     drain();
-    onView(withId(R.id.search_results_rv)).check(withItemCount(greaterThan(1)));
+    if (resultsExpected) {
+      onView(withId(R.id.search_results_rv)).check(withItemCount(greaterThan(1)));
+    }
   }
 }
