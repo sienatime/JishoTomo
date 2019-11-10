@@ -34,7 +34,7 @@ class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: 
 
   private fun appendPartsOfSpeech(builder: StringBuilder, sense: Sense): Boolean {
     if (sense.partsOfSpeech != null) {
-      builder.append(senseDisplay.formatPartsOfSpeech(sense))
+      builder.append(senseDisplay.formatPartsOfSpeech(sense.partsOfSpeech))
       builder.append("<br/>")
       return true
     }

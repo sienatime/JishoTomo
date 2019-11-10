@@ -3,6 +3,7 @@ package net.emojiparty.android.jishotomo.ui.presentation
 import android.content.Context
 import android.content.res.Resources
 import android.text.TextUtils
+import androidx.annotation.VisibleForTesting
 import net.emojiparty.android.jishotomo.data.SemicolonSplit
 import net.emojiparty.android.jishotomo.data.room.Sense
 import java.util.LinkedHashSet
@@ -11,8 +12,8 @@ class SenseDisplay(private val resources: Resources, private val packageName: St
 
   constructor(context: Context): this(context.resources, context.packageName)
 
-  fun formatPartsOfSpeech(sense: Sense): String {
-    val partsOfSpeech = SemicolonSplit.split(sense.partsOfSpeech)
+  fun formatPartsOfSpeech(unsplitPartsOfSpeech: String): String {
+    val partsOfSpeech = SemicolonSplit.split(unsplitPartsOfSpeech)
 
     val localizedPartsOfSpeech = LinkedHashSet<String>()
     for (partOfSpeech in partsOfSpeech) {
@@ -29,10 +30,11 @@ class SenseDisplay(private val resources: Resources, private val packageName: St
       sense: Sense,
       context: Context
     ): String {
-      return SenseDisplay(context).formatPartsOfSpeech(sense)
+      return SenseDisplay(context).formatPartsOfSpeech(sense.partsOfSpeech)
     }
 
-    private fun getPartOfSpeechKey(partOfSpeech: String): String {
+    @VisibleForTesting
+    fun getPartOfSpeechKey(partOfSpeech: String): String {
       return if (partOfSpeech == "int") {
         "intj"
       } else {
