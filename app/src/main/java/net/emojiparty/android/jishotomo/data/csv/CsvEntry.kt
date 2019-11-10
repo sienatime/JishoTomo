@@ -8,18 +8,18 @@ import net.emojiparty.android.jishotomo.ui.presentation.SenseDisplay
 
 class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: SenseDisplay) {
   fun toArray(): Array<String> {
-    return arrayOf(entry.getKanjiOrReading(), meaning(), reading())
+    return arrayOf(entry.kanjiOrReading, meaning(), reading())
   }
 
   @VisibleForTesting
   fun meaning(): String {
     val builder = StringBuilder()
-    val numberOfSenses = entry.getSenses().size
+    val numberOfSenses = entry.senses.size
     var glossIndex = 1;
     for (i in 0 until numberOfSenses) {
-      val sense = entry.getSenses()[i]
+      val sense = entry.senses[i]
 
-      val newPartOfSpeech = appendPartsOfSpeech(builder, sense.getSense())
+      val newPartOfSpeech = appendPartsOfSpeech(builder, sense.sense)
       if (newPartOfSpeech) {
         glossIndex = 1
       }
@@ -28,7 +28,7 @@ class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: 
         builder.append(". ")
         glossIndex++
       }
-      builder.append(SemicolonSplit.splitAndJoin(sense.getSense().glosses))
+      builder.append(SemicolonSplit.splitAndJoin(sense.sense.glosses))
       builder.append("<br/>")
     }
     return builder.toString()

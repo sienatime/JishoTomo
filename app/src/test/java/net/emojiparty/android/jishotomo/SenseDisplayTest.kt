@@ -17,6 +17,13 @@ class SenseDisplayTest {
   }
 
   @Test
+  fun `formatPartsOfSpeech when called with null returns empty string`() {
+    val senseDisplay = SenseDisplay(testResources, testPackageName)
+
+    assertThat(senseDisplay.formatPartsOfSpeech(null), `is`(""))
+  }
+
+  @Test
   fun `getPartOfSpeechKey when given a key with a -, replaces it with a _`() {
     assertThat(SenseDisplay.getPartOfSpeechKey("my-key"), `is`("my_key"))
   }
