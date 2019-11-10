@@ -1,5 +1,6 @@
 package net.emojiparty.android.jishotomo.data.csv
 
+import androidx.annotation.VisibleForTesting
 import net.emojiparty.android.jishotomo.data.SemicolonSplit
 import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses
 import net.emojiparty.android.jishotomo.data.room.Sense
@@ -7,10 +8,10 @@ import net.emojiparty.android.jishotomo.ui.presentation.SenseDisplay
 
 class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: SenseDisplay) {
   fun toArray(): Array<String> {
-    return arrayOf(entry.getKanjiOrReading(), meaning(entry), reading(entry))
+    return arrayOf(entry.getKanjiOrReading(), meaning(), reading())
   }
 
-  private fun meaning(entry: EntryWithAllSenses): String {
+  private fun meaning(): String {
     val builder = StringBuilder()
     val numberOfSenses = entry.getSenses().size
     var glossIndex = 1;
@@ -41,7 +42,8 @@ class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: 
     return false
   }
 
-  private fun reading(entry: EntryWithAllSenses): String {
+  @VisibleForTesting
+  fun reading(): String {
     return if (entry.hasKanji()) {
       String.format(
           "%s[%s]", entry.entry.primaryKanji,
