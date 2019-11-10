@@ -27,7 +27,6 @@ class CsvEntryTest {
     assertThat(csvEntry.reading(), `is`("ねこ"))
   }
 
-
   @Test
   fun `meaning, when only one sense, returns the parts of speech followed by the sense`() {
     val entryWithOneSense = makeEntry("ねこ", "猫", makeSense("cat", "n"))
@@ -44,12 +43,35 @@ class CsvEntryTest {
 
   @Test
   fun `meaning, when more than one sense but more than one part of speech, returns the parts of speech followed by a numbered list of senses`() {
-    val entryWithOneSense = makeEntry("ねこ", "猫", makeSense("cat", "n"), makeSense("a pretty cat"), makeSense("to do cat things", "v1"))
+    val entryWithOneSense = makeEntry(
+        "ねこ", "猫", makeSense("cat", "n"), makeSense("a pretty cat"),
+        makeSense("to do cat things", "v1")
+    )
     val csvEntry = CsvEntry(entryWithOneSense, senseDisplay)
-    assertThat(csvEntry.meaning(), `is`("Noun<br/>1. cat<br/>2. a pretty cat<br/>Verb<br/>1. to do cat things<br/>"))
+    assertThat(
+        csvEntry.meaning(),
+        `is`("Noun<br/>1. cat<br/>2. a pretty cat<br/>Verb<br/>1. to do cat things<br/>")
+    )
   }
 
-  private fun makeSense(gloss: String, partsOfSpeech: String? = null): SenseWithCrossReferences {
+  @Test
+  fun `toArray when there is a kanji returns an array with the kanji first`() {
+    val entryWithKanji = makeEntry("ねこ", "猫", makeSense("cat", "n"))
+    val csvEntry = CsvEntry(entryWithKanji, senseDisplay)
+    assertThat(csvEntry.toArray(), `is`(arrayOf("猫", "Noun<br/>cat<br/>", "猫[ねこ]")))
+  }
+
+  @Test
+  fun `toArray when there is not a kanji returns an array with the reading first`() {
+    val entryWithKanji = makeEntry("ねこ", null, makeSense("cat", "n"))
+    val csvEntry = CsvEntry(entryWithKanji, senseDisplay)
+    assertThat(csvEntry.toArray(), `is`(arrayOf("ねこ", "Noun<br/>cat<br/>", "ねこ")))
+  }
+
+  private fun makeSense(
+    gloss: String,
+    partsOfSpeech: String? = null
+  ): SenseWithCrossReferences {
     return SenseWithCrossReferences().apply {
       this.sense = Sense().apply {
         this.glosses = gloss
@@ -58,7 +80,11 @@ class CsvEntryTest {
     }
   }
 
-  private fun makeEntry(reading: String, kanji: String? = null, vararg senses: SenseWithCrossReferences): EntryWithAllSenses {
+  private fun makeEntry(
+    reading: String,
+    kanji: String? = null,
+    vararg senses: SenseWithCrossReferences
+  ): EntryWithAllSenses {
     return EntryWithAllSenses().apply {
       this.entry = Entry().apply {
         this.primaryKanji = kanji
