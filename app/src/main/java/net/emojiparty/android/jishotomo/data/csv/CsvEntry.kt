@@ -11,7 +11,8 @@ class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: 
     return arrayOf(entry.getKanjiOrReading(), meaning(), reading())
   }
 
-  private fun meaning(): String {
+  @VisibleForTesting
+  fun meaning(): String {
     val builder = StringBuilder()
     val numberOfSenses = entry.getSenses().size
     var glossIndex = 1;

@@ -12,7 +12,7 @@ class SenseDisplay(private val resources: Resources, private val packageName: St
 
   constructor(context: Context): this(context.resources, context.packageName)
 
-  fun formatPartsOfSpeech(unsplitPartsOfSpeech: String): String {
+  fun formatPartsOfSpeech(unsplitPartsOfSpeech: String?): String {
     val partsOfSpeech = SemicolonSplit.split(unsplitPartsOfSpeech)
 
     val localizedPartsOfSpeech = LinkedHashSet<String>()
