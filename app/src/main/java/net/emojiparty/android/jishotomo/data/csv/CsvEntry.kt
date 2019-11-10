@@ -1,14 +1,11 @@
 package net.emojiparty.android.jishotomo.data.csv
 
-import android.content.Context
 import net.emojiparty.android.jishotomo.data.SemicolonSplit
 import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses
 import net.emojiparty.android.jishotomo.data.room.Sense
 import net.emojiparty.android.jishotomo.ui.presentation.SenseDisplay
 
-class CsvEntry(private val entry: EntryWithAllSenses, context: Context) {
-  private val senseDisplay = SenseDisplay(context)
-
+class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: SenseDisplay) {
   fun toArray(): Array<String> {
     return arrayOf(entry.getKanjiOrReading(), meaning(entry), reading(entry))
   }

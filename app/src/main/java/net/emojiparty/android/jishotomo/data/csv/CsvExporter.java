@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.emojiparty.android.jishotomo.data.AppRepository;
 import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses;
+import net.emojiparty.android.jishotomo.ui.presentation.SenseDisplay;
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl;
 
 public class CsvExporter {
@@ -49,7 +50,7 @@ public class CsvExporter {
       int totalCount = entries.size();
       for (int i = 0; i < totalCount; i++) {
         EntryWithAllSenses entry = entries.get(i);
-        writer.writeNext(new CsvEntry(entry, context).toArray());
+        writer.writeNext(new CsvEntry(entry, new SenseDisplay(context)).toArray());
         callback.onUpdateProgress((i + 1) * 100 / totalCount);
       }
       writer.close();
