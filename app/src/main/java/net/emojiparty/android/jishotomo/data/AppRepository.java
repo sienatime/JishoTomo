@@ -41,17 +41,9 @@ public class AppRepository {
     return liveData;
   }
 
-  private boolean isKana(int codePoint) {
-    return codePoint >= 12352 && codePoint <= 12543;
-  }
-
-  private boolean isCJK(int codePoint) {
-    return codePoint >= 19968;
-  }
-
   public LiveData<PagedList<SearchResultEntry>> search(String term) {
     int unicodeCodePoint = Character.codePointAt(term, 0);
-    if (isKana(unicodeCodePoint) || isCJK(unicodeCodePoint)) {
+    if (CJKUtil.isJapanese(unicodeCodePoint)) {
       String wildcardQuery = String.format("*%s*", term);
       return new LivePagedListBuilder<>(entryDao.searchByJapaneseTerm(wildcardQuery), PAGE_SIZE).build();
     } else {
