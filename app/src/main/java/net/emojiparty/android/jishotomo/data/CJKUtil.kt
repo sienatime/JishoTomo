@@ -22,4 +22,12 @@ object CJKUtil {
   fun isJapanese(codePoint: Int): Boolean {
     return isKana(codePoint) || isCJK(codePoint)
   }
+
+  @JvmStatic
+  fun allKanji(string: String): Boolean {
+    return string.indices.all {
+      val codePoint = Character.codePointAt(string, it)
+      isCJK(codePoint)
+    }
+  }
 }

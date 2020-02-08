@@ -21,6 +21,13 @@ class CsvEntryTest {
   }
 
   @Test
+  fun `reading, when an entry has kanji followed by hiragana, returns the kanji followed by the reading followed by the hiragana`() {
+    val entryWithKanji = makeEntry("うれしい", "嬉しい")
+    val csvEntry = CsvEntry(entryWithKanji, senseDisplay)
+    assertThat(csvEntry.reading(), `is`("嬉[うれ]しい"))
+  }
+
+  @Test
   fun `reading, when an entry does not have kanji, returns the reading`() {
     val entryWithoutKanji = makeEntry("ねこ")
     val csvEntry = CsvEntry(entryWithoutKanji, senseDisplay)

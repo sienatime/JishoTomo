@@ -1,8 +1,10 @@
 package net.emojiparty.android.jishotomo.data.csv
 
 import androidx.annotation.VisibleForTesting
+import net.emojiparty.android.jishotomo.data.CJKUtil
 import net.emojiparty.android.jishotomo.data.SemicolonSplit
 import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses
+import net.emojiparty.android.jishotomo.data.room.Entry
 import net.emojiparty.android.jishotomo.data.room.Sense
 import net.emojiparty.android.jishotomo.ui.presentation.SenseDisplay
 
@@ -46,12 +48,41 @@ class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: 
   @VisibleForTesting
   fun reading(): String {
     return if (entry.hasKanji()) {
-      String.format(
-          "%s[%s]", entry.entry.primaryKanji,
-          entry.entry.primaryReading
-      )
+      formatReading(entry.entry)
     } else {
       entry.entry.primaryReading
     }
+  }
+
+  private fun formatReading(entry: Entry): String {
+    return if (CJKUtil.allKanji(entry.primaryKanji)) {
+      "${entry.primaryKanji}[${entry.primaryReading}]"
+    } else {
+      val builder = java.lang.StringBuilder()
+
+      val commonSuffix = entry.primaryKanji.commonSuffixWith(entry.primaryReading)
+      if (commonSuffix.isNotEmpty()) {
+
+        builder.append(differenceFrom(entry.primaryKanji, commonSuffix))
+
+        builder.append("[")
+
+        builder.append(differenceFrom(entry.primaryReading, commonSuffix))
+
+        builder.append("]")
+
+        builder.append(commonSuffix)
+      }
+
+      builder.toString()
+    }
+  }
+
+  private fun differenceFrom(string1: String, string2: String): String {
+    // given a string like 嬉しい and another string like しい,
+    // return the part that is not the same (嬉)
+
+    val subStart = string1.indexOf(string2)
+    return string1.slice(0 until subStart)
   }
 }

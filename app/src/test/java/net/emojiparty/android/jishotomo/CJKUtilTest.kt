@@ -41,4 +41,14 @@ class CJKUtilTest {
   fun `isCJK, when given some other character, returns false`() {
     assertThat(CJKUtil.isCJK(900), `is`(false))
   }
+
+  @Test
+  fun `allKanji, when given a string with all kanji, returns true`() {
+    assertThat(CJKUtil.allKanji("美術館"), `is`(true))
+  }
+
+  @Test
+  fun `allKanji, when given a string with a mix of kanji and kana, returns false`() {
+    assertThat(CJKUtil.allKanji("嬉しい"), `is`(false))
+  }
 }
