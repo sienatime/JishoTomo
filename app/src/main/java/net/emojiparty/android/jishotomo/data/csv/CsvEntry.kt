@@ -55,27 +55,53 @@ class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: 
   }
 
   private fun formatReading(entry: Entry): String {
-    return if (CJKUtil.allKanji(entry.primaryKanji)) {
-      "${entry.primaryKanji}[${entry.primaryReading}]"
-    } else {
-      val builder = java.lang.StringBuilder()
+    val kanji = entry.primaryKanji
+    val reading = entry.primaryReading
 
-      val commonSuffix = entry.primaryKanji.commonSuffixWith(entry.primaryReading)
-      if (commonSuffix.isNotEmpty()) {
+    val builder = StringBuilder()
 
-        builder.append(differenceFrom(entry.primaryKanji, commonSuffix))
+    var lastIndex = -1
 
-        builder.append("[")
+    for (i in kanji.indices) {
+      val codePoint = Character.codePointAt(kanji, i)
+      if (CJKUtil.isKana(codePoint)) {
+        builder.append(kanji[i])
+      } else {
+        lastIndex = i
+        if (builder.isNotEmpty()) {
+          builder.append(" ")
+        }
+        break
 
-        builder.append(differenceFrom(entry.primaryReading, commonSuffix))
-
-        builder.append("]")
-
-        builder.append(commonSuffix)
       }
-
-      builder.toString()
     }
+
+    addKanjiReadingPair(
+        builder,
+        kanji.substring(lastIndex, kanji.length),
+        reading.substring(lastIndex, reading.length)
+    )
+
+    return builder.toString()
+  }
+
+  private fun addKanjiReadingPair(builder: StringBuilder, kanji: String, reading: String): StringBuilder {
+    val commonSuffix = kanji.commonSuffixWith(reading)
+    if (commonSuffix.isNotEmpty()) {
+
+      builder.append(differenceFrom(kanji, commonSuffix))
+
+      builder.append("[")
+
+      builder.append(differenceFrom(reading, commonSuffix))
+
+      builder.append("]")
+
+      builder.append(commonSuffix)
+    } else {
+      builder.append("$kanji[$reading]")
+    }
+    return builder
   }
 
   private fun differenceFrom(string1: String, string2: String): String {

@@ -28,6 +28,34 @@ class CsvEntryTest {
   }
 
   @Test
+  fun `reading, when an entry has kana followed by kanji, returns the right format`() {
+    val entryWithKanji = makeEntry("ちりがみ", "ちり紙")
+    val csvEntry = CsvEntry(entryWithKanji, senseDisplay)
+    assertThat(csvEntry.reading(), `is`("ちり 紙[がみ]"))
+  }
+
+  @Test
+  fun `reading, when an entry has a kanji sandwich, returns the right format`() {
+    val entryWithKanji = makeEntry("くっつく", "くっ付く")
+    val csvEntry = CsvEntry(entryWithKanji, senseDisplay)
+    assertThat(csvEntry.reading(), `is`("くっ 付[つ]く"))
+  }
+
+  @Test
+  fun `reading, when an entry has kanji followed by hiragana, followed by more kanji, returns the right format`() {
+    val entryWithKanji = makeEntry("とこのま", "床の間")
+    val csvEntry = CsvEntry(entryWithKanji, senseDisplay)
+    assertThat(csvEntry.reading(), `is`("床[とこ]の 間[ま]"))
+  }
+
+  @Test
+  fun `reading, when an entry has a kanji and kana pairs, returns the right format`() {
+    val entryWithKanji = makeEntry("しみじみ", "沁み沁み")
+    val csvEntry = CsvEntry(entryWithKanji, senseDisplay)
+    assertThat(csvEntry.reading(), `is`("沁[し]み 沁[じ]み"))
+  }
+
+  @Test
   fun `reading, when an entry does not have kanji, returns the reading`() {
     val entryWithoutKanji = makeEntry("ねこ")
     val csvEntry = CsvEntry(entryWithoutKanji, senseDisplay)
