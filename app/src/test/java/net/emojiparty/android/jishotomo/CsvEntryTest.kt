@@ -50,9 +50,9 @@ class CsvEntryTest {
 
   @Test
   fun `reading, when an entry has a kanji and kana pairs, returns the right format`() {
-    val entryWithKanji = makeEntry("しみじみ", "沁み沁み")
+    val entryWithKanji = makeEntry("さしひき", "差し引き")
     val csvEntry = CsvEntry(entryWithKanji, senseDisplay)
-    assertThat(csvEntry.reading(), `is`("沁[し]み 沁[じ]み"))
+    assertThat(csvEntry.reading(), `is`("差[さ]し 引[ひ]き"))
   }
 
   @Test

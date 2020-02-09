@@ -60,29 +60,50 @@ class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: 
 
     val builder = StringBuilder()
 
-    var lastIndex = -1
+    val kanjiKanaPairIndices = mutableListOf<Int>()
+    var lastWasKana = false
 
     for (i in kanji.indices) {
       val codePoint = Character.codePointAt(kanji, i)
       if (CJKUtil.isKana(codePoint)) {
-        builder.append(kanji[i])
+        lastWasKana = true
       } else {
-        lastIndex = i
-        if (builder.isNotEmpty()) {
-          builder.append(" ")
+        if (lastWasKana || i == 0) {
+          kanjiKanaPairIndices.add(i)
         }
-        break
-
+        lastWasKana = false
       }
     }
 
-    addKanjiReadingPair(
-        builder,
-        kanji.substring(lastIndex, kanji.length),
-        reading.substring(lastIndex, reading.length)
-    )
+    if (kanjiKanaPairIndices.first() != 0) {
+      // kana at beginning
+      builder.append(kanji.substring(0 until kanjiKanaPairIndices.first()))
+    }
+
+    for (kanjiStart in kanjiKanaPairIndices) {
+      if (builder.isNotEmpty()) {
+        builder.append(" ")
+      }
+
+      val kanjiEnd = getEnd(kanji, kanjiStart, kanjiKanaPairIndices)
+      val readingEnd = getEnd(reading, kanjiStart, kanjiKanaPairIndices)
+
+      addKanjiReadingPair(
+          builder,
+          kanji.substring(kanjiStart, kanjiEnd),
+          reading.substring(kanjiStart, readingEnd)
+      )
+    }
 
     return builder.toString()
+  }
+
+  private fun getEnd(string: String, index: Int, list: List<Int>): Int {
+    return if ((index + 1) < list.size) {
+      list.get(index + 1)
+    } else {
+      string.length
+    }
   }
 
   private fun addKanjiReadingPair(builder: StringBuilder, kanji: String, reading: String): StringBuilder {
