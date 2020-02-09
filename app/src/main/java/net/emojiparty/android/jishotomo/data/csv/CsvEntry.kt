@@ -4,7 +4,6 @@ import androidx.annotation.VisibleForTesting
 import net.emojiparty.android.jishotomo.data.CJKUtil
 import net.emojiparty.android.jishotomo.data.SemicolonSplit
 import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses
-import net.emojiparty.android.jishotomo.data.room.Entry
 import net.emojiparty.android.jishotomo.data.room.Sense
 import net.emojiparty.android.jishotomo.ui.presentation.SenseDisplay
 
@@ -48,21 +47,63 @@ class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: 
   @VisibleForTesting
   fun reading(): String {
     return if (entry.hasKanji()) {
-      formatReading(entry.entry)
+      formatReading(entry.entry.primaryKanji, entry.entry.primaryReading)
     } else {
       entry.entry.primaryReading
     }
   }
 
-  private fun formatReading(entry: Entry): String {
-    val kanji = entry.primaryKanji
-    val reading = entry.primaryReading
-
+  private fun formatReading(kanji: String, reading: String): String {
     val builder = StringBuilder()
 
-    val kanjiStartIndices = mutableListOf<Int>(0)
-    val readingStartIndices = mutableListOf(0)
+    val kanjiTokens = buildKanjiTokens(kanji)
+    val readingTokens = buildReadingTokens(reading, kanji, kanjiTokens)
+    val zipped = kanjiTokens zip readingTokens
 
+    for ((kanjiToken, readingToken) in zipped) {
+      if (builder.isNotEmpty()) {
+        builder.append(" ")
+      }
+
+      addKanjiReadingPair(
+          builder,
+          kanjiToken,
+          readingToken
+      )
+    }
+
+    return builder.toString()
+  }
+
+  private fun addKanjiReadingPair(builder: StringBuilder, kanji: String, reading: String): StringBuilder {
+    if (kanji.equals(reading)) {
+      builder.append(reading)
+      return builder
+    }
+
+    val commonSuffix = kanji.commonSuffixWith(reading)
+    if (commonSuffix.isNotEmpty()) {
+      builder.append(differenceFrom(kanji, commonSuffix))
+      builder.append("[")
+      builder.append(differenceFrom(reading, commonSuffix))
+      builder.append("]")
+      builder.append(commonSuffix)
+    } else {
+      builder.append("$kanji[$reading]")
+    }
+    return builder
+  }
+
+  private fun differenceFrom(string1: String, string2: String): String {
+    // given a string like 嬉しい and another string like しい,
+    // return the part that is not the same (嬉)
+
+    val subStart = string1.indexOf(string2)
+    return string1.substring(0 until subStart)
+  }
+
+  private fun buildKanjiTokens(kanji: String): List<String> {
+    val kanjiStartIndices = mutableListOf(0)
     var lastWasKana = false
 
     for (i in kanji.indices) {
@@ -77,14 +118,11 @@ class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: 
       }
     }
 
-    val kanjiTokens = mutableListOf<String>()
-    val readingTokens = mutableListOf<String>()
+    return buildTokensFromIndices(kanji, kanjiStartIndices)
+  }
 
-    for (kanjiStart in kanjiStartIndices) {
-      val kanjiEnd = getEnd(kanji, kanjiStart, kanjiStartIndices)
-      kanjiTokens.add(kanji.substring(kanjiStart, kanjiEnd))
-    }
-
+  private fun buildReadingTokens(reading: String, kanji: String, kanjiTokens: List<String>): List<String> {
+    val readingStartIndices = mutableListOf(0)
     for (kanjiToken in kanjiTokens) {
       var kanaSearch = ""
 
@@ -101,27 +139,16 @@ class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: 
       }
     }
 
-    for (readingStart in readingStartIndices) {
-      val readingEnd = getEnd(reading, readingStart, readingStartIndices)
-      readingTokens.add(reading.substring(readingStart, readingEnd))
-    }
+    return buildTokensFromIndices(reading, readingStartIndices)
+  }
 
-    for (i in kanjiTokens.indices) {
-      if (builder.isNotEmpty()) {
-        builder.append(" ")
+  private fun buildTokensFromIndices(string: String, indices: List<Int>): List<String> {
+    return mutableListOf<String>().apply {
+      for (start in indices) {
+        val end = getEnd(string, start, indices)
+        this.add(string.substring(start, end))
       }
-
-      val kanjiToken = kanjiTokens.get(i)
-      val readingToken = readingTokens.get(i)
-
-      addKanjiReadingPair(
-          builder,
-          kanjiToken,
-          readingToken
-      )
     }
-
-    return builder.toString()
   }
 
   private fun getEnd(string: String, index: Int, list: List<Int>): Int {
@@ -130,37 +157,5 @@ class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: 
     } else {
       string.length
     }
-  }
-
-  private fun addKanjiReadingPair(builder: StringBuilder, kanji: String, reading: String): StringBuilder {
-    if (kanji.equals(reading)) {
-      builder.append(reading)
-      return builder
-    }
-
-    val commonSuffix = kanji.commonSuffixWith(reading)
-    if (commonSuffix.isNotEmpty()) {
-
-      builder.append(differenceFrom(kanji, commonSuffix))
-
-      builder.append("[")
-
-      builder.append(differenceFrom(reading, commonSuffix))
-
-      builder.append("]")
-
-      builder.append(commonSuffix)
-    } else {
-      builder.append("$kanji[$reading]")
-    }
-    return builder
-  }
-
-  private fun differenceFrom(string1: String, string2: String): String {
-    // given a string like 嬉しい and another string like しい,
-    // return the part that is not the same (嬉)
-
-    val subStart = string1.indexOf(string2)
-    return string1.substring(0 until subStart)
   }
 }
