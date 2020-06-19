@@ -18,3 +18,4 @@
 keystore
 keystore.properties
 /app/release
+.idea/
