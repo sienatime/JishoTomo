@@ -8,9 +8,7 @@ import net.emojiparty.android.jishotomo.data.SemicolonSplit
 import net.emojiparty.android.jishotomo.data.room.Sense
 import java.util.LinkedHashSet
 
-class SenseDisplay(private val resources: Resources, private val packageName: String) {
-
-  constructor(context: Context): this(context.resources, context.packageName)
+class SenseDisplay(private val resources: ResourceFetcher, private val packageName: String) {
 
   fun formatPartsOfSpeech(unsplitPartsOfSpeech: String?): String {
     val partsOfSpeech = SemicolonSplit.split(unsplitPartsOfSpeech)
@@ -28,9 +26,10 @@ class SenseDisplay(private val resources: Resources, private val packageName: St
     @JvmStatic
     fun formatPartsOfSpeech(
       sense: Sense,
-      context: Context
+      resources: ResourceFetcher,
+      packageName: String
     ): String {
-      return SenseDisplay(context).formatPartsOfSpeech(sense.partsOfSpeech)
+      return SenseDisplay(resources, packageName).formatPartsOfSpeech(sense.partsOfSpeech)
     }
 
     @VisibleForTesting

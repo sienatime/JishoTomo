@@ -1,8 +1,8 @@
 package net.emojiparty.android.jishotomo
 
-import android.content.res.Resources
+import net.emojiparty.android.jishotomo.ui.presentation.ResourceFetcher
 
-class TestResources: Resources(null, null, null) {
+class TestResources: ResourceFetcher {
   private val keys = arrayOf(
       "adj_f", "adj_i", "adj_ix", "adj_ku", "adj_na", "adj_nari", "adj_no", "adj_pn", "adj_shiku",
       "adj_t", "adv_to", "adv", "aux_adj", "aux_v", "aux", "conj", "cop_da", "ctr", "exp", "intj",
@@ -27,8 +27,8 @@ class TestResources: Resources(null, null, null) {
       "Verb (Transitive)", "Verb"
   )
 
-  override fun getIdentifier(key: String, _deftype: String, _packageName: String): Int {
-    return keys.indexOf(key)
+  override fun getIdentifier(name: String, defType: String, defPackage: String): Int {
+    return keys.indexOf(name)
   }
 
   override fun getString(id: Int): String {

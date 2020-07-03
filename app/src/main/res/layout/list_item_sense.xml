@@ -5,11 +5,9 @@
     >
 
   <data>
-    <import type="net.emojiparty.android.jishotomo.data.SemicolonSplit"/>
-    <import type="net.emojiparty.android.jishotomo.ui.presentation.SenseDisplay"/>
     <variable
         name="presenter"
-        type="net.emojiparty.android.jishotomo.data.models.SenseWithCrossReferences"
+        type="net.emojiparty.android.jishotomo.ui.presentation.SensePresenter"
         />
   </data>
 
@@ -27,8 +25,8 @@
         android:layout_marginTop="24dp"
         android:paddingBottom="8dp"
         style="@style/small_caps"
-        visibleOrGone="@{presenter.getSense().partsOfSpeech != null}"
-        android:text="@{SenseDisplay.formatPartsOfSpeech(presenter.getSense(), context)}"
+        visibleOrGone="@{presenter.partsOfSpeechIsVisible()}"
+        android:text="@{presenter.partsOfSpeech(context)}"
         tools:text="NOUN, NA-ADJ"
         />
     <View
@@ -43,7 +41,7 @@
         android:paddingTop="16dp"
         android:textAlignment="viewStart"
         android:lineSpacingExtra="6sp"
-        android:text='@{SemicolonSplit.splitAndJoin(presenter.getSense().glosses, "\n")}'
+        android:text='@{presenter.gloss()}'
         android:textSize="@dimen/text_size_body"
         app:fontFamily="sans-serif"
         tools:text="stuff\nand other things\nlots of words on this one, wow"
@@ -58,8 +56,8 @@
         android:lineSpacingExtra="6sp"
         android:textAlignment="viewStart"
         android:focusable="true"
-        visibleOrGone="@{presenter.getSense().appliesTo != null}"
-        appliesToText="@{presenter.getSense().appliesTo}"
+        visibleOrGone="@{presenter.appliesToIsVisible()}"
+        appliesToText="@{presenter.appliesTo()}"
         android:textSize="@dimen/text_size_body"
         app:fontFamily="sans-serif"
         tools:text="Applies to: 半片"
@@ -75,7 +73,7 @@
         android:textAlignment="viewStart"
         android:textSize="@dimen/text_size_body"
         app:fontFamily="sans-serif"
-        visibleOrGone="@{presenter.crossReferences.size() > 0}"
+        visibleOrGone="@{presenter.crossReferencesIsVisible()}"
         android:text="@string/see_also"
         />
 
@@ -84,7 +82,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        crossReferenceLinks="@{presenter.crossReferences}"
+        crossReferenceLinks="@{presenter.crossReferenceLinks()}"
         />
 
   </LinearLayout>

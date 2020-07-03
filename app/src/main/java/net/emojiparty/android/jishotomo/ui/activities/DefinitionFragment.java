@@ -12,12 +12,16 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
+import java.util.ArrayList;
+import java.util.List;
 import net.emojiparty.android.jishotomo.BR;
 import net.emojiparty.android.jishotomo.JishoTomoApp;
 import net.emojiparty.android.jishotomo.R;
 import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger;
 import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses;
+import net.emojiparty.android.jishotomo.data.models.SenseWithCrossReferences;
 import net.emojiparty.android.jishotomo.ui.adapters.DataBindingAdapter;
+import net.emojiparty.android.jishotomo.ui.presentation.SensePresenter;
 import net.emojiparty.android.jishotomo.ui.viewmodels.EntryViewModel;
 import net.emojiparty.android.jishotomo.ui.viewmodels.EntryViewModelFactory;
 
@@ -60,13 +64,24 @@ public class DefinitionFragment extends Fragment {
       viewModel.entry.observe(this, (@Nullable EntryWithAllSenses entry) -> {
         if (entry != null) {
           binding.setVariable(BR.presenter, entry);
-          adapter.setItems(entry.getSenses());
+          adapter.setItems(getPresenters(entry.getSenses()));
           analyticsLogger.logViewItem(entry.entry.getId(), entry.getKanjiOrReading());
         }
       });
     } else {
       root.findViewById(R.id.empty).setVisibility(View.VISIBLE);
     }
+  }
+
+  private List<SensePresenter> getPresenters(List<SenseWithCrossReferences> senses) {
+    ArrayList<SensePresenter> presenters = new ArrayList<>();
+
+    for (int i = 0; i < senses.size(); i++) {
+      SenseWithCrossReferences sense = senses.get(i);
+      presenters.add(new SensePresenter(sense));
+    }
+
+    return presenters;
   }
 
   private int findEntryId(Bundle bundle) {
