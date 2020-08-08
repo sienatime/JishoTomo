@@ -1,7 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'io.fabric'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 
 sourceCompatibility = 1.8
 
@@ -83,8 +84,8 @@ dependencies {
   annotationProcessor "com.google.dagger:dagger-compiler:2.13"
 
   // Firebase Core and Crashlytics: Analytics, Crash Reporting
-  implementation 'com.google.firebase:firebase-core:17.2.0'
-  implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+  implementation 'com.google.firebase:firebase-crashlytics:17.1.1'
+  implementation 'com.google.firebase:firebase-analytics:17.4.4'
 
   // CSV export
   implementation("com.opencsv:opencsv:4.0") {
