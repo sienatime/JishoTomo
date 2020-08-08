@@ -1,7 +1,5 @@
 package net.emojiparty.android.jishotomo.ui.presentation
 
-import android.content.Context
-import android.content.res.Resources
 import android.text.TextUtils
 import androidx.annotation.VisibleForTesting
 import net.emojiparty.android.jishotomo.data.SemicolonSplit
@@ -12,7 +10,6 @@ class SenseDisplay(private val resources: ResourceFetcher, private val packageNa
 
   fun formatPartsOfSpeech(unsplitPartsOfSpeech: String?): String {
     val partsOfSpeech = SemicolonSplit.split(unsplitPartsOfSpeech)
-
     val localizedPartsOfSpeech = LinkedHashSet<String>()
     for (partOfSpeech in partsOfSpeech) {
       val key = getPartOfSpeechKey(partOfSpeech)
