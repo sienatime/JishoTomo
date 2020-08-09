@@ -24,10 +24,10 @@ public class CrossReferenceButton {
     int buttonStyleId = R.style.xref_button;
     Button button =
         new Button(new ContextThemeWrapper(context, buttonStyleId), null, buttonStyleId);
-    button.setText(JapaneseLocaleSpan.all(crossReferencedEntry.getKanjiOrReading()));
+    button.setText(JapaneseLocaleSpan.all(crossReferencedEntry.kanjiOrReading()));
     setMargins(button);
     button.setOnClickListener((View clickView) -> {
-      EntryClickHandler.open(context, crossReferencedEntry.id);
+      EntryClickHandler.open(context, crossReferencedEntry.getId());
     });
     return button;
   }

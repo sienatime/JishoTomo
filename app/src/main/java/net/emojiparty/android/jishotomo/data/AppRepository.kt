@@ -47,7 +47,7 @@ class AppRepository {
     return liveData
   }
 
-  fun search(term: String?): LiveData<PagedList<SearchResultEntry>> {
+  fun search(term: String): LiveData<PagedList<SearchResultEntry>> {
     val unicodeCodePoint = Character.codePointAt(term, 0)
     return if (isJapanese(unicodeCodePoint)) {
       val wildcardQuery = String.format("*%s*", term)
@@ -65,28 +65,30 @@ class AppRepository {
     return LivePagedListBuilder(entryDao.browse(), PAGE_SIZE).build()
   }
 
-  val favorites: LiveData<PagedList<SearchResultEntry>>
-    get() = LivePagedListBuilder(entryDao.favorites, PAGE_SIZE).build()
+  fun getFavorites(): LiveData<PagedList<SearchResultEntry>> {
+    return LivePagedListBuilder(entryDao.getFavorites(), PAGE_SIZE).build()
+  }
 
-  fun getByJlptLevel(level: Int?): LiveData<PagedList<SearchResultEntry>> {
+  fun getByJlptLevel(level: Int): LiveData<PagedList<SearchResultEntry>> {
     return LivePagedListBuilder(
         entryDao.findByJlptLevel(level), PAGE_SIZE
     ).build()
   }
 
-  val allFavorites: List<EntryWithAllSenses>
-    get() = entryDao.allFavorites
+  fun getAllFavorites(): List<EntryWithAllSenses> {
+    return entryDao.getAllFavorites()
+  }
 
-  fun getAllByJlptLevel(jlptLevel: Int?): List<EntryWithAllSenses> {
+  fun getAllByJlptLevel(jlptLevel: Int): List<EntryWithAllSenses> {
     return entryDao.getAllByJlptLevel(jlptLevel)
   }
 
   interface OnDataLoaded {
-    fun success(entry: SearchResultEntry?)
+    fun success(entry: SearchResultEntry)
   }
 
   fun getRandomEntryByJlptLevel(
-    level: Int?,
+    level: Int,
     callback: OnDataLoaded
   ) {
     AsyncTask.execute {
@@ -112,17 +114,13 @@ class AppRepository {
     AsyncTask.execute { entryDao.unfavoriteAll() }
   }
 
-  interface OnEntryLoaded {
-    fun success(entry: Entry?)
-  }
-
   fun getEntryByKanji(
-    kanji: String?,
-    callback: OnEntryLoaded
+    kanji: String,
+    callback: (entry: Entry) -> Unit
   ) {
     AsyncTask.execute {
       val entry = entryDao.getEntryByKanji(kanji)
-      callback.success(entry)
+      callback(entry)
     }
   }
 
@@ -134,24 +132,18 @@ class AppRepository {
     senseDao.getCrossReferencedEntries(
         entry.getEntry()
             .id
-    )
-        .observe(
-            lifecycleOwner,
-            Observer { crossReferencedEntries: List<CrossReferencedEntry>? ->
-              if (crossReferencedEntries != null) {
-                val hashMap =
-                  crossReferenceHash(crossReferencedEntries)
-                for (sense in entry.getSenses()) {
-                  val list: List<CrossReferencedEntry>? = hashMap[sense.getSense()
-                      .id]
-                  if (list != null) {
-                    sense.setCrossReferences(list)
-                  }
-                }
+    ).observe(
+        lifecycleOwner,
+        Observer { crossReferencedEntries: List<CrossReferencedEntry> ->
+            val hashMap = crossReferenceHash(crossReferencedEntries)
+            for (sense in entry.getSenses()) {
+              hashMap[sense.getSense().id]?.let {
+                sense.setCrossReferences(it)
               }
-              liveData.setValue(entry)
             }
-        )
+          liveData.setValue(entry)
+        }
+    )
   }
 
   private fun crossReferenceHash(

@@ -58,7 +58,7 @@ class ExportIntentTest {
     onView(withText("七転び八起き"))
         .check(matches(isDisplayed()))
     onView(withId(id.menu_export))
-        .perform(click())
+        .perform(click()) // flaky (I think because drawer is still animating closed)
     onView(withText("PROCEED"))
         .inRoot(isDialog())
         .check(matches(isDisplayed()))

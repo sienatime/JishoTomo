@@ -33,17 +33,17 @@ public class JishoTomoJlptWidget extends AppWidgetProvider {
     appRepo.getRandomEntryByJlptLevel(selectedLevel, (SearchResultEntry entry) -> {
       RemoteViews views = configureViewWithEntry(selectedLevel, entry, context, appWidgetId);
       appWidgetManager.updateAppWidget(appWidgetId, views);
-      getAnalyticsLoggerFromContext(context).logWidgetUpdated(selectedLevel, entry.id,
-          entry.getKanjiOrReading());
+      getAnalyticsLoggerFromContext(context).logWidgetUpdated(selectedLevel, entry.getId(),
+          entry.kanjiOrReading());
     });
   }
 
   private static RemoteViews configureViewWithEntry(int selectedLevel, SearchResultEntry entry,
       Context context, int appWidgetId) {
     RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.jisho_tomo_jlpt_widget);
-    views.setTextViewText(R.id.widget_kanji, entry.getKanjiOrReading());
-    views.setTextViewText(R.id.widget_reading, entry.getReading());
-    int readingVisible = entry.getReading() == null ? View.GONE : View.VISIBLE;
+    views.setTextViewText(R.id.widget_kanji, entry.kanjiOrReading());
+    views.setTextViewText(R.id.widget_reading, entry.reading());
+    int readingVisible = entry.reading() == null ? View.GONE : View.VISIBLE;
     views.setViewVisibility(R.id.widget_reading, readingVisible);
     views.setTextViewText(R.id.widget_gloss, entry.getPrimaryGloss());
 
@@ -57,7 +57,7 @@ public class JishoTomoJlptWidget extends AppWidgetProvider {
 
   private static PendingIntent openDefinitionActivity(SearchResultEntry entry, Context context, int appWidgetId) {
     Intent appIntent = new Intent(context, DefinitionActivity.class);
-    appIntent.putExtra(ENTRY_ID_EXTRA, entry.id);
+    appIntent.putExtra(ENTRY_ID_EXTRA, entry.getId());
 
     return TaskStackBuilder.create(context)
         .addNextIntentWithParentStack(appIntent)

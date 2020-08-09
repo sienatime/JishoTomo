@@ -108,10 +108,12 @@ class CsvEntryTest {
     partsOfSpeech: String? = null
   ): SenseWithCrossReferences {
     return SenseWithCrossReferences().apply {
-      this.sense = Sense().apply {
-        this.glosses = gloss
-        this.partsOfSpeech = partsOfSpeech
-      }
+      this.sense = Sense(
+          0,
+          0,
+          partsOfSpeech,
+          gloss
+      )
     }
   }
 
@@ -121,11 +123,12 @@ class CsvEntryTest {
     vararg senses: SenseWithCrossReferences
   ): EntryWithAllSenses {
     return EntryWithAllSenses().apply {
-      this.entry = Entry().apply {
-        this.primaryKanji = kanji
-        this.primaryReading = reading
-      }
-      if (senses.size > 0) {
+      this.entry = Entry(
+          0,
+          kanji,
+          reading
+      )
+      if (senses.isNotEmpty()) {
         this.senses = ArrayList()
         this.senses.addAll(senses)
       }

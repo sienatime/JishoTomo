@@ -24,8 +24,8 @@ object JishoTomoTestUtils {
         .perform(NavigationViewActions.navigateTo(nav_id))
   }
 
-  fun addFavoriteEntry(kanji: String?) {
+  fun addFavoriteEntry(kanji: String) {
     val repo = AppRepository()
-    repo.getEntryByKanji(kanji) { entry: Entry? -> repo.toggleFavorite(entry) }
+    repo.getEntryByKanji(kanji) { entry: Entry -> repo.toggleFavorite(entry) }
   }
 }

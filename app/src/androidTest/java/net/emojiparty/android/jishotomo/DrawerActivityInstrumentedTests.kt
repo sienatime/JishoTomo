@@ -195,7 +195,7 @@ class DrawerActivityInstrumentedTests {
     onView(withId(id.menu_remove_all_favorites))
         .perform(click())
     onView(withText("OK"))
-        .perform(click())
+        .perform(click()) // flaky
     drain()
     onView(withId(id.search_results_rv))
         .check(withItemCount(0))

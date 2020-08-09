@@ -64,7 +64,7 @@ public class PagedEntriesAdapter
       new DiffUtil.ItemCallback<SearchResultEntry>() {
         @Override public boolean areItemsTheSame(SearchResultEntry oldSearchResultEntry,
             SearchResultEntry newSearchResultEntry) {
-          return oldSearchResultEntry.id == newSearchResultEntry.id;
+          return oldSearchResultEntry.getId() == newSearchResultEntry.getId();
         }
 
         @Override public boolean areContentsTheSame(SearchResultEntry oldSearchResultEntry,

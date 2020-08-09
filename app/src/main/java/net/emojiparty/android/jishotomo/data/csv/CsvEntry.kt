@@ -53,7 +53,7 @@ class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: 
     }
   }
 
-  private fun formatReading(kanji: String, reading: String): String {
+  private fun formatReading(kanji: String?, reading: String): String {
     val builder = StringBuilder()
 
     val kanjiTokens = buildKanjiTokens(kanji)
@@ -102,26 +102,30 @@ class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: 
     return string1.substring(0 until subStart)
   }
 
-  private fun buildKanjiTokens(kanji: String): List<String> {
-    val kanjiStartIndices = mutableListOf(0)
-    var lastWasKana = false
+  private fun buildKanjiTokens(kanji: String?): List<String> {
+    return if (kanji == null) {
+      emptyList()
+    } else {
+      val kanjiStartIndices = mutableListOf(0)
+      var lastWasKana = false
 
-    for (i in kanji.indices) {
-      val codePoint = Character.codePointAt(kanji, i)
-      if (CJKUtil.isKana(codePoint)) {
-        lastWasKana = true
-      } else {
-        if (lastWasKana) {
-          kanjiStartIndices.add(i)
+      for (i in kanji.indices) {
+        val codePoint = Character.codePointAt(kanji, i)
+        if (CJKUtil.isKana(codePoint)) {
+          lastWasKana = true
+        } else {
+          if (lastWasKana) {
+            kanjiStartIndices.add(i)
+          }
+          lastWasKana = false
         }
-        lastWasKana = false
       }
-    }
 
-    return buildTokensFromIndices(kanji, kanjiStartIndices)
+      buildTokensFromIndices(kanji, kanjiStartIndices)
+    }
   }
 
-  private fun buildReadingTokens(reading: String, kanji: String, kanjiTokens: List<String>): List<String> {
+  private fun buildReadingTokens(reading: String, kanji: String?, kanjiTokens: List<String>): List<String> {
     val readingStartIndices = mutableListOf(0)
     for (kanjiToken in kanjiTokens) {
       var kanaSearch = ""
@@ -142,11 +146,15 @@ class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: 
     return buildTokensFromIndices(reading, readingStartIndices)
   }
 
-  private fun buildTokensFromIndices(string: String, indices: List<Int>): List<String> {
-    return mutableListOf<String>().apply {
-      for (start in indices) {
-        val end = getEnd(string, start, indices)
-        this.add(string.substring(start, end))
+  private fun buildTokensFromIndices(string: String?, indices: List<Int>): List<String> {
+    return if (string == null) {
+      emptyList()
+    } else {
+      mutableListOf<String>().apply {
+        for (start in indices) {
+          val end = getEnd(string, start, indices)
+          this.add(string.substring(start, end))
+        }
       }
     }
   }

@@ -77,6 +77,7 @@ class DefinitionActivityInstrumentedTests {
         .check(matches(withText("○")))
   }
 
+  // flaky
   @Test
   fun itCanAddAndRemoveFavorite() {
     launchActivityWithEntry("七転び八起き")
