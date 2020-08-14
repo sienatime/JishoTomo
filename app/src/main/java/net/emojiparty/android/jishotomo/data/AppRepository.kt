@@ -130,15 +130,14 @@ class AppRepository {
     lifecycleOwner: LifecycleOwner
   ) {
     senseDao.getCrossReferencedEntries(
-        entry.getEntry()
-            .id
+        entry.entry.id
     ).observe(
         lifecycleOwner,
         Observer { crossReferencedEntries: List<CrossReferencedEntry> ->
             val hashMap = crossReferenceHash(crossReferencedEntries)
-            for (sense in entry.getSenses()) {
-              hashMap[sense.getSense().id]?.let {
-                sense.setCrossReferences(it)
+            for (sense in entry.senses) {
+              hashMap[sense.sense.id]?.let {
+                sense.crossReferences = it
               }
             }
           liveData.setValue(entry)

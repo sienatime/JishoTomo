@@ -107,14 +107,12 @@ class CsvEntryTest {
     gloss: String,
     partsOfSpeech: String? = null
   ): SenseWithCrossReferences {
-    return SenseWithCrossReferences().apply {
-      this.sense = Sense(
-          0,
-          0,
-          partsOfSpeech,
-          gloss
-      )
-    }
+    return SenseWithCrossReferences(Sense(
+        0,
+        0,
+        partsOfSpeech,
+        gloss
+    ))
   }
 
   private fun makeEntry(
@@ -122,16 +120,19 @@ class CsvEntryTest {
     kanji: String? = null,
     vararg senses: SenseWithCrossReferences
   ): EntryWithAllSenses {
-    return EntryWithAllSenses().apply {
-      this.entry = Entry(
-          0,
-          kanji,
-          reading
-      )
-      if (senses.isNotEmpty()) {
-        this.senses = ArrayList()
-        this.senses.addAll(senses)
-      }
+    val finalSenses = if (senses.isNotEmpty()) {
+      senses.toList()
+    } else {
+      emptyList()
     }
+
+    return EntryWithAllSenses(
+        Entry(
+            0,
+            kanji,
+            reading
+        ),
+        finalSenses
+    )
   }
 }

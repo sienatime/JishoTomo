@@ -1,6 +1,5 @@
 package net.emojiparty.android.jishotomo.ui.presentation
 
-import android.text.TextUtils
 import androidx.annotation.VisibleForTesting
 import net.emojiparty.android.jishotomo.data.SemicolonSplit
 import net.emojiparty.android.jishotomo.data.room.Sense
@@ -16,7 +15,7 @@ class SenseDisplay(private val resources: ResourceFetcher, private val packageNa
       val stringId = resources.getIdentifier(key, "string", packageName)
       localizedPartsOfSpeech.add(resources.getString(stringId))
     }
-    return TextUtils.join(", ", localizedPartsOfSpeech)
+    return localizedPartsOfSpeech.joinToString(", ")
   }
 
   companion object {

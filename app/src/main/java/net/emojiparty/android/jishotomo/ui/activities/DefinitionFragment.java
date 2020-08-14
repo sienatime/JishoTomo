@@ -65,7 +65,7 @@ public class DefinitionFragment extends Fragment {
         if (entry != null) {
           binding.setVariable(BR.presenter, entry);
           adapter.setItems(getPresenters(entry.getSenses()));
-          analyticsLogger.logViewItem(entry.entry.getId(), entry.getKanjiOrReading());
+          analyticsLogger.logViewItem(entry.getEntry().getId(), entry.getKanjiOrReading());
         }
       });
     } else {
