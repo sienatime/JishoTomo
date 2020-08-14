@@ -1,9 +1,9 @@
 package net.emojiparty.android.jishotomo.ui.presentation
 
 import android.content.Context
-import net.emojiparty.android.jishotomo.data.SemicolonSplit
 import net.emojiparty.android.jishotomo.data.models.CrossReferencedEntry
 import net.emojiparty.android.jishotomo.data.models.SenseWithCrossReferences
+import net.emojiparty.android.jishotomo.ext.splitAndJoin
 
 class SensePresenter(private val sense: SenseWithCrossReferences) {
 
@@ -16,7 +16,7 @@ class SensePresenter(private val sense: SenseWithCrossReferences) {
   }
 
   fun gloss(): String {
-    return SemicolonSplit.splitAndJoin(sense.sense.glosses, "\n")
+    return sense.sense.glosses.splitAndJoin("\n")
   }
 
   fun appliesToIsVisible(): Boolean {

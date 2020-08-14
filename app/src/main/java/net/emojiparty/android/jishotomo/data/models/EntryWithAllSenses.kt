@@ -7,9 +7,9 @@ import androidx.room.Relation
 import net.emojiparty.android.jishotomo.JishoTomoApp
 import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger
 import net.emojiparty.android.jishotomo.data.AppRepository
-import net.emojiparty.android.jishotomo.data.SemicolonSplit
 import net.emojiparty.android.jishotomo.data.room.Entry
 import net.emojiparty.android.jishotomo.data.room.Sense
+import net.emojiparty.android.jishotomo.ext.splitAndJoin
 
 data class EntryWithAllSenses(
   @Embedded var entry: Entry,
@@ -32,11 +32,11 @@ data class EntryWithAllSenses(
     return entry.primaryKanji != null
   }
 
-  val alternateKanji: String
-    get() = SemicolonSplit.splitAndJoin(entry.otherKanji)
+  @Ignore
+  val alternateKanji: String = entry.otherKanji?.splitAndJoin() ?: ""
 
-  val alternateReadings: String
-    get() = SemicolonSplit.splitAndJoin(entry.otherReadings)
+  @Ignore
+  val alternateReadings: String = entry.otherReadings?.splitAndJoin() ?: ""
 
   fun hasAlternateKanji(): Boolean {
     return entry.otherKanji != null

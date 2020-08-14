@@ -2,8 +2,8 @@ package net.emojiparty.android.jishotomo.data.models
 
 import androidx.room.ColumnInfo
 import androidx.room.Relation
-import net.emojiparty.android.jishotomo.data.SemicolonSplit
 import net.emojiparty.android.jishotomo.data.room.Sense
+import net.emojiparty.android.jishotomo.ext.splitAndJoin
 
 // this should have only the things needed to display the search result:
 //   the Entry's primary_kanji, primary_reading
@@ -22,7 +22,7 @@ data class SearchResultEntry(
   )
   var glosses: List<String> = emptyList()
 
-  fun getPrimaryGloss(): String = SemicolonSplit.splitAndJoin(glosses[0])
+  fun getPrimaryGloss(): String = glosses[0].splitAndJoin()
 
   fun hasKanji(): Boolean = primaryKanji != null
 

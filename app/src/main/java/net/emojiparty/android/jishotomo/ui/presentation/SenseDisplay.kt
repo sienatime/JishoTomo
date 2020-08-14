@@ -1,14 +1,14 @@
 package net.emojiparty.android.jishotomo.ui.presentation
 
 import androidx.annotation.VisibleForTesting
-import net.emojiparty.android.jishotomo.data.SemicolonSplit
 import net.emojiparty.android.jishotomo.data.room.Sense
+import net.emojiparty.android.jishotomo.ext.semicolonSplit
 import java.util.LinkedHashSet
 
 class SenseDisplay(private val resources: ResourceFetcher, private val packageName: String) {
 
   fun formatPartsOfSpeech(unsplitPartsOfSpeech: String?): String {
-    val partsOfSpeech = SemicolonSplit.split(unsplitPartsOfSpeech)
+    val partsOfSpeech = unsplitPartsOfSpeech?.semicolonSplit() ?: emptyList()
     val localizedPartsOfSpeech = LinkedHashSet<String>()
     for (partOfSpeech in partsOfSpeech) {
       val key = getPartOfSpeechKey(partOfSpeech)

@@ -2,9 +2,9 @@ package net.emojiparty.android.jishotomo.data.csv
 
 import androidx.annotation.VisibleForTesting
 import net.emojiparty.android.jishotomo.data.CJKUtil
-import net.emojiparty.android.jishotomo.data.SemicolonSplit
 import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses
 import net.emojiparty.android.jishotomo.data.room.Sense
+import net.emojiparty.android.jishotomo.ext.splitAndJoin
 import net.emojiparty.android.jishotomo.ui.presentation.SenseDisplay
 
 class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: SenseDisplay) {
@@ -29,7 +29,7 @@ class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: 
         builder.append(". ")
         glossIndex++
       }
-      builder.append(SemicolonSplit.splitAndJoin(sense.sense.glosses))
+      builder.append(sense.sense.glosses.splitAndJoin())
       builder.append("<br/>")
     }
     return builder.toString()

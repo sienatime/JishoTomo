@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     >
   <data>
-    <import type="net.emojiparty.android.jishotomo.data.SemicolonSplit"/>
     <variable
         name="presenter"
         type="net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses"
