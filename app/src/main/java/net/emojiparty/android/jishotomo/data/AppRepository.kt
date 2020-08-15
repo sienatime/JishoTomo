@@ -7,6 +7,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import net.emojiparty.android.jishotomo.JishoTomoApp
 import net.emojiparty.android.jishotomo.data.CJKUtil.isJapanese
 import net.emojiparty.android.jishotomo.data.models.CrossReferencedEntry
@@ -107,7 +109,9 @@ class AppRepository {
   }
 
   fun unfavoriteAll() {
-    AsyncTask.execute { entryDao.unfavoriteAll() }
+    GlobalScope.launch {
+      entryDao.unfavoriteAll()
+    }
   }
 
   fun getEntryByKanji(
