@@ -49,10 +49,7 @@ class CsvExportAsyncTask(
           }
       )
 
-      csvExporter.export(
-          pagedEntriesControl.searchType,
-          pagedEntriesControl.jlptLevel!!
-      )
+      csvExporter.export(pagedEntriesControl)
     }
 
     return null

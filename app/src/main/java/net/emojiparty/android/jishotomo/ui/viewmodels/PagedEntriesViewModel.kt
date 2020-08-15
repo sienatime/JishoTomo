@@ -20,15 +20,12 @@ class PagedEntriesViewModel : ViewModel() {
         pagedEntriesControlLiveData
     ) { pagedEntriesControl: PagedEntriesControl ->
       this.pagedEntriesControl = pagedEntriesControl
-      val searchType = pagedEntriesControl.searchType
-      val searchTerm = pagedEntriesControl.searchTerm
-      when (searchType) {
-        PagedEntriesControl.SEARCH -> return@switchMap appRepo.search(searchTerm!!)
-        PagedEntriesControl.FAVORITES -> return@switchMap appRepo.getFavorites()
-        PagedEntriesControl.JLPT -> return@switchMap appRepo.getByJlptLevel(
-            pagedEntriesControl.jlptLevel!!
-        )
-        else -> return@switchMap appRepo.browse()
+
+      return@switchMap when (pagedEntriesControl) {
+        is PagedEntriesControl.Search -> appRepo.search(pagedEntriesControl.searchTerm)
+        is PagedEntriesControl.Favorites -> appRepo.getFavorites()
+        is PagedEntriesControl.JLPT -> appRepo.getByJlptLevel(pagedEntriesControl.level)
+        is PagedEntriesControl.Browse -> appRepo.browse()
       }
     }
   }

@@ -27,7 +27,7 @@ class AnalyticsLogger(
   }
 
   fun logSearchResultsOrViewItemList(pagedEntriesControl: PagedEntriesControl) {
-    if (pagedEntriesControl.searchType == PagedEntriesControl.SEARCH) {
+    if (pagedEntriesControl is PagedEntriesControl.Search) {
       logSearchResults(pagedEntriesControl)
     } else {
       logViewItemList(pagedEntriesControl)
@@ -98,15 +98,17 @@ class AnalyticsLogger(
 
   private fun logSearchResults(pagedEntriesControl: PagedEntriesControl) {
     val bundle = Bundle()
-    bundle.putString(Param.SEARCH_TERM, pagedEntriesControl.searchTerm)
+    if (pagedEntriesControl is PagedEntriesControl.Search) {
+      bundle.putString(Param.SEARCH_TERM, pagedEntriesControl.searchTerm)
+    }
     firebaseAnalytics.logEvent(Event.VIEW_SEARCH_RESULTS, bundle)
   }
 
   private fun logViewItemList(pagedEntriesControl: PagedEntriesControl) {
     val bundle = Bundle()
-    bundle.putString(Param.ITEM_CATEGORY, pagedEntriesControl.searchType)
-    if (pagedEntriesControl.searchType == PagedEntriesControl.JLPT) {
-      bundle.putString(PARAM_JLPT_LEVEL, pagedEntriesControl.jlptLevel.toString())
+    bundle.putString(Param.ITEM_CATEGORY, pagedEntriesControl.name)
+    if (pagedEntriesControl is PagedEntriesControl.JLPT) {
+      bundle.putString(PARAM_JLPT_LEVEL, pagedEntriesControl.level.toString())
     }
     firebaseAnalytics.logEvent(Event.VIEW_ITEM_LIST, bundle)
   }

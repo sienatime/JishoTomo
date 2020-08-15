@@ -94,10 +94,17 @@ class DrawerActivity : AppCompatActivity(),
   private fun restoreFromBundle(bundle: Bundle) {
     val searchType = bundle.getString(STATE_SEARCH_TYPE)
     val searchTerm = bundle.getString(STATE_SEARCH_TERM)
-    val pagedEntriesControl = PagedEntriesControl(searchType, searchTerm)
-    if (bundle.containsKey(STATE_JLPT_LEVEL)) {
-      pagedEntriesControl.jlptLevel = bundle.getInt(STATE_JLPT_LEVEL)
+
+    val pagedEntriesControl = if (bundle.containsKey(STATE_JLPT_LEVEL)) {
+      PagedEntriesControl.JLPT(bundle.getInt(STATE_JLPT_LEVEL))
+    } else if (searchTerm != null) {
+      PagedEntriesControl.Search(searchTerm)
+    } else if (searchType == PagedEntriesControl.Favorites.name) {
+      PagedEntriesControl.Favorites
+    } else {
+      PagedEntriesControl.Browse
     }
+
     setPagedEntriesControl(pagedEntriesControl)
     val lastEntryViewedFromBundle = bundle.getInt(STATE_LAST_ENTRY_VIEWED)
     if (lastEntryViewedFromBundle != DefinitionFragment.ENTRY_EMPTY) {
@@ -139,15 +146,13 @@ class DrawerActivity : AppCompatActivity(),
   // https://developer.android.com/training/search/setup
   // https://developer.android.com/guide/topics/search/search-dialog
   private fun searchIntent(intent: Intent) {
-    var query: String? = null
-    val searchType: String
-    if (Intent.ACTION_SEARCH == intent.action) {
-      query = intent.getStringExtra(SearchManager.QUERY)
-      searchType = PagedEntriesControl.SEARCH
+    val pagedEntriesControl = if (Intent.ACTION_SEARCH == intent.action) {
+      val query = intent.getStringExtra(SearchManager.QUERY)
+      PagedEntriesControl.Search(query)
     } else {
-      searchType = PagedEntriesControl.BROWSE
+      PagedEntriesControl.Browse
     }
-    setPagedEntriesControl(PagedEntriesControl(searchType, query))
+    setPagedEntriesControl(pagedEntriesControl)
   }
 
   override fun onNewIntent(intent: Intent) {
@@ -178,10 +183,10 @@ class DrawerActivity : AppCompatActivity(),
   }
 
   private fun noResultsText(): String {
-    return when (viewModel.pagedEntriesControl.searchType) {
-      PagedEntriesControl.FAVORITES -> getString(string.no_favorites)
-      PagedEntriesControl.SEARCH -> String.format(
-          getString(string.no_search_results), viewModel.pagedEntriesControl.searchTerm
+    return when (val control = viewModel.pagedEntriesControl) {
+      is PagedEntriesControl.Favorites -> getString(string.no_favorites)
+      is PagedEntriesControl.Search -> String.format(
+          getString(string.no_search_results), control.searchTerm
       )
       else -> getString(string.nothing_here)
     }
@@ -203,11 +208,14 @@ class DrawerActivity : AppCompatActivity(),
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
-    if (viewModel.pagedEntriesControl.jlptLevel != null) {
-      outState.putInt(STATE_JLPT_LEVEL, viewModel.pagedEntriesControl.jlptLevel!!)
+
+    when (val control = viewModel.pagedEntriesControl) {
+      is PagedEntriesControl.JLPT -> outState.putInt(STATE_JLPT_LEVEL, control.level)
+      is PagedEntriesControl.Search -> outState.putString(STATE_SEARCH_TERM, control.searchTerm)
     }
-    outState.putString(STATE_SEARCH_TYPE, viewModel.pagedEntriesControl.searchType)
-    outState.putString(STATE_SEARCH_TERM, viewModel.pagedEntriesControl.searchTerm)
+
+    outState.putString(STATE_SEARCH_TYPE, viewModel.pagedEntriesControl.name)
+
     outState.putInt(STATE_LAST_ENTRY_VIEWED, lastEntryViewed)
     super.onSaveInstanceState(outState)
   }
@@ -222,10 +230,8 @@ class DrawerActivity : AppCompatActivity(),
   }
 
   override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-    val hasFavorites =
-      viewModel.pagedEntriesControl.searchType == PagedEntriesControl.FAVORITES && adapter!!.itemCount > 0
-    val isJlpt =
-      viewModel.pagedEntriesControl.searchType == PagedEntriesControl.JLPT
+    val hasFavorites = viewModel.pagedEntriesControl is PagedEntriesControl.Favorites && adapter!!.itemCount > 0
+    val isJlpt = viewModel.pagedEntriesControl is PagedEntriesControl.JLPT
     MenuButtons.setExportVisibility(menu, hasFavorites || isJlpt)
     MenuButtons.setUnfavoriteAllVisibility(menu, hasFavorites)
     return true
@@ -245,7 +251,7 @@ class DrawerActivity : AppCompatActivity(),
       }
 
       override fun onViewDetachedFromWindow(view: View) {
-        if (viewModel.pagedEntriesControl.searchType == PagedEntriesControl.SEARCH) {
+        if (viewModel.pagedEntriesControl is PagedEntriesControl.Search) {
           // we performed a search, so hide the other buttons
           // (have to do this here because calling invalidateOptionsMenu while search input is open
           // makes the search input close)
@@ -299,37 +305,38 @@ class DrawerActivity : AppCompatActivity(),
 
   override fun onNavigationItemSelected(item: MenuItem): Boolean {
     val id = item.itemId
-    val pagedEntriesControl = PagedEntriesControl()
+    var pagedEntriesControl: PagedEntriesControl? = null
     val jlptIds = jlptMenuIds()
+
     if (id == R.id.nav_search) {
       searchViewMenuItem!!.expandActionView()
     } else if (id == R.id.nav_browse) {
-      pagedEntriesControl.searchType = PagedEntriesControl.BROWSE
+      pagedEntriesControl = PagedEntriesControl.Browse
     } else if (id == R.id.nav_favorites) {
-      pagedEntriesControl.searchType = PagedEntriesControl.FAVORITES
+      pagedEntriesControl = PagedEntriesControl.Favorites
     } else if (jlptIds.indexOf(id) > -1) {
-      pagedEntriesControl.searchType = PagedEntriesControl.JLPT
-      pagedEntriesControl.jlptLevel = jlptIds.indexOf(id) + 1
+      pagedEntriesControl = PagedEntriesControl.JLPT(jlptIds.indexOf(id) + 1)
     } else if (id == R.id.nav_about) {
       showAbout()
     }
-    if (pagedEntriesControl.searchType != null) {
-      setPagedEntriesControl(pagedEntriesControl)
+
+    pagedEntriesControl?.let {
+      setPagedEntriesControl(it)
     }
+
     val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
     drawer.closeDrawer(GravityCompat.START)
     return true
   }
 
   private fun titleIdForSearchType(pagedEntriesControl: PagedEntriesControl): Int {
-    return when (pagedEntriesControl.searchType) {
-      PagedEntriesControl.BROWSE -> string.app_name
-      PagedEntriesControl.FAVORITES -> string.favorites
-      PagedEntriesControl.JLPT -> StringForJlptLevel.getId(
-          pagedEntriesControl.jlptLevel, this
+    return when (pagedEntriesControl) {
+      is PagedEntriesControl.Browse -> string.app_name
+      is PagedEntriesControl.Favorites -> string.favorites
+      is PagedEntriesControl.JLPT -> StringForJlptLevel.getId(
+          pagedEntriesControl.level, this
       )
-      PagedEntriesControl.SEARCH -> string.search_results
-      else -> string.app_name
+      is PagedEntriesControl.Search -> string.search_results
     }
   }
 }

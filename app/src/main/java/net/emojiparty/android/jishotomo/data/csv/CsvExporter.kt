@@ -19,14 +19,11 @@ class CsvExporter(
 
   // https://www.callicoder.com/java-read-write-csv-file-opencsv/
   // https://stackoverflow.com/questions/11341931/how-to-create-a-csv-on-android
-  fun export(
-    searchType: String,
-    jlptLevel: Int
-  ) {
+  fun export(pagedEntriesControl: PagedEntriesControl) {
     val writer: CSVWriter
     var entries: List<EntryWithAllSenses?> = ArrayList()
     try {
-      entries = entriesForSearchType(searchType, jlptLevel)
+      entries = entriesForSearchType(pagedEntriesControl)
     } catch (exception: CsvForbiddenExportTypeException) {
       onFailure(exception)
     }
@@ -50,16 +47,13 @@ class CsvExporter(
     }
   }
 
-  private fun entriesForSearchType(
-    searchType: String,
-    jlptLevel: Int
-  ): List<EntryWithAllSenses?> {
+  private fun entriesForSearchType(pagedEntriesControl: PagedEntriesControl): List<EntryWithAllSenses?> {
     val appRepo = AppRepository()
-    return when (searchType) {
-      PagedEntriesControl.FAVORITES -> appRepo.getAllFavorites()
-      PagedEntriesControl.JLPT -> appRepo.getAllByJlptLevel(jlptLevel)
+    return when (pagedEntriesControl) {
+      is PagedEntriesControl.Favorites -> appRepo.getAllFavorites()
+      is PagedEntriesControl.JLPT -> appRepo.getAllByJlptLevel(pagedEntriesControl.level)
       else -> throw CsvForbiddenExportTypeException(
-          "Not allowed to export this kind of list! $searchType"
+          "Not allowed to export this kind of list! ${pagedEntriesControl.name}"
       )
     }
   }
