@@ -20,6 +20,6 @@ public class EntryClickHandler {
 
   private static boolean isDrawerActivityWithFragment(Context context) {
     return (context instanceof DrawerActivity)
-        && ((DrawerActivity) context).fragmentContainer != null;
+        && ((DrawerActivity) context).getFragmentContainer() != null;
   }
 }

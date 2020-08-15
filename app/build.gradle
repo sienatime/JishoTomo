@@ -47,6 +47,9 @@ android {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
+  kotlinOptions {
+    jvmTarget = "1.8"
+  }
   testOptions {
     animationsDisabled = true
   }
@@ -66,18 +69,25 @@ dependencies {
   androidTestImplementation 'androidx.test.espresso:espresso-intents:3.2.0'
   implementation 'androidx.test.espresso:espresso-idling-resource:3.2.0'
 
+  def lifecycle_version = "2.2.0"
+  def arch_version = "2.1.0"
+  def paging_version = "2.1.2"
+  def room_version = "2.2.0"
+
   // ViewModel and LiveData
-  implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
-  implementation 'androidx.lifecycle:lifecycle-common-java8:2.1.0'
+  implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+  implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+  implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
+
   // Room
-  implementation 'androidx.room:room-runtime:2.2.0'
-  kapt "androidx.room:room-compiler:2.2.0"
+  implementation "androidx.room:room-runtime:$room_version"
+  kapt "androidx.room:room-compiler:$room_version"
   // Paging
-  implementation 'androidx.paging:paging-runtime:2.1.0'
+  implementation "androidx.paging:paging-runtime:$paging_version"
   // Test helpers for LiveData
-  androidTestImplementation 'androidx.arch.core:core-testing:2.1.0'
+  androidTestImplementation "androidx.arch.core:core-testing:$arch_version"
   // Test helpers for Room
-  testImplementation 'androidx.room:room-testing:2.2.0'
+  testImplementation "androidx.room:room-testing:$room_version"
 
   // Dagger 2
   implementation "com.google.dagger:dagger-android-support:2.13"
@@ -92,8 +102,12 @@ dependencies {
   implementation("com.opencsv:opencsv:4.0") {
     exclude group: 'commons-logging', module: 'commons-logging'
   }
+
+  // AndroidX KTX Extensions
   implementation "androidx.core:core-ktx:1.2.0-beta01"
-  implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0"
+  implementation "androidx.activity:activity-ktx:1.1.0"
+  implementation "androidx.fragment:fragment-ktx:1.2.5"
+
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
   testImplementation "org.mockito:mockito-core:2.19.0"
