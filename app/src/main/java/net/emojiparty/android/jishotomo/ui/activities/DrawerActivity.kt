@@ -14,13 +14,12 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.paging.PagedList
-import com.google.android.material.navigation.NavigationView
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
 import kotlinx.android.synthetic.main.activity_drawer.drawer_layout
+import kotlinx.android.synthetic.main.activity_drawer.nav_view
 import kotlinx.android.synthetic.main.app_bar_drawer.drawer_toolbar
 import kotlinx.android.synthetic.main.app_bar_drawer.toolbar_title
 import kotlinx.android.synthetic.main.content_drawer.definition_fragment_container
@@ -205,8 +204,7 @@ class DrawerActivity : AppCompatActivity(),
   }
 
   private fun setupNavigationView() {
-    val navigationView = findViewById<NavigationView>(id.nav_view)
-    navigationView.setNavigationItemSelectedListener(this)
+    nav_view.setNavigationItemSelectedListener(this)
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
@@ -223,9 +221,8 @@ class DrawerActivity : AppCompatActivity(),
   }
 
   override fun onBackPressed() {
-    val drawer = findViewById<DrawerLayout>(id.drawer_layout)
-    if (drawer.isDrawerOpen(GravityCompat.START)) {
-      drawer.closeDrawer(GravityCompat.START)
+    if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
+      closeDrawer()
     } else {
       super.onBackPressed()
     }
@@ -326,9 +323,12 @@ class DrawerActivity : AppCompatActivity(),
       setPagedEntriesControl(it)
     }
 
-    val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
-    drawer.closeDrawer(GravityCompat.START)
+    closeDrawer()
     return true
+  }
+
+  private fun closeDrawer() {
+    drawer_layout.closeDrawer(GravityCompat.START)
   }
 
   private fun titleIdForSearchType(pagedEntriesControl: PagedEntriesControl): Int {

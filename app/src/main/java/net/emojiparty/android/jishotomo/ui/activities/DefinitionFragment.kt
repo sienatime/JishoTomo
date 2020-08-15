@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.fragment_definition.no_entry_textview
 import net.emojiparty.android.jishotomo.BR
 import net.emojiparty.android.jishotomo.JishoTomoApp
 import net.emojiparty.android.jishotomo.R
@@ -60,7 +61,7 @@ class DefinitionFragment : Fragment() {
         }
       )
     } else {
-      root.findViewById<View>(R.id.empty).visibility = View.VISIBLE
+      no_entry_textview.visibility = View.VISIBLE
     }
   }
 
