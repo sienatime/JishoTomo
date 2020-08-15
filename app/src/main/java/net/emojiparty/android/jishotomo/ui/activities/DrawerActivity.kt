@@ -13,7 +13,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentManager
@@ -21,7 +20,8 @@ import androidx.lifecycle.Observer
 import androidx.paging.PagedList
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
-import kotlinx.android.synthetic.main.activity_definition.toolbar
+import kotlinx.android.synthetic.main.activity_drawer.drawer_layout
+import kotlinx.android.synthetic.main.app_bar_drawer.drawer_toolbar
 import kotlinx.android.synthetic.main.app_bar_drawer.toolbar_title
 import kotlinx.android.synthetic.main.content_drawer.definition_fragment_container
 import kotlinx.android.synthetic.main.content_drawer.loading
@@ -61,7 +61,7 @@ class DrawerActivity : AppCompatActivity(),
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(layout.activity_drawer)
-    setSupportActionBar(toolbar)
+    setSupportActionBar(drawer_toolbar)
     supportActionBar!!.setDisplayShowTitleEnabled(false) // I handle the title separately
 
     fragmentContainer = definition_fragment_container
@@ -77,7 +77,7 @@ class DrawerActivity : AppCompatActivity(),
     } else {
       restoreFromBundle(savedInstanceState)
     }
-    setupDrawer(toolbar)
+    setupDrawer()
     setupNavigationView()
     setupRecyclerView()
 
@@ -192,13 +192,15 @@ class DrawerActivity : AppCompatActivity(),
     }
   }
 
-  private fun setupDrawer(toolbar: Toolbar) {
-    val drawer = findViewById<DrawerLayout>(id.drawer_layout)
+  private fun setupDrawer() {
     val toggle = ActionBarDrawerToggle(
-        this, drawer, toolbar, string.navigation_drawer_open,
+        this,
+        drawer_layout,
+        drawer_toolbar,
+        string.navigation_drawer_open,
         string.navigation_drawer_close
     )
-    drawer.addDrawerListener(toggle)
+    drawer_layout.addDrawerListener(toggle)
     toggle.syncState()
   }
 

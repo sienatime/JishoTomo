@@ -42,6 +42,7 @@ object BindingMethods {
     appliesTo: String?
   ) {
     if (appliesTo == null) {
+      view.text = ""
       return
     }
     val context = view.context
@@ -78,6 +79,7 @@ object BindingMethods {
     text: String?
   ) {
     if (text == null) {
+      view.text = ""
       return
     }
     view.text = JapaneseLocaleSpan.all(text)
