@@ -15,7 +15,6 @@ import net.emojiparty.android.jishotomo.data.csv.CsvExporter.Companion.fileLocat
 import net.emojiparty.android.jishotomo.ui.csv.CsvExportAsyncTask
 import net.emojiparty.android.jishotomo.ui.csv.CsvExportAsyncTask.CsvExportUiCallbacks
 import net.emojiparty.android.jishotomo.ui.dialogs.CallbackDialog
-import net.emojiparty.android.jishotomo.ui.dialogs.CallbackDialog.OnConfirm
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl
 import java.io.File
 
@@ -25,9 +24,9 @@ class FavoritesMenu(
 
   fun explainUnfavoriteAll(activity: FragmentActivity) {
     val dialog = CallbackDialog(
-        OnConfirm { unfavoriteAll() },
         string.explain_unfavorite_all,
-        string.okay
+        string.okay,
+        ::unfavoriteAll
     )
     dialog.show(activity.supportFragmentManager, "unfavorite_all_explain")
   }
@@ -42,10 +41,9 @@ class FavoritesMenu(
     pagedEntriesControl: PagedEntriesControl
   ) {
     val dialog = CallbackDialog(
-        OnConfirm { checkForPermissionThenExport(activity, pagedEntriesControl) },
         string.export_instructions,
         string.export_yes
-    )
+    ) { checkForPermissionThenExport(activity, pagedEntriesControl) }
     dialog.show(activity.supportFragmentManager, "export_explain")
   }
 
