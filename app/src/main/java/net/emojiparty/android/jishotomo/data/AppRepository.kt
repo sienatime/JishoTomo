@@ -17,6 +17,7 @@ import net.emojiparty.android.jishotomo.data.models.SearchResultEntry
 import net.emojiparty.android.jishotomo.data.room.Entry
 import net.emojiparty.android.jishotomo.data.room.EntryDao
 import net.emojiparty.android.jishotomo.data.room.SenseDao
+import org.jetbrains.annotations.TestOnly
 import java.util.ArrayList
 import java.util.HashMap
 import javax.inject.Inject
@@ -114,15 +115,8 @@ class AppRepository {
     }
   }
 
-  fun getEntryByKanji(
-    kanji: String,
-    callback: (entry: Entry) -> Unit
-  ) {
-    AsyncTask.execute {
-      val entry = entryDao.getEntryByKanji(kanji)
-      callback(entry)
-    }
-  }
+  @TestOnly
+  suspend fun getEntryByKanji(kanji: String): Entry = entryDao.getEntryByKanji(kanji)
 
   private fun setCrossReferences(
     entry: EntryWithAllSenses,

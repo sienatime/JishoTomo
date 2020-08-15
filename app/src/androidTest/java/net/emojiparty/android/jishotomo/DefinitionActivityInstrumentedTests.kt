@@ -12,9 +12,9 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
+import kotlinx.coroutines.runBlocking
 import net.emojiparty.android.jishotomo.R.id
 import net.emojiparty.android.jishotomo.data.AppRepository
-import net.emojiparty.android.jishotomo.data.room.Entry
 import net.emojiparty.android.jishotomo.ui.activities.DefinitionActivity
 import net.emojiparty.android.jishotomo.ui.activities.DefinitionFragment
 import net.emojiparty.android.jishotomo.utils.CustomMatchers.nthChildOf
@@ -102,16 +102,18 @@ class DefinitionActivityInstrumentedTests {
   }
 
   private fun launchActivityWithEntry(kanji: String) {
-    AppRepository().getEntryByKanji(
-      kanji
-    ) { entry: Entry ->
-      val intent = Intent()
-      intent.putExtra(DefinitionFragment.ENTRY_ID_EXTRA, entry.id)
+    runBlocking {
+      val entry = AppRepository().getEntryByKanji(kanji)
+      val intent = Intent().apply {
+        this.putExtra(DefinitionFragment.ENTRY_ID_EXTRA, entry.id)
+      }
+
       activityRule.launchActivity(intent)
+
+      onView(withText("Jisho Tomo"))
+        .check(matches(isDisplayed()))
+      onView(withId(id.def_kanji))
+        .check(matches(withText(kanji)))
     }
-    onView(withText("Jisho Tomo"))
-      .check(matches(isDisplayed()))
-    onView(withId(id.def_kanji))
-      .check(matches(withText(kanji)))
   }
 }

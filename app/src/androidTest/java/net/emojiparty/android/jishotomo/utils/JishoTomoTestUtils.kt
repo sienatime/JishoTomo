@@ -6,9 +6,9 @@ import androidx.test.espresso.contrib.DrawerActions.open
 import androidx.test.espresso.contrib.DrawerMatchers.isOpen
 import androidx.test.espresso.contrib.NavigationViewActions
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import kotlinx.coroutines.runBlocking
 import net.emojiparty.android.jishotomo.R.id
 import net.emojiparty.android.jishotomo.data.AppRepository
-import net.emojiparty.android.jishotomo.data.room.Entry
 
 object JishoTomoTestUtils {
   fun openDrawer() {
@@ -26,6 +26,9 @@ object JishoTomoTestUtils {
 
   fun addFavoriteEntry(kanji: String) {
     val repo = AppRepository()
-    repo.getEntryByKanji(kanji) { entry: Entry -> repo.toggleFavorite(entry) }
+    runBlocking {
+      val entry = repo.getEntryByKanji(kanji)
+      repo.toggleFavorite(entry)
+    }
   }
 }

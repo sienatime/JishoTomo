@@ -63,7 +63,7 @@ interface EntryDao {
 
   @TestOnly
   @Query("SELECT * FROM entries WHERE primary_kanji = :kanji LIMIT 1")
-  fun getEntryByKanji(kanji: String): Entry
+  suspend fun getEntryByKanji(kanji: String): Entry
 
   // WIDGET
   @Transaction
