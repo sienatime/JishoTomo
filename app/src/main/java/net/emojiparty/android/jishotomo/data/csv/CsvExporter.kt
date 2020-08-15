@@ -34,8 +34,8 @@ class CsvExporter(
         val entry = entries[i]
         writer.writeNext(
             CsvEntry(
-                entry!!, SenseDisplay(
-                AndroidResourceFetcher(context.resources), context.packageName
+                entry!!,
+                SenseDisplay(AndroidResourceFetcher(context.resources), context.packageName
             )
             ).toArray()
         )

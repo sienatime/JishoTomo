@@ -269,7 +269,7 @@ class DrawerActivity : AppCompatActivity(),
   }
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
-    val favoritesMenu = FavoritesMenu(application as JishoTomoApp)
+    val favoritesMenu = FavoritesMenu((application as JishoTomoApp).analyticsLogger)
     if (item.itemId == id.menu_export) {
       favoritesMenu.explainCsvExport(this, viewModel.pagedEntriesControl)
       return true
