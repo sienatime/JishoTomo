@@ -19,7 +19,6 @@ class SenseDisplay(private val resources: ResourceFetcher, private val packageNa
   }
 
   companion object {
-    @JvmStatic
     fun formatPartsOfSpeech(
       sense: Sense,
       resources: ResourceFetcher,

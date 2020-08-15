@@ -51,7 +51,7 @@ class JishoTomoJlptWidget : AppWidgetProvider() {
   }
 
   companion object {
-    @JvmStatic fun updateAppWidget(
+    fun updateAppWidget(
       context: Context,
       appWidgetManager: AppWidgetManager,
       appWidgetId: Int

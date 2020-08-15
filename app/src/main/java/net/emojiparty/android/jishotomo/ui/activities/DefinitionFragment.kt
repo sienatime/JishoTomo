@@ -79,7 +79,7 @@ class DefinitionFragment : Fragment() {
     const val ENTRY_ID_EXTRA = "ENTRY_ID_EXTRA"
     const val ENTRY_EMPTY = -1
 
-    @JvmStatic fun instance(entryId: Int): DefinitionFragment {
+    fun instance(entryId: Int): DefinitionFragment {
       val fragment = DefinitionFragment()
       val bundle = Bundle()
       bundle.putInt(ENTRY_ID_EXTRA, entryId)

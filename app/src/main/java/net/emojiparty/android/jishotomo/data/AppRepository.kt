@@ -39,11 +39,11 @@ class AppRepository {
   ): MutableLiveData<EntryWithAllSenses> {
     val liveData = MutableLiveData<EntryWithAllSenses>()
     entryDao.getEntryById(entryId).observe(
-        lifecycleOwner,
-        Observer { entry: EntryWithAllSenses ->
-          setCrossReferences(entry, liveData, lifecycleOwner)
-        }
-      )
+      lifecycleOwner,
+      Observer { entry: EntryWithAllSenses ->
+        setCrossReferences(entry, liveData, lifecycleOwner)
+      }
+    )
     return liveData
   }
 

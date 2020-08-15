@@ -6,7 +6,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import dagger.Module
 import dagger.Provides
-import net.emojiparty.android.jishotomo.Environment.Companion.isTest
+import net.emojiparty.android.jishotomo.Environment
 import net.emojiparty.android.jishotomo.data.room.AppDatabase
 import net.emojiparty.android.jishotomo.data.room.EntryDao
 import net.emojiparty.android.jishotomo.data.room.SenseDao
@@ -32,7 +32,7 @@ class RoomModule @Singleton constructor(application: Application?) {
   }
 
   private fun databaseName(): String {
-    return if (isTest) {
+    return if (Environment.isTest) {
       "jishotomo_test.db"
     } else {
       databaseFileName

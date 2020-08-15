@@ -3,7 +3,7 @@ package net.emojiparty.android.jishotomo.ui.presentation
 import android.content.Context
 
 object StringForJlptLevel {
-  @JvmStatic fun getId(
+  fun getId(
     level: Int,
     context: Context
   ): Int {

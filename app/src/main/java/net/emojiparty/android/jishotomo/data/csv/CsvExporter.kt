@@ -72,7 +72,7 @@ class CsvExporter(
   )
 
   companion object {
-    @JvmStatic fun fileLocation(context: Context): String {
+    fun fileLocation(context: Context): String {
       return context.getExternalFilesDir("csv_export").toString() + "/jisho_tomo_export.csv"
     }
   }
