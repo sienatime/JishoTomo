@@ -89,7 +89,7 @@ public class FavoritesMenu {
             analyticsLogger.logCsvSuccess();
           }
 
-          @Override public void onCanceled() {
+          @Override public void onCancelled() {
             exportIndicator.setVisibility(View.GONE);
             Toast.makeText(activity, R.string.csv_failed, Toast.LENGTH_SHORT).show();
             analyticsLogger.logCsvFailed();
