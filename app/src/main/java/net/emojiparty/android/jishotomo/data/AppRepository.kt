@@ -17,7 +17,6 @@ import net.emojiparty.android.jishotomo.data.room.Entry
 import net.emojiparty.android.jishotomo.data.room.EntryDao
 import net.emojiparty.android.jishotomo.data.room.SenseDao
 import org.jetbrains.annotations.TestOnly
-import java.util.ArrayList
 import java.util.HashMap
 import javax.inject.Inject
 
@@ -39,11 +38,10 @@ class AppRepository {
     lifecycleOwner: LifecycleOwner
   ): MutableLiveData<EntryWithAllSenses> {
     val liveData = MutableLiveData<EntryWithAllSenses>()
-    entryDao.getEntryById(entryId)
-      .observe(
+    entryDao.getEntryById(entryId).observe(
         lifecycleOwner,
-        Observer { entry: EntryWithAllSenses? ->
-          entry?.let { setCrossReferences(it, liveData, lifecycleOwner) }
+        Observer { entry: EntryWithAllSenses ->
+          setCrossReferences(entry, liveData, lifecycleOwner)
         }
       )
     return liveData
@@ -85,9 +83,7 @@ class AppRepository {
     return entryDao.getAllByJlptLevel(jlptLevel)
   }
 
-  suspend fun getRandomEntryByJlptLevel(
-    level: Int
-  ): SearchResultEntry {
+  suspend fun getRandomEntryByJlptLevel(level: Int): SearchResultEntry {
     val jlptCount = entryDao.getJlptLevelCount(level)
     return entryDao.randomByJlptLevel(level, randomOffset(jlptCount))
   }
@@ -124,7 +120,7 @@ class AppRepository {
       lifecycleOwner,
       Observer { crossReferencedEntries: List<CrossReferencedEntry> ->
         val hashMap = crossReferenceHash(crossReferencedEntries)
-        for (sense in entry.senses) {
+        entry.senses.forEach { sense ->
           hashMap[sense.sense.id]?.let {
             sense.crossReferences = it
           }
@@ -137,18 +133,15 @@ class AppRepository {
   private fun crossReferenceHash(
     senses: List<CrossReferencedEntry>
   ): HashMap<Int, MutableList<CrossReferencedEntry>> {
-    val hashMap =
-      HashMap<Int, MutableList<CrossReferencedEntry>>()
-    for (crossReferencedEntry in senses) {
+    val hashMap = HashMap<Int, MutableList<CrossReferencedEntry>>()
+
+    senses.forEach { crossReferencedEntry ->
       val senseId = crossReferencedEntry.senseId
+
       if (hashMap[senseId] == null) {
-        val xrefs =
-          ArrayList<CrossReferencedEntry>()
-        xrefs.add(crossReferencedEntry)
-        hashMap[senseId] = xrefs
+        hashMap[senseId] = mutableListOf(crossReferencedEntry)
       } else {
-        hashMap[senseId]!!
-          .add(crossReferencedEntry)
+        hashMap[senseId]!!.add(crossReferencedEntry)
       }
     }
     return hashMap

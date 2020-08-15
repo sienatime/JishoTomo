@@ -17,9 +17,8 @@ class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: 
     val builder = StringBuilder()
     val numberOfSenses = entry.senses.size
     var glossIndex = 1
-    for (i in 0 until numberOfSenses) {
-      val sense = entry.senses[i]
 
+    entry.senses.forEach { sense ->
       val newPartOfSpeech = appendPartsOfSpeech(builder, sense.sense)
       if (newPartOfSpeech) {
         glossIndex = 1
@@ -109,15 +108,15 @@ class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: 
       val kanjiStartIndices = mutableListOf(0)
       var lastWasKana = false
 
-      for (i in kanji.indices) {
+      kanji.indices.forEach { i ->
         val codePoint = Character.codePointAt(kanji, i)
-        if (CJKUtil.isKana(codePoint)) {
-          lastWasKana = true
+        lastWasKana = if (CJKUtil.isKana(codePoint)) {
+          true
         } else {
           if (lastWasKana) {
             kanjiStartIndices.add(i)
           }
-          lastWasKana = false
+          false
         }
       }
 
@@ -127,13 +126,18 @@ class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: 
 
   private fun buildReadingTokens(reading: String, kanji: String?, kanjiTokens: List<String>): List<String> {
     val readingStartIndices = mutableListOf(0)
-    for (kanjiToken in kanjiTokens) {
+
+    if (kanji == null && kanjiTokens.isNotEmpty()) {
+      throw Exception("Kanji tokens should be empty if kanji is null")
+    }
+
+    kanjiTokens.forEach { kanjiToken ->
       var kanaSearch = ""
 
-      for (i in kanjiToken.indices) {
-        val codePoint = Character.codePointAt(kanji, i)
+      kanjiToken.forEachIndexed { i, token ->
+        val codePoint = Character.codePointAt(kanji!!, i)
         if (CJKUtil.isKana(codePoint)) {
-          kanaSearch += kanjiToken.get(i)
+          kanaSearch += token
         }
       }
 
@@ -151,7 +155,7 @@ class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: 
       emptyList()
     } else {
       mutableListOf<String>().apply {
-        for (start in indices) {
+        indices.forEach { start ->
           val end = getEnd(string, start, indices)
           this.add(string.substring(start, end))
         }
@@ -161,7 +165,7 @@ class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: 
 
   private fun getEnd(string: String, index: Int, list: List<Int>): Int {
     return if ((index + 1) < list.size) {
-      list.get(index + 1)
+      list[index + 1]
     } else {
       string.length
     }
