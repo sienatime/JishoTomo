@@ -5,11 +5,11 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
 @Database(
-    entities = [Entry::class, Sense::class, CrossReference::class, EntryFts::class, SenseFts::class],
-    version = 3, exportSchema = false
+  entities = [Entry::class, Sense::class, CrossReference::class, EntryFts::class, SenseFts::class],
+  version = 3, exportSchema = false
 )
 @TypeConverters(
-    Converters::class
+  Converters::class
 )
 abstract class AppDatabase : RoomDatabase() {
   abstract fun entryDao(): EntryDao

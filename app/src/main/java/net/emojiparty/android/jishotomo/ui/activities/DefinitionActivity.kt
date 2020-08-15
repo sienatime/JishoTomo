@@ -16,8 +16,8 @@ class DefinitionActivity : AppCompatActivity() {
     val entryId = findEntryId(intent)
     val fragment = instance(entryId)
     supportFragmentManager.beginTransaction()
-        .replace(id.definition_activity_fragment_container, fragment)
-        .commit()
+      .replace(id.definition_activity_fragment_container, fragment)
+      .commit()
   }
 
   private fun setupToolbar() {
@@ -30,8 +30,8 @@ class DefinitionActivity : AppCompatActivity() {
     }
     return if (intent.hasExtra(DefinitionFragment.ENTRY_ID_EXTRA)) {
       intent.getIntExtra(
-          DefinitionFragment.ENTRY_ID_EXTRA,
-          DefinitionFragment.ENTRY_EMPTY
+        DefinitionFragment.ENTRY_ID_EXTRA,
+        DefinitionFragment.ENTRY_EMPTY
       )
     } else {
       DefinitionFragment.ENTRY_EMPTY

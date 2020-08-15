@@ -5,8 +5,6 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'kotlin-kapt'
 
-sourceCompatibility = 1.8
-
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
@@ -55,8 +53,15 @@ android {
   }
 }
 
+configurations {
+  ktlint
+}
+
 dependencies {
   implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+  ktlint "com.pinterest:ktlint:0.37.2"
+
   implementation 'androidx.appcompat:appcompat:1.1.0'
   implementation 'com.google.android.material:material:1.1.0-beta01'
   implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
@@ -114,7 +119,17 @@ dependencies {
   testImplementation 'org.mockito:mockito-inline:2.13.0'
 }
 
-apply plugin: 'com.google.gms.google-services'
-repositories {
-  mavenCentral()
+task ktlint(type: JavaExec, group: "verification") {
+  description = "Check Kotlin code style."
+  main = "com.pinterest.ktlint.Main"
+  classpath = configurations.ktlint
+  args "src/**/*.kt"
+}
+check.dependsOn ktlint
+
+task ktlintFormat(type: JavaExec, group: "formatting") {
+  description = "Fix Kotlin code style deviations."
+  main = "com.pinterest.ktlint.Main"
+  classpath = configurations.ktlint
+  args "-F", "src/**/*.kt"
 }

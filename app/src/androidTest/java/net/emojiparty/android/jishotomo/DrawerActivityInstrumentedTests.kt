@@ -44,7 +44,7 @@ import java.util.concurrent.TimeUnit.MINUTES
 class DrawerActivityInstrumentedTests {
   @get:Rule
   var activityRule = ActivityTestRule(
-      DrawerActivity::class.java
+    DrawerActivity::class.java
   )
 
   @get:Rule
@@ -53,7 +53,7 @@ class DrawerActivityInstrumentedTests {
   @Before fun checkAppLoaded() {
     AppRepository().unfavoriteAll()
     onView(withText("Jisho Tomo"))
-        .check(matches(isDisplayed()))
+      .check(matches(isDisplayed()))
   }
 
   @After fun cleanup() {
@@ -63,46 +63,46 @@ class DrawerActivityInstrumentedTests {
   @Test
   fun appLoads() {
     onView(withId(id.search_results_rv))
-        .check(
-            withItemCount(greaterThan(1))
-        )
+      .check(
+        withItemCount(greaterThan(1))
+      )
     onView(withId(id.search_results_rv))
-        .perform(
-            actionOnItemAtPosition<ViewHolder>(
-                2, click()
-            )
+      .perform(
+        actionOnItemAtPosition<ViewHolder>(
+          2, click()
         )
+      )
     onView(withId(id.def_kanji))
-        .check(matches(isDisplayed()))
+      .check(matches(isDisplayed()))
   }
 
   // BROWSE
   @Test
   fun itHasOnlySearchMenuItem() {
     onView(withId(id.menu_search))
-        .check(matches(isDisplayed()))
+      .check(matches(isDisplayed()))
     onView(withId(id.menu_export))
-        .check(doesNotExist())
+      .check(doesNotExist())
     onView(withId(id.menu_remove_all_favorites))
-        .check(doesNotExist())
+      .check(doesNotExist())
   }
 
   // SEARCH
   @Test
   fun itCanPerformSearchFromToolbar() {
     onView(withId(id.menu_search))
-        .perform(click())
+      .perform(click())
     performSearch("朝")
     onView(withText("あさ"))
-        .check(matches(isDisplayed()))
+      .check(matches(isDisplayed()))
     onView(withText("morning"))
-        .check(matches(isDisplayed()))
+      .check(matches(isDisplayed()))
     onView(withId(id.no_results))
-        .check(
-            matches(
-                not(isDisplayed())
-            )
+      .check(
+        matches(
+          not(isDisplayed())
         )
+      )
   }
 
   @Test
@@ -110,9 +110,9 @@ class DrawerActivityInstrumentedTests {
     JishoTomoTestUtils.clickDrawerItem(id.nav_search)
     performSearch("朝")
     onView(withText("あさ"))
-        .check(matches(isDisplayed()))
+      .check(matches(isDisplayed()))
     onView(withText("morning"))
-        .check(matches(isDisplayed()))
+      .check(matches(isDisplayed()))
   }
 
   @Test
@@ -121,13 +121,13 @@ class DrawerActivityInstrumentedTests {
     JishoTomoTestUtils.clickDrawerItem(id.nav_search)
     performSearch(searchTerm, false)
     onView(withId(id.no_results))
-        .check(
-            matches(
-                withText(
-                    "No results found for \"$searchTerm\". Try a different search."
-                )
-            )
+      .check(
+        matches(
+          withText(
+            "No results found for \"$searchTerm\". Try a different search."
+          )
         )
+      )
   }
 
   // DRAWER
@@ -135,15 +135,15 @@ class DrawerActivityInstrumentedTests {
   fun itHasItemsInTheDrawer() {
     JishoTomoTestUtils.openDrawer()
     onView(withText("Browse"))
-        .check(matches(isDisplayed()))
+      .check(matches(isDisplayed()))
     onView(withText("Search"))
-        .check(matches(isDisplayed()))
+      .check(matches(isDisplayed()))
     onView(withText("Favorites"))
-        .check(matches(isDisplayed()))
+      .check(matches(isDisplayed()))
     onView(withText("About"))
-        .check(matches(isDisplayed()))
+      .check(matches(isDisplayed()))
     onView(withText("JLPT Vocabulary Lists"))
-        .check(matches(isDisplayed()))
+      .check(matches(isDisplayed()))
   }
 
   @Test
@@ -151,7 +151,7 @@ class DrawerActivityInstrumentedTests {
     JishoTomoTestUtils.openDrawer()
     pressBack()
     onView(withId(id.drawer_layout))
-        .check(matches(isClosed()))
+      .check(matches(isClosed()))
   }
 
   // FAVORITES
@@ -160,30 +160,30 @@ class DrawerActivityInstrumentedTests {
     JishoTomoTestUtils.addFavoriteEntry("七転び八起き")
     JishoTomoTestUtils.clickDrawerItem(id.nav_favorites)
     onView(withId(id.menu_search))
-        .check(matches(isDisplayed()))
+      .check(matches(isDisplayed()))
     onView(withId(id.menu_export))
-        .check(matches(isDisplayed()))
+      .check(matches(isDisplayed()))
     onView(withId(id.menu_remove_all_favorites))
-        .check(matches(isDisplayed()))
+      .check(matches(isDisplayed()))
     onView(withId(id.no_results))
-        .check(
-            matches(
-                not(isDisplayed())
-            )
+      .check(
+        matches(
+          not(isDisplayed())
         )
+      )
   }
 
   @Test
   fun itShowsOnlySearchMenuItemWhenThereAreNoFavorites() {
     JishoTomoTestUtils.clickDrawerItem(id.nav_favorites)
     onView(withId(id.menu_search))
-        .check(matches(isDisplayed()))
+      .check(matches(isDisplayed()))
     onView(withId(id.menu_export))
-        .check(doesNotExist())
+      .check(doesNotExist())
     onView(withId(id.menu_remove_all_favorites))
-        .check(doesNotExist())
+      .check(doesNotExist())
     onView(withId(id.no_results))
-        .check(matches(withText(string.no_favorites)))
+      .check(matches(withText(string.no_favorites)))
   }
 
   @Test
@@ -191,16 +191,16 @@ class DrawerActivityInstrumentedTests {
     JishoTomoTestUtils.addFavoriteEntry("七転び八起き")
     JishoTomoTestUtils.clickDrawerItem(id.nav_favorites)
     onView(withId(id.search_results_rv))
-        .check(withItemCount(1))
+      .check(withItemCount(1))
     onView(withId(id.menu_remove_all_favorites))
-        .perform(click())
+      .perform(click())
     onView(withText("OK"))
-        .perform(click()) // flaky
+      .perform(click()) // flaky
     drain()
     onView(withId(id.search_results_rv))
-        .check(withItemCount(0))
+      .check(withItemCount(0))
     onView(withId(id.no_results))
-        .check(matches(withText(string.no_favorites)))
+      .check(matches(withText(string.no_favorites)))
   }
 
   // ABOUT
@@ -208,7 +208,7 @@ class DrawerActivityInstrumentedTests {
   fun itCanOpenAboutActivity() {
     JishoTomoTestUtils.clickDrawerItem(id.nav_about)
     onView(withId(id.about_text))
-        .check(matches(isDisplayed()))
+      .check(matches(isDisplayed()))
   }
 
   // JLPT LISTS
@@ -216,11 +216,11 @@ class DrawerActivityInstrumentedTests {
   fun itShowsSearchAndExportMenuItems() {
     JishoTomoTestUtils.clickDrawerItem(id.nav_jlptn1)
     onView(withId(id.menu_search))
-        .check(matches(isDisplayed()))
+      .check(matches(isDisplayed()))
     onView(withId(id.menu_export))
-        .check(matches(isDisplayed()))
+      .check(matches(isDisplayed()))
     onView(withId(id.menu_remove_all_favorites))
-        .check(doesNotExist())
+      .check(doesNotExist())
   }
 
   // HELPER METHODS
@@ -233,18 +233,18 @@ class DrawerActivityInstrumentedTests {
     resultsExpected: Boolean = true
   ) {
     onView(isAssignableFrom(EditText::class.java))
-        .perform(
-            replaceText(searchTerm),
-            pressImeActionButton()
-        )
+      .perform(
+        replaceText(searchTerm),
+        pressImeActionButton()
+      )
     drain()
     if (resultsExpected) {
       onView(withId(id.search_results_rv))
-          .check(
-              withItemCount(
-                  greaterThan(1)
-              )
+        .check(
+          withItemCount(
+            greaterThan(1)
           )
+        )
     }
   }
 }

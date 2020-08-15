@@ -24,9 +24,9 @@ class FavoritesMenu(
 
   fun explainUnfavoriteAll(activity: FragmentActivity) {
     val dialog = CallbackDialog(
-        string.explain_unfavorite_all,
-        string.okay,
-        ::unfavoriteAll
+      string.explain_unfavorite_all,
+      string.okay,
+      ::unfavoriteAll
     )
     dialog.show(activity.supportFragmentManager, "unfavorite_all_explain")
   }
@@ -41,8 +41,8 @@ class FavoritesMenu(
     pagedEntriesControl: PagedEntriesControl
   ) {
     val dialog = CallbackDialog(
-        string.export_instructions,
-        string.export_yes
+      string.export_instructions,
+      string.export_yes
     ) { checkForPermissionThenExport(activity, pagedEntriesControl) }
     dialog.show(activity.supportFragmentManager, "export_explain")
   }
@@ -83,7 +83,7 @@ class FavoritesMenu(
         exportIndicator.visibility = View.GONE
         val csv = File(fileLocation(activity))
         val csvUri = FileProvider.getUriForFile(
-            activity, activity.getString(string.fileprovider_package), csv
+          activity, activity.getString(string.fileprovider_package), csv
         )
         val shareIntent = Intent().apply {
           this.action = Intent.ACTION_SEND
@@ -91,7 +91,7 @@ class FavoritesMenu(
           this.type = "text/csv"
         }
         activity.startActivity(
-            Intent.createChooser(shareIntent, activity.getString(string.share_csv))
+          Intent.createChooser(shareIntent, activity.getString(string.share_csv))
         )
         analyticsLogger.logCsvSuccess()
       }

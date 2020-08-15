@@ -10,8 +10,8 @@ object ScreenSize {
     resources: Resources
   ): Int {
     return TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP, dps,
-        resources.displayMetrics
+      TypedValue.COMPLEX_UNIT_DIP, dps,
+      resources.displayMetrics
     ).toInt()
   }
 }

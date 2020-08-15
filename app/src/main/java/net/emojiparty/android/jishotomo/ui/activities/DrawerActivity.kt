@@ -41,8 +41,9 @@ import net.emojiparty.android.jishotomo.ui.presentation.StringForJlptLevel
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesViewModel
 
-class DrawerActivity : AppCompatActivity(),
-    OnNavigationItemSelectedListener {
+class DrawerActivity :
+  AppCompatActivity(),
+  OnNavigationItemSelectedListener {
   private lateinit var viewModel: PagedEntriesViewModel
 
   private var searchViewMenuItem: MenuItem? = null
@@ -121,14 +122,14 @@ class DrawerActivity : AppCompatActivity(),
     fragmentContainer?.let {
       val fragmentManager = supportFragmentManager
       fragmentManager.popBackStack(
-          null, FragmentManager.POP_BACK_STACK_INCLUSIVE
+        null, FragmentManager.POP_BACK_STACK_INCLUSIVE
       )
       if (fragmentManager.backStackEntryCount == 0) {
         val fragment =
           instance(DefinitionFragment.ENTRY_EMPTY)
         fragmentManager.beginTransaction()
-            .replace(id.definition_fragment_container, fragment)
-            .commitAllowingStateLoss()
+          .replace(id.definition_fragment_container, fragment)
+          .commitAllowingStateLoss()
       }
     }
   }
@@ -137,9 +138,9 @@ class DrawerActivity : AppCompatActivity(),
     lastEntryViewed = entryId
     val fragment = instance(entryId)
     supportFragmentManager.beginTransaction()
-        .add(id.definition_fragment_container, fragment)
-        .addToBackStack(null)
-        .commit()
+      .add(id.definition_fragment_container, fragment)
+      .addToBackStack(null)
+      .commit()
   }
 
   // https://developer.android.com/training/search/setup
@@ -162,8 +163,8 @@ class DrawerActivity : AppCompatActivity(),
   // Paging library reference https://developer.android.com/topic/libraries/architecture/paging
   private fun setupRecyclerView() {
     viewModel.entries.observe(
-        this,
-        Observer<PagedList<SearchResultEntry>> { entries: PagedList<SearchResultEntry> ->
+      this,
+      Observer<PagedList<SearchResultEntry>> { entries: PagedList<SearchResultEntry> ->
         loading.visibility = View.INVISIBLE
         adapter?.submitList(entries)
         setNoResultsText(entries.size)
@@ -185,7 +186,7 @@ class DrawerActivity : AppCompatActivity(),
     return when (val control = viewModel.pagedEntriesControl) {
       is PagedEntriesControl.Favorites -> getString(string.no_favorites)
       is PagedEntriesControl.Search -> String.format(
-          getString(string.no_search_results), control.searchTerm
+        getString(string.no_search_results), control.searchTerm
       )
       else -> getString(string.nothing_here)
     }
@@ -193,11 +194,11 @@ class DrawerActivity : AppCompatActivity(),
 
   private fun setupDrawer() {
     val toggle = ActionBarDrawerToggle(
-        this,
-        drawer_layout,
-        drawer_toolbar,
-        string.navigation_drawer_open,
-        string.navigation_drawer_close
+      this,
+      drawer_layout,
+      drawer_toolbar,
+      string.navigation_drawer_open,
+      string.navigation_drawer_close
     )
     drawer_layout.addDrawerListener(toggle)
     toggle.syncState()
@@ -336,7 +337,7 @@ class DrawerActivity : AppCompatActivity(),
       is PagedEntriesControl.Browse -> string.app_name
       is PagedEntriesControl.Favorites -> string.favorites
       is PagedEntriesControl.JLPT -> StringForJlptLevel.getId(
-          pagedEntriesControl.level, this
+        pagedEntriesControl.level, this
       )
       is PagedEntriesControl.Search -> string.search_results
     }

@@ -13,7 +13,7 @@ import net.emojiparty.android.jishotomo.data.models.SearchResultEntry
 import net.emojiparty.android.jishotomo.ui.adapters.PagedEntriesAdapter.DataBindingViewHolder
 
 class PagedEntriesAdapter(private val layoutId: Int) :
-    PagedListAdapter<SearchResultEntry, DataBindingViewHolder>(DIFF_CALLBACK) {
+  PagedListAdapter<SearchResultEntry, DataBindingViewHolder>(DIFF_CALLBACK) {
 
   override fun onBindViewHolder(
     holder: DataBindingViewHolder,
@@ -36,7 +36,7 @@ class PagedEntriesAdapter(private val layoutId: Int) :
     val binding =
       DataBindingUtil.inflate<ViewDataBinding>(layoutInflater, layoutId, parent, false)
     return DataBindingViewHolder(
-        binding, context
+      binding, context
     )
   }
 

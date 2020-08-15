@@ -34,18 +34,18 @@ class ExportIntentTest {
 
   @get:Rule
   var intentsTestRule = IntentsTestRule(
-      DrawerActivity::class.java
+    DrawerActivity::class.java
   )
 
   @Before fun stubIntent() {
     Intents.intending(hasAction(Intent.ACTION_CHOOSER))
-        .respondWith(ActivityResult(Activity.RESULT_OK, null))
+      .respondWith(ActivityResult(Activity.RESULT_OK, null))
   }
 
   @Before fun checkAppLoaded() {
     AppRepository().unfavoriteAll()
     onView(withText("Jisho Tomo"))
-        .check(matches(isDisplayed()))
+      .check(matches(isDisplayed()))
   }
 
   @After fun cleanup() {
@@ -56,26 +56,26 @@ class ExportIntentTest {
     JishoTomoTestUtils.addFavoriteEntry("七転び八起き")
     JishoTomoTestUtils.clickDrawerItem(id.nav_favorites)
     onView(withText("七転び八起き"))
-        .check(matches(isDisplayed()))
+      .check(matches(isDisplayed()))
     onView(withId(id.menu_export))
-        .perform(click()) // flaky (I think because drawer is still animating closed)
+      .perform(click()) // flaky (I think because drawer is still animating closed)
     onView(withText("PROCEED"))
-        .inRoot(isDialog())
-        .check(matches(isDisplayed()))
+      .inRoot(isDialog())
+      .check(matches(isDisplayed()))
     onView(withText("PROCEED"))
-        .perform(click())
+      .perform(click())
   }
 
   @Test fun itCanExportJlptListToCsv() {
     JishoTomoTestUtils.clickDrawerItem(id.nav_jlptn1)
     onView(withText("明白"))
-        .check(matches(isDisplayed()))
+      .check(matches(isDisplayed()))
     onView(withId(id.menu_export))
-        .perform(click())
+      .perform(click())
     onView(withText("PROCEED"))
-        .inRoot(isDialog())
-        .check(matches(isDisplayed()))
+      .inRoot(isDialog())
+      .check(matches(isDisplayed()))
     onView(withText("PROCEED"))
-        .perform(click())
+      .perform(click())
   }
 }

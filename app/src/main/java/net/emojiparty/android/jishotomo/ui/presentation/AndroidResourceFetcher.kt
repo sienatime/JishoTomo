@@ -2,7 +2,7 @@ package net.emojiparty.android.jishotomo.ui.presentation
 
 import android.content.res.Resources
 
-class AndroidResourceFetcher(private val resources: Resources): ResourceFetcher {
+class AndroidResourceFetcher(private val resources: Resources) : ResourceFetcher {
   override fun getIdentifier(
     name: String,
     defType: String,

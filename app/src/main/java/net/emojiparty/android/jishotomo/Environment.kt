@@ -5,7 +5,7 @@ import android.util.Log
 class Environment {
   companion object {
     @JvmStatic
-    val isTest : Boolean by lazy {
+    val isTest: Boolean by lazy {
       try {
         Class.forName("androidx.test.espresso.Espresso")
         Log.i("Environment", "isTest true")

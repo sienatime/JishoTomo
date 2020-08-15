@@ -49,9 +49,9 @@ object BindingMethods {
     val literalAppliesTo = context.getString(string.applies_to)
     val allAppliesTo = appliesTo.splitAndJoin()
     val formatted = String.format(
-        context.getString(string.applies_to_format),
-        literalAppliesTo,
-        allAppliesTo
+      context.getString(string.applies_to_format),
+      literalAppliesTo,
+      allAppliesTo
     )
     view.text = JapaneseLocaleSpan.mixed(formatted, literalAppliesTo)
   }

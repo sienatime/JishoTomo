@@ -50,7 +50,5 @@ class DataBindingAdapter(private val layoutId: Int) : RecyclerView.Adapter<ViewH
       binding.setVariable(BR.presenter, presenter)
       binding.executePendingBindings()
     }
-
   }
-
 }

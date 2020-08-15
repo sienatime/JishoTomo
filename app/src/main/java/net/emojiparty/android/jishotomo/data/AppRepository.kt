@@ -38,12 +38,12 @@ class AppRepository {
   ): MutableLiveData<EntryWithAllSenses> {
     val liveData = MutableLiveData<EntryWithAllSenses>()
     entryDao.getEntryById(entryId)
-        .observe(
-            lifecycleOwner,
-            Observer { entry: EntryWithAllSenses? ->
-              entry?.let { setCrossReferences(it, liveData, lifecycleOwner) }
-            }
-        )
+      .observe(
+        lifecycleOwner,
+        Observer { entry: EntryWithAllSenses? ->
+          entry?.let { setCrossReferences(it, liveData, lifecycleOwner) }
+        }
+      )
     return liveData
   }
 
@@ -52,11 +52,11 @@ class AppRepository {
     return if (isJapanese(unicodeCodePoint)) {
       val wildcardQuery = String.format("*%s*", term)
       LivePagedListBuilder(
-          entryDao.searchByJapaneseTerm(wildcardQuery), PAGE_SIZE
+        entryDao.searchByJapaneseTerm(wildcardQuery), PAGE_SIZE
       ).build()
     } else {
       LivePagedListBuilder(
-          entryDao.searchByEnglishTerm(term), PAGE_SIZE
+        entryDao.searchByEnglishTerm(term), PAGE_SIZE
       ).build()
     }
   }
@@ -71,7 +71,7 @@ class AppRepository {
 
   fun getByJlptLevel(level: Int): LiveData<PagedList<SearchResultEntry>> {
     return LivePagedListBuilder(
-        entryDao.findByJlptLevel(level), PAGE_SIZE
+      entryDao.findByJlptLevel(level), PAGE_SIZE
     ).build()
   }
 
@@ -126,18 +126,18 @@ class AppRepository {
     lifecycleOwner: LifecycleOwner
   ) {
     senseDao.getCrossReferencedEntries(
-        entry.entry.id
+      entry.entry.id
     ).observe(
-        lifecycleOwner,
-        Observer { crossReferencedEntries: List<CrossReferencedEntry> ->
-            val hashMap = crossReferenceHash(crossReferencedEntries)
-            for (sense in entry.senses) {
-              hashMap[sense.sense.id]?.let {
-                sense.crossReferences = it
-              }
-            }
-          liveData.setValue(entry)
+      lifecycleOwner,
+      Observer { crossReferencedEntries: List<CrossReferencedEntry> ->
+        val hashMap = crossReferenceHash(crossReferencedEntries)
+        for (sense in entry.senses) {
+          hashMap[sense.sense.id]?.let {
+            sense.crossReferences = it
+          }
         }
+        liveData.setValue(entry)
+      }
     )
   }
 
@@ -155,7 +155,7 @@ class AppRepository {
         hashMap[senseId] = xrefs
       } else {
         hashMap[senseId]!!
-            .add(crossReferencedEntry)
+          .add(crossReferencedEntry)
       }
     }
     return hashMap

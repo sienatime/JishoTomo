@@ -17,13 +17,13 @@ class CrossReferenceButton(private val context: Context) {
   fun create(crossReferencedEntry: CrossReferencedEntry): Button {
     val buttonStyleId = style.xref_button
     val button = Button(
-        ContextThemeWrapper(context, buttonStyleId), null, buttonStyleId
+      ContextThemeWrapper(context, buttonStyleId), null, buttonStyleId
     )
     button.text = JapaneseLocaleSpan.all(crossReferencedEntry.kanjiOrReading())
     setMargins(button)
     button.setOnClickListener {
       EntryClickHandler.open(
-          context, crossReferencedEntry.id
+        context, crossReferencedEntry.id
       )
     }
     return button
@@ -31,8 +31,8 @@ class CrossReferenceButton(private val context: Context) {
 
   private fun setMargins(button: Button) {
     val layoutParams = LayoutParams(
-        LayoutParams.WRAP_CONTENT,
-        LayoutParams.WRAP_CONTENT
+      LayoutParams.WRAP_CONTENT,
+      LayoutParams.WRAP_CONTENT
     )
     val marginInPixels = ScreenSize.dpsToPixels(margin, resources)
     layoutParams.marginEnd = marginInPixels

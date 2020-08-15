@@ -29,7 +29,6 @@ class CsvExportAsyncTask(
   override fun onProgressUpdate(vararg values: Int?) {
     super.onProgressUpdate(*values)
     uiCallbacks.onProgressUpdate(values[0])
-
   }
 
   override fun onCancelled() {
@@ -40,13 +39,13 @@ class CsvExportAsyncTask(
   override fun doInBackground(vararg params: Context?): Void? {
     params[0]?.let { context ->
       val csvExporter = CsvExporter(
-          context,
-          { progress ->
-            onProgressUpdate(progress)
-          },
-          {
-            cancel(true)
-          }
+        context,
+        { progress ->
+          onProgressUpdate(progress)
+        },
+        {
+          cancel(true)
+        }
       )
 
       csvExporter.export(pagedEntriesControl)

@@ -79,13 +79,13 @@ class CsvEntryTest {
   @Test
   fun `meaning, when more than one sense but more than one part of speech, returns the parts of speech followed by a numbered list of senses`() {
     val entryWithOneSense = makeEntry(
-        "ねこ", "猫", makeSense("cat", "n"), makeSense("a pretty cat"),
-        makeSense("to do cat things", "v1")
+      "ねこ", "猫", makeSense("cat", "n"), makeSense("a pretty cat"),
+      makeSense("to do cat things", "v1")
     )
     val csvEntry = CsvEntry(entryWithOneSense, senseDisplay)
     assertThat(
-        csvEntry.meaning(),
-        `is`("Noun<br/>1. cat<br/>2. a pretty cat<br/>Verb<br/>1. to do cat things<br/>")
+      csvEntry.meaning(),
+      `is`("Noun<br/>1. cat<br/>2. a pretty cat<br/>Verb<br/>1. to do cat things<br/>")
     )
   }
 
@@ -107,12 +107,14 @@ class CsvEntryTest {
     gloss: String,
     partsOfSpeech: String? = null
   ): SenseWithCrossReferences {
-    return SenseWithCrossReferences(Sense(
+    return SenseWithCrossReferences(
+      Sense(
         0,
         0,
         partsOfSpeech,
         gloss
-    ))
+      )
+    )
   }
 
   private fun makeEntry(
@@ -127,12 +129,12 @@ class CsvEntryTest {
     }
 
     return EntryWithAllSenses(
-        Entry(
-            0,
-            kanji,
-            reading
-        ),
-        finalSenses
+      Entry(
+        0,
+        kanji,
+        reading
+      ),
+      finalSenses
     )
   }
 }

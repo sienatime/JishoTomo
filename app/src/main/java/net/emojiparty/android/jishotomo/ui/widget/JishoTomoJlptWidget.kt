@@ -26,7 +26,7 @@ class JishoTomoJlptWidget : AppWidgetProvider() {
   override fun onEnabled(context: Context) {
     super.onEnabled(context)
     getAnalyticsLoggerFromContext(context)
-        .logAddWidget()
+      .logAddWidget()
   }
 
   override fun onUpdate(
@@ -59,15 +59,15 @@ class JishoTomoJlptWidget : AppWidgetProvider() {
       val appRepo = AppRepository()
       appRepo.getRandomEntryByJlptLevel(selectedLevel) { entry: SearchResultEntry ->
         val views = configureViewWithEntry(
-            selectedLevel, entry, context, appWidgetId
+          selectedLevel, entry, context, appWidgetId
         )
         appWidgetManager.updateAppWidget(appWidgetId, views)
         getAnalyticsLoggerFromContext(context)
-            .logWidgetUpdated(
-                selectedLevel,
-                entry.id,
-                entry.kanjiOrReading()
-            )
+          .logWidgetUpdated(
+            selectedLevel,
+            entry.id,
+            entry.kanjiOrReading()
+          )
       }
     }
 
@@ -102,8 +102,8 @@ class JishoTomoJlptWidget : AppWidgetProvider() {
         this.putExtra(DefinitionFragment.ENTRY_ID_EXTRA, entry.id)
       }
       return TaskStackBuilder.create(context)
-          .addNextIntentWithParentStack(appIntent)
-          .getPendingIntent(appWidgetId, PendingIntent.FLAG_UPDATE_CURRENT)
+        .addNextIntentWithParentStack(appIntent)
+        .getPendingIntent(appWidgetId, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     private fun getAnalyticsLoggerFromContext(context: Context): AnalyticsLogger {

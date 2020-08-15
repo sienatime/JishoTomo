@@ -16,7 +16,7 @@ class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: 
   fun meaning(): String {
     val builder = StringBuilder()
     val numberOfSenses = entry.senses.size
-    var glossIndex = 1;
+    var glossIndex = 1
     for (i in 0 until numberOfSenses) {
       val sense = entry.senses[i]
 
@@ -66,9 +66,9 @@ class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: 
       }
 
       addKanjiReadingPair(
-          builder,
-          kanjiToken,
-          readingToken
+        builder,
+        kanjiToken,
+        readingToken
       )
     }
 

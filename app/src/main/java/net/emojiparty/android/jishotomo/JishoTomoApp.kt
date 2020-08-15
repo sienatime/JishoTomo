@@ -14,8 +14,8 @@ class JishoTomoApp : Application() {
   override fun onCreate() {
     super.onCreate()
     appComponent = DaggerAppComponent.builder()
-        .roomModule(RoomModule(this))
-        .build()
+      .roomModule(RoomModule(this))
+      .build()
     analyticsLogger = AnalyticsLogger(this.applicationContext)
     analyticsLogger.logAppOpenEvent()
   }

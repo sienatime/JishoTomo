@@ -13,15 +13,15 @@ import net.emojiparty.android.jishotomo.data.room.Entry
 object JishoTomoTestUtils {
   fun openDrawer() {
     onView(withId(id.drawer_layout))
-        .perform(open())
+      .perform(open())
     onView(withId(id.drawer_layout))
-        .check(matches(isOpen()))
+      .check(matches(isOpen()))
   }
 
   fun clickDrawerItem(nav_id: Int) {
     openDrawer()
     onView(withId(id.nav_view))
-        .perform(NavigationViewActions.navigateTo(nav_id))
+      .perform(NavigationViewActions.navigateTo(nav_id))
   }
 
   fun addFavoriteEntry(kanji: String) {

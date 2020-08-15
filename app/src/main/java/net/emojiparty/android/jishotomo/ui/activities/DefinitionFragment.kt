@@ -29,7 +29,7 @@ class DefinitionFragment : Fragment() {
     savedInstanceState: Bundle?
   ): View? {
     val binding = DataBindingUtil.inflate<ViewDataBinding>(
-        inflater, layout.fragment_definition, container, false
+      inflater, layout.fragment_definition, container, false
     )
     val root = binding.root
     binding.lifecycleOwner = activity
@@ -53,20 +53,22 @@ class DefinitionFragment : Fragment() {
 
       val viewModel: EntryViewModel by viewModels()
       viewModel
-          .entryLiveData(viewLifecycleOwner, entryId)
-          .observe(viewLifecycleOwner, Observer { entry: EntryWithAllSenses ->
+        .entryLiveData(viewLifecycleOwner, entryId)
+        .observe(
+          viewLifecycleOwner,
+          Observer { entry: EntryWithAllSenses ->
             binding.setVariable(BR.presenter, entry)
             adapter.setItems(getPresenters(entry.senses))
             analyticsLogger.logViewItem(entry.entry.id, entry.kanjiOrReading)
-        }
-      )
+          }
+        )
     } else {
       no_entry_textview.visibility = View.VISIBLE
     }
   }
 
   private fun getPresenters(senses: List<SenseWithCrossReferences>): List<SensePresenter?> {
-    return  senses.map { SensePresenter(it) }
+    return senses.map { SensePresenter(it) }
   }
 
   private fun findEntryId(bundle: Bundle?): Int {

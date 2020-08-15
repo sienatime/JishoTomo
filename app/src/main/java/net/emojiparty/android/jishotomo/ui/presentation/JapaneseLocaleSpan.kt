@@ -22,7 +22,7 @@ object JapaneseLocaleSpan {
     val defaultLocaleLength = defaultLocaleText.length
     spannableString.setSpan(LocaleSpan(Locale.getDefault()), 0, defaultLocaleLength, 0)
     spannableString.setSpan(
-        LocaleSpan(Locale.JAPANESE), defaultLocaleLength + 1, spannableString.length, 0
+      LocaleSpan(Locale.JAPANESE), defaultLocaleLength + 1, spannableString.length, 0
     )
     return spannableString
   }

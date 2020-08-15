@@ -15,10 +15,10 @@ data class SearchResultEntry(
   @ColumnInfo(name = "primary_reading") var primaryReading: String
 ) {
   @Relation(
-      parentColumn = "id",
-      entityColumn = "entry_id",
-      entity = Sense::class,
-      projection = ["glosses"]
+    parentColumn = "id",
+    entityColumn = "entry_id",
+    entity = Sense::class,
+    projection = ["glosses"]
   )
   var glosses: List<String> = emptyList()
 

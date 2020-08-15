@@ -16,9 +16,9 @@ class CallbackDialog(
   // https://developer.android.com/guide/topics/ui/dialogs
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     return Builder(requireActivity())
-        .setMessage(dialogText)
-        .setPositiveButton(confirmText) { _: DialogInterface?, _: Int -> onConfirm() }
-        .setNegativeButton(string.cancel, null)
-        .create()
+      .setMessage(dialogText)
+      .setPositiveButton(confirmText) { _: DialogInterface?, _: Int -> onConfirm() }
+      .setNegativeButton(string.cancel, null)
+      .create()
   }
 }

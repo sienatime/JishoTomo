@@ -33,11 +33,12 @@ class CsvExporter(
       for (i in 0 until totalCount) {
         val entry = entries[i]
         writer.writeNext(
-            CsvEntry(
-                entry!!,
-                SenseDisplay(AndroidResourceFetcher(context.resources), context.packageName
+          CsvEntry(
+            entry!!,
+            SenseDisplay(
+              AndroidResourceFetcher(context.resources), context.packageName
             )
-            ).toArray()
+          ).toArray()
         )
         onUpdateProgress((i + 1) * 100 / totalCount)
       }
@@ -53,7 +54,7 @@ class CsvExporter(
       is PagedEntriesControl.Favorites -> appRepo.getAllFavorites()
       is PagedEntriesControl.JLPT -> appRepo.getAllByJlptLevel(pagedEntriesControl.level)
       else -> throw CsvForbiddenExportTypeException(
-          "Not allowed to export this kind of list! ${pagedEntriesControl.name}"
+        "Not allowed to export this kind of list! ${pagedEntriesControl.name}"
       )
     }
   }
@@ -61,13 +62,13 @@ class CsvExporter(
   @Throws(IOException::class)
   private fun semicolonSeparatedWriter(csv: String): CSVWriter {
     return CSVWriter(
-        FileWriter(csv), ';', CSVWriter.NO_QUOTE_CHARACTER,
-        CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END
+      FileWriter(csv), ';', CSVWriter.NO_QUOTE_CHARACTER,
+      CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END
     )
   }
 
   internal inner class CsvForbiddenExportTypeException(message: String?) : RuntimeException(
-      message
+    message
   )
 
   companion object {
@@ -75,5 +76,4 @@ class CsvExporter(
       return context.getExternalFilesDir("csv_export").toString() + "/jisho_tomo_export.csv"
     }
   }
-
 }

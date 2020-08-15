@@ -41,24 +41,24 @@ class RoomModule @Singleton constructor(application: Application?) {
 
   init {
     db = Room.databaseBuilder(application!!, AppDatabase::class.java, databaseName())
-        .createFromAsset("databases/$databaseFileName")
-        .addMigrations(object : Migration(1, 2) {
-          override fun migrate(database: SupportSQLiteDatabase) {
-            database.execSQL("ALTER TABLE entries ADD COLUMN favorited INTEGER")
-          }
-        })
-        .addMigrations(object : Migration(2, 3) {
-          override fun migrate(database: SupportSQLiteDatabase) {
-            database.execSQL(
-                "CREATE VIRTUAL TABLE IF NOT EXISTS `entriesFts` USING FTS4(`primary_kanji`, `primary_reading`, `other_kanji`, `other_readings`, content=`entries`)"
-            )
-            database.execSQL(
-                "CREATE VIRTUAL TABLE IF NOT EXISTS `sensesFts` USING FTS4(`glosses`, content=`senses`)"
-            )
-            database.execSQL("INSERT INTO entriesFts(entriesFts) VALUES ('rebuild')")
-            database.execSQL("INSERT INTO sensesFts(sensesFts) VALUES ('rebuild')")
-          }
-        })
-        .build()
+      .createFromAsset("databases/$databaseFileName")
+      .addMigrations(object : Migration(1, 2) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+          database.execSQL("ALTER TABLE entries ADD COLUMN favorited INTEGER")
+        }
+      })
+      .addMigrations(object : Migration(2, 3) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+          database.execSQL(
+            "CREATE VIRTUAL TABLE IF NOT EXISTS `entriesFts` USING FTS4(`primary_kanji`, `primary_reading`, `other_kanji`, `other_readings`, content=`entries`)"
+          )
+          database.execSQL(
+            "CREATE VIRTUAL TABLE IF NOT EXISTS `sensesFts` USING FTS4(`glosses`, content=`senses`)"
+          )
+          database.execSQL("INSERT INTO entriesFts(entriesFts) VALUES ('rebuild')")
+          database.execSQL("INSERT INTO sensesFts(sensesFts) VALUES ('rebuild')")
+        }
+      })
+      .build()
   }
 }

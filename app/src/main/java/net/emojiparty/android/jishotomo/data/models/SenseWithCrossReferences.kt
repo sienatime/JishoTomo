@@ -10,5 +10,4 @@ data class SenseWithCrossReferences(
   // TODO do i need this class??
   @Ignore
   var crossReferences: List<CrossReferencedEntry> = emptyList()
-
 }

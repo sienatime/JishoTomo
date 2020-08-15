@@ -19,7 +19,6 @@ class CJKUtilTest {
   @Test
   fun `isKana, when given some kana in between, returns true`() {
     assertThat(CJKUtil.isKana(12500), `is`(true))
-
   }
 
   @Test

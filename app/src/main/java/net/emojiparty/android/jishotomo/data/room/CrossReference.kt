@@ -8,8 +8,8 @@ import androidx.room.PrimaryKey
 import net.emojiparty.android.jishotomo.data.models.PrimaryOnlyEntry
 
 @Entity(
-    tableName = "cross_references",
-    indices = [Index("sense_id")]
+  tableName = "cross_references",
+  indices = [Index("sense_id")]
 )
 data class CrossReference(
   @PrimaryKey var id: Int = 0,

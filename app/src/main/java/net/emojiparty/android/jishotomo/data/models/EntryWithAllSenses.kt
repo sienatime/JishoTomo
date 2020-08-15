@@ -53,9 +53,9 @@ data class EntryWithAllSenses(
   fun toggleFavorite(context: Context) {
     appRepository.toggleFavorite(entry)
     getAnalyticsLogger(context).logToggleFavoriteEvent(
-        entry.id,
-        kanjiOrReading,
-        !entry.isFavorited()
+      entry.id,
+      kanjiOrReading,
+      !entry.isFavorited()
     )
   }
 

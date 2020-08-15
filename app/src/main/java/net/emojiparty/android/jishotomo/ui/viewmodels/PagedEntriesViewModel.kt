@@ -17,7 +17,7 @@ class PagedEntriesViewModel : ViewModel() {
   init {
     val appRepo = AppRepository()
     entries = Transformations.switchMap(
-        pagedEntriesControlLiveData
+      pagedEntriesControlLiveData
     ) { pagedEntriesControl: PagedEntriesControl ->
       this.pagedEntriesControl = pagedEntriesControl
 
