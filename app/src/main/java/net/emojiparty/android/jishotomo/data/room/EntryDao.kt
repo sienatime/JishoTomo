@@ -13,7 +13,7 @@ import org.jetbrains.annotations.TestOnly
 @Dao
 interface EntryDao {
   @Update
-  fun updateEntry(entry: Entry)
+  suspend fun updateEntry(entry: Entry)
 
   @Transaction
   @Query("SELECT * FROM entries WHERE entries.id = :id LIMIT 1")
@@ -70,8 +70,8 @@ interface EntryDao {
   @Query(
     "SELECT id, primary_kanji, primary_reading FROM entries WHERE jlpt_level = :level ORDER BY id ASC LIMIT 1 OFFSET :offset"
   )
-  fun randomByJlptLevel(level: Int, offset: Int): SearchResultEntry
+  suspend fun randomByJlptLevel(level: Int, offset: Int): SearchResultEntry
 
   @Query("SELECT COUNT(id) FROM entries WHERE jlpt_level = :level")
-  fun getJlptLevelCount(level: Int): Int
+  suspend fun getJlptLevelCount(level: Int): Int
 }

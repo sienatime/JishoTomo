@@ -8,6 +8,7 @@ import android.content.Intent
 import android.view.View
 import android.widget.RemoteViews
 import androidx.core.app.TaskStackBuilder
+import kotlinx.coroutines.runBlocking
 import net.emojiparty.android.jishotomo.JishoTomoApp
 import net.emojiparty.android.jishotomo.R.id
 import net.emojiparty.android.jishotomo.R.layout
@@ -57,18 +58,21 @@ class JishoTomoJlptWidget : AppWidgetProvider() {
     ) {
       val selectedLevel = JishoTomoJlptWidgetConfigureActivity.loadJlptLevelPref(context, appWidgetId)
       val appRepo = AppRepository()
-      appRepo.getRandomEntryByJlptLevel(selectedLevel) { entry: SearchResultEntry ->
-        val views = configureViewWithEntry(
-          selectedLevel, entry, context, appWidgetId
-        )
-        appWidgetManager.updateAppWidget(appWidgetId, views)
-        getAnalyticsLoggerFromContext(context)
-          .logWidgetUpdated(
-            selectedLevel,
-            entry.id,
-            entry.kanjiOrReading()
-          )
+      val entry = runBlocking {
+        appRepo.getRandomEntryByJlptLevel(selectedLevel)
       }
+
+      val views = configureViewWithEntry(
+        selectedLevel, entry, context, appWidgetId
+      )
+
+      appWidgetManager.updateAppWidget(appWidgetId, views)
+      getAnalyticsLoggerFromContext(context)
+        .logWidgetUpdated(
+          selectedLevel,
+          entry.id,
+          entry.kanjiOrReading()
+        )
     }
 
     private fun configureViewWithEntry(

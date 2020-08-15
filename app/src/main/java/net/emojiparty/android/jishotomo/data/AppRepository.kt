@@ -1,6 +1,5 @@
 package net.emojiparty.android.jishotomo.data
 
-import android.os.AsyncTask
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -86,15 +85,11 @@ class AppRepository {
     return entryDao.getAllByJlptLevel(jlptLevel)
   }
 
-  fun getRandomEntryByJlptLevel(
-    level: Int,
-    onLoaded: (entry: SearchResultEntry) -> Unit
-  ) {
-    AsyncTask.execute {
-      val jlptCount = entryDao.getJlptLevelCount(level)
-      val entry = entryDao.randomByJlptLevel(level, randomOffset(jlptCount))
-      onLoaded(entry)
-    }
+  suspend fun getRandomEntryByJlptLevel(
+    level: Int
+  ): SearchResultEntry {
+    val jlptCount = entryDao.getJlptLevelCount(level)
+    return entryDao.randomByJlptLevel(level, randomOffset(jlptCount))
   }
 
   private fun randomOffset(count: Int): Int {
@@ -103,8 +98,8 @@ class AppRepository {
   }
 
   fun toggleFavorite(entry: Entry) {
-    AsyncTask.execute {
-      entry.toggleFavorited()
+    entry.toggleFavorited()
+    GlobalScope.launch {
       entryDao.updateEntry(entry)
     }
   }
