@@ -83,18 +83,14 @@ class AppRepository {
     return entryDao.getAllByJlptLevel(jlptLevel)
   }
 
-  interface OnDataLoaded {
-    fun success(entry: SearchResultEntry)
-  }
-
   fun getRandomEntryByJlptLevel(
     level: Int,
-    callback: OnDataLoaded
+    onLoaded: (entry: SearchResultEntry) -> Unit
   ) {
     AsyncTask.execute {
       val jlptCount = entryDao.getJlptLevelCount(level)
       val entry = entryDao.randomByJlptLevel(level, randomOffset(jlptCount))
-      callback.success(entry)
+      onLoaded(entry)
     }
   }
 
