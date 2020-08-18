@@ -6,6 +6,14 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.util.Date
 
+/**
+ * An Entry has many Senses, which can be thought of like a definition.
+ *
+ * Ex. an entry with the kanji 行けない and reading いけない has several meanings:
+ * 1. wrong, not good, of no use
+ * 2. hopeless, past hope
+ * 3. must not do
+ */
 @Entity(tableName = "entries", indices = [Index("jlpt_level")])
 data class Entry(
   @PrimaryKey val id: Int,

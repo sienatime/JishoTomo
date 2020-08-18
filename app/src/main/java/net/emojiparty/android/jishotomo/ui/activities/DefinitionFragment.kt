@@ -52,6 +52,7 @@ class DefinitionFragment : Fragment() {
     if (entryId != ENTRY_EMPTY) {
 
       val viewModel: EntryViewModel by viewModels()
+
       viewModel
         .entryLiveData(entryId)
         .observe(
