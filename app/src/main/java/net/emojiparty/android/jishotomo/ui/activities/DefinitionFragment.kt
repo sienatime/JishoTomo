@@ -54,7 +54,7 @@ class DefinitionFragment : Fragment() {
       val viewModel: EntryViewModel by viewModels()
 
       viewModel
-        .entryLiveData(entryId)
+        .entryLiveData(viewLifecycleOwner, entryId)
         .observe(
           viewLifecycleOwner,
           Observer { entry: EntryWithAllSenses ->

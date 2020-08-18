@@ -1,5 +1,6 @@
 package net.emojiparty.android.jishotomo.data.room
 
+import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
 import androidx.room.Dao
 import androidx.room.Query
@@ -16,7 +17,7 @@ interface EntryDao {
 
   @Transaction
   @Query("SELECT * FROM entries WHERE entries.id = :id LIMIT 1")
-  suspend fun getEntryById(id: Int): EntryWithAllSenses
+  fun getEntryById(id: Int): LiveData<EntryWithAllSenses>
 
   @Transaction
   @Query("SELECT id, primary_kanji, primary_reading FROM entries ORDER BY id ASC")

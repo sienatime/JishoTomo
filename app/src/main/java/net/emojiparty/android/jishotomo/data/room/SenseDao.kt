@@ -1,5 +1,6 @@
 package net.emojiparty.android.jishotomo.data.room
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Query
 import net.emojiparty.android.jishotomo.data.models.CrossReferencedEntry
@@ -15,5 +16,5 @@ interface SenseDao {
       "  JOIN entries AS xRefEntries ON xRefSenses.entry_id = xRefEntries.id" +
       "  WHERE mainSenses.entry_id = :entryId"
   )
-  suspend fun getCrossReferencedEntries(entryId: Int): List<CrossReferencedEntry>
+  fun getCrossReferencedEntries(entryId: Int): LiveData<List<CrossReferencedEntry>>
 }
