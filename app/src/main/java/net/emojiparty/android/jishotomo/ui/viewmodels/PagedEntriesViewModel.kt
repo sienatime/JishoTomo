@@ -10,17 +10,31 @@ import net.emojiparty.android.jishotomo.data.models.SearchResultEntry
 
 class PagedEntriesViewModel : ViewModel() {
 
-  val entries: LiveData<PagedList<SearchResultEntry>>
-  val pagedEntriesControlLiveData = MutableLiveData<PagedEntriesControl>()
-  lateinit var pagedEntriesControl: PagedEntriesControl
+  private val entries: LiveData<PagedList<SearchResultEntry>>
+  private val pagedEntriesControl = MutableLiveData<PagedEntriesControl>()
+
+  fun getPagedEntriesControl(): PagedEntriesControl {
+    return pagedEntriesControl.value ?: PagedEntriesControl.Browse
+  }
+
+  fun setPagedEntriesControl(pagedEntriesControl: PagedEntriesControl) {
+    this.pagedEntriesControl.value = pagedEntriesControl
+  }
+
+  fun getEntries(): LiveData<PagedList<SearchResultEntry>> = entries
+
+  fun isFavorites(): Boolean = pagedEntriesControl.value is PagedEntriesControl.Favorites
+
+  fun isJlpt(): Boolean = pagedEntriesControl.value is PagedEntriesControl.JLPT
+
+  fun isSearch(): Boolean = pagedEntriesControl.value is PagedEntriesControl.Search
 
   init {
     val appRepo = AppRepository()
-    entries = Transformations.switchMap(
-      pagedEntriesControlLiveData
-    ) { pagedEntriesControl: PagedEntriesControl ->
-      this.pagedEntriesControl = pagedEntriesControl
 
+    entries = Transformations.switchMap(
+      pagedEntriesControl
+    ) { pagedEntriesControl: PagedEntriesControl ->
       return@switchMap when (pagedEntriesControl) {
         is PagedEntriesControl.Search -> appRepo.search(pagedEntriesControl.searchTerm)
         is PagedEntriesControl.Favorites -> appRepo.getFavorites()

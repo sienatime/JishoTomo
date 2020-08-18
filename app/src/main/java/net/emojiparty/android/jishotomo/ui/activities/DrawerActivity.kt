@@ -162,7 +162,7 @@ class DrawerActivity :
 
   // Paging library reference https://developer.android.com/topic/libraries/architecture/paging
   private fun setupRecyclerView() {
-    viewModel.entries.observe(
+    viewModel.getEntries().observe(
       this,
       Observer<PagedList<SearchResultEntry>> { entries: PagedList<SearchResultEntry> ->
         loading.visibility = View.INVISIBLE
@@ -183,7 +183,7 @@ class DrawerActivity :
   }
 
   private fun noResultsText(): String {
-    return when (val control = viewModel.pagedEntriesControl) {
+    return when (val control = viewModel.getPagedEntriesControl()) {
       is PagedEntriesControl.Favorites -> getString(string.no_favorites)
       is PagedEntriesControl.Search -> String.format(
         getString(string.no_search_results), control.searchTerm
@@ -210,12 +210,12 @@ class DrawerActivity :
 
   override fun onSaveInstanceState(outState: Bundle) {
 
-    when (val control = viewModel.pagedEntriesControl) {
+    when (val control = viewModel.getPagedEntriesControl()) {
       is PagedEntriesControl.JLPT -> outState.putInt(STATE_JLPT_LEVEL, control.level)
       is PagedEntriesControl.Search -> outState.putString(STATE_SEARCH_TERM, control.searchTerm)
     }
 
-    outState.putString(STATE_SEARCH_TYPE, viewModel.pagedEntriesControl.name)
+    outState.putString(STATE_SEARCH_TYPE, viewModel.getPagedEntriesControl().name)
 
     outState.putInt(STATE_LAST_ENTRY_VIEWED, lastEntryViewed)
     super.onSaveInstanceState(outState)
@@ -230,9 +230,8 @@ class DrawerActivity :
   }
 
   override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-    val hasFavorites = viewModel.pagedEntriesControl is PagedEntriesControl.Favorites && adapter!!.itemCount > 0
-    val isJlpt = viewModel.pagedEntriesControl is PagedEntriesControl.JLPT
-    MenuButtons.setExportVisibility(menu, hasFavorites || isJlpt)
+    val hasFavorites = viewModel.isFavorites() && adapter!!.itemCount > 0
+    MenuButtons.setExportVisibility(menu, hasFavorites || viewModel.isJlpt())
     MenuButtons.setUnfavoriteAllVisibility(menu, hasFavorites)
     return true
   }
@@ -251,7 +250,7 @@ class DrawerActivity :
       }
 
       override fun onViewDetachedFromWindow(view: View) {
-        if (viewModel.pagedEntriesControl is PagedEntriesControl.Search) {
+        if (viewModel.isSearch()) {
           // we performed a search, so hide the other buttons
           // (have to do this here because calling invalidateOptionsMenu while search input is open
           // makes the search input close)
@@ -271,7 +270,7 @@ class DrawerActivity :
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     val favoritesMenu = FavoritesMenu((application as JishoTomoApp).analyticsLogger)
     if (item.itemId == id.menu_export) {
-      favoritesMenu.explainCsvExport(this, viewModel.pagedEntriesControl)
+      favoritesMenu.explainCsvExport(this, viewModel.getPagedEntriesControl())
       return true
     } else if (item.itemId == id.menu_remove_all_favorites) {
       favoritesMenu.explainUnfavoriteAll(this)
@@ -294,7 +293,7 @@ class DrawerActivity :
     clearDefinitionBackstack()
     no_results.visibility = View.GONE
     loading.visibility = View.VISIBLE
-    viewModel.pagedEntriesControlLiveData.value = pagedEntriesControl
+    viewModel.setPagedEntriesControl(pagedEntriesControl)
     invalidateOptionsMenu()
     analyticsLogger.logSearchResultsOrViewItemList(pagedEntriesControl)
   }
