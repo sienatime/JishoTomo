@@ -10,7 +10,7 @@ import net.emojiparty.android.jishotomo.ext.splitAndJoin
 data class EntryWithAllSenses(
   @Embedded var entry: Entry,
   @Relation(parentColumn = "id", entityColumn = "entry_id", entity = Sense::class)
-  var senses: List<SenseWithCrossReferences> = emptyList()
+  var senses: List<Sense> = emptyList()
 ) : BasicEntry() {
 
   @Ignore override var primaryKanji = entry.primaryKanji

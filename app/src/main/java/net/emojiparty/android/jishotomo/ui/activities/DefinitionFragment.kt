@@ -18,7 +18,7 @@ import net.emojiparty.android.jishotomo.R
 import net.emojiparty.android.jishotomo.R.layout
 import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger
 import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses
-import net.emojiparty.android.jishotomo.data.models.SenseWithCrossReferences
+import net.emojiparty.android.jishotomo.data.room.Sense
 import net.emojiparty.android.jishotomo.ui.adapters.DataBindingAdapter
 import net.emojiparty.android.jishotomo.ui.presentation.SensePresenter
 import net.emojiparty.android.jishotomo.ui.viewmodels.EntryViewModel
@@ -73,7 +73,7 @@ class DefinitionFragment : Fragment() {
     }
   }
 
-  private fun getPresenters(senses: List<SenseWithCrossReferences>): List<SensePresenter?> {
+  private fun getPresenters(senses: List<Sense>): List<SensePresenter?> {
     return senses.map { SensePresenter(it) }
   }
 

@@ -2,8 +2,10 @@ package net.emojiparty.android.jishotomo.data.room
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import net.emojiparty.android.jishotomo.data.models.CrossReferencedEntry
 
 /**
  * A Sense is like a definition, but is also self-referential,
@@ -15,10 +17,12 @@ import androidx.room.PrimaryKey
  */
 @Entity(tableName = "senses", indices = [Index("entry_id")])
 data class Sense(
-  @PrimaryKey val id: Int,
-  @ColumnInfo(name = "entry_id") val entryId: Int,
-  @ColumnInfo(name = "parts_of_speech") val partsOfSpeech: String? = null,
-  val glosses: String,
-  @ColumnInfo(name = "applies_to") val appliesTo: String? = null,
-  @ColumnInfo(name = "cross_references") val crossReferences: String? = null
-)
+  @PrimaryKey var id: Int,
+  @ColumnInfo(name = "entry_id") var entryId: Int,
+  @ColumnInfo(name = "parts_of_speech") var partsOfSpeech: String? = null,
+  var glosses: String,
+  @ColumnInfo(name = "applies_to") var appliesTo: String? = null,
+  @ColumnInfo(name = "cross_references") var _crossReferences: String? = null
+) {
+  @Ignore var crossReferences: List<CrossReferencedEntry> = emptyList()
+}

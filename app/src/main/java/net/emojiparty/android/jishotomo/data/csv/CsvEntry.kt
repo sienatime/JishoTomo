@@ -19,7 +19,7 @@ class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: 
     var glossIndex = 1
 
     entry.senses.forEach { sense ->
-      val newPartOfSpeech = appendPartsOfSpeech(builder, sense.sense)
+      val newPartOfSpeech = appendPartsOfSpeech(builder, sense)
       if (newPartOfSpeech) {
         glossIndex = 1
       }
@@ -28,7 +28,7 @@ class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: 
         builder.append(". ")
         glossIndex++
       }
-      builder.append(sense.sense.glosses.splitAndJoin())
+      builder.append(sense.glosses.splitAndJoin())
       builder.append("<br/>")
     }
     return builder.toString()

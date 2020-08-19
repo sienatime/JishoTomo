@@ -2,7 +2,6 @@ package net.emojiparty.android.jishotomo
 
 import net.emojiparty.android.jishotomo.data.csv.CsvEntry
 import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses
-import net.emojiparty.android.jishotomo.data.models.SenseWithCrossReferences
 import net.emojiparty.android.jishotomo.data.room.Entry
 import net.emojiparty.android.jishotomo.data.room.Sense
 import net.emojiparty.android.jishotomo.ui.presentation.SenseDisplay
@@ -106,21 +105,19 @@ class CsvEntryTest {
   private fun makeSense(
     gloss: String,
     partsOfSpeech: String? = null
-  ): SenseWithCrossReferences {
-    return SenseWithCrossReferences(
-      Sense(
+  ): Sense {
+    return Sense(
         0,
         0,
         partsOfSpeech,
         gloss
       )
-    )
   }
 
   private fun makeEntry(
     reading: String,
     kanji: String? = null,
-    vararg senses: SenseWithCrossReferences
+    vararg senses: Sense
   ): EntryWithAllSenses {
     val finalSenses = if (senses.isNotEmpty()) {
       senses.toList()

@@ -113,7 +113,7 @@ class AppRepository {
       Observer { crossReferencedEntries: List<CrossReferencedEntry> ->
         val hashMap = crossReferenceHash(crossReferencedEntries)
         entry.senses.forEach { sense ->
-          hashMap[sense.sense.id]?.let {
+          hashMap[sense.id]?.let {
             sense.crossReferences = it
           }
         }
