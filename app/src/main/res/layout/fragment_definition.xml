@@ -172,7 +172,6 @@
         android:layout_margin="@dimen/fab_margin"
         app:elevation="@dimen/fab_elevation"
         android:contentDescription="@{presenter.entry.isFavorited() ? @string/remove_from_favorites : @string/add_to_favorites }"
-        android:onClick="@{() -> presenter.toggleFavorite(context)}"
         android:src="@{presenter.entry.isFavorited() ? @drawable/ic_star : @drawable/ic_star_border }"
         />
   </FrameLayout>

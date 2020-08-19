@@ -7,6 +7,9 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import net.emojiparty.android.jishotomo.R.id
 import net.emojiparty.android.jishotomo.R.string
 import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger
@@ -25,15 +28,16 @@ class FavoritesMenu(
   fun explainUnfavoriteAll(activity: FragmentActivity) {
     val dialog = CallbackDialog(
       string.explain_unfavorite_all,
-      string.okay,
-      ::unfavoriteAll
-    )
+      string.okay
+    ) { unfavoriteAll(activity.lifecycleScope) }
     dialog.show(activity.supportFragmentManager, "unfavorite_all_explain")
   }
 
-  private fun unfavoriteAll() {
-    AppRepository().unfavoriteAll()
-    analyticsLogger.logUnfavoriteAll()
+  private fun unfavoriteAll(scope: CoroutineScope) {
+    scope.launch {
+      AppRepository().unfavoriteAll()
+      analyticsLogger.logUnfavoriteAll()
+    }
   }
 
   fun explainCsvExport(

@@ -6,8 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import net.emojiparty.android.jishotomo.JishoTomoApp
 import net.emojiparty.android.jishotomo.data.CJKUtil.isJapanese
 import net.emojiparty.android.jishotomo.data.models.CrossReferencedEntry
@@ -93,18 +91,12 @@ class AppRepository {
     return (Math.random() * max).toInt()
   }
 
-  fun toggleFavorite(entry: Entry) {
+  suspend fun toggleFavorite(entry: Entry) {
     entry.toggleFavorited()
-    GlobalScope.launch {
-      entryDao.updateEntry(entry)
-    }
+    entryDao.updateEntry(entry)
   }
 
-  fun unfavoriteAll() {
-    GlobalScope.launch {
-      entryDao.unfavoriteAll()
-    }
-  }
+  suspend fun unfavoriteAll() = entryDao.unfavoriteAll()
 
   @TestOnly
   suspend fun getEntryByKanji(kanji: String): Entry = entryDao.getEntryByKanji(kanji)

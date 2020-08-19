@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.fragment_definition.fab
 import kotlinx.android.synthetic.main.fragment_definition.no_entry_textview
 import net.emojiparty.android.jishotomo.BR
 import net.emojiparty.android.jishotomo.JishoTomoApp
@@ -61,6 +62,10 @@ class DefinitionFragment : Fragment() {
             binding.setVariable(BR.presenter, entry)
             adapter.setItems(getPresenters(entry.senses))
             analyticsLogger.logViewItem(entry.entry.id, entry.kanjiOrReading)
+
+            fab.setOnClickListener {
+              viewModel.toggleFavorite(analyticsLogger)
+            }
           }
         )
     } else {

@@ -35,12 +35,16 @@ class DefinitionActivityInstrumentedTests {
 
   @Before
   fun setup() {
-    AppRepository().unfavoriteAll()
+    runBlocking {
+      AppRepository().unfavoriteAll()
+    }
   }
 
   @After
   fun cleanup() {
-    AppRepository().unfavoriteAll()
+    runBlocking {
+      AppRepository().unfavoriteAll()
+    }
   }
 
   @Test
