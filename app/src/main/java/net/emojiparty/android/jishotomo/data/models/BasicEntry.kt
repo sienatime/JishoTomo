@@ -6,9 +6,12 @@ abstract class BasicEntry {
   abstract var primaryKanji: String?
   abstract var primaryReading: String
 
-  fun hasKanji(): Boolean = primaryKanji != null
+  val hasKanji: Boolean
+    get() = primaryKanji != null
 
-  fun kanjiOrReading(): String = if (hasKanji()) primaryKanji!! else primaryReading
+  val kanjiOrReading: String
+    get() = if (hasKanji) primaryKanji!! else primaryReading
 
-  fun reading(): String? = if (hasKanji()) primaryReading else null
+  val reading: String?
+    get() = if (hasKanji) primaryReading else null
 }

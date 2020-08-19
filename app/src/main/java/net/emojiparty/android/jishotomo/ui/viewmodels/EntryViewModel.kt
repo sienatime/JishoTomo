@@ -26,9 +26,9 @@ class EntryViewModel : ViewModel() {
       viewModelScope.launch {
         appRepository.toggleFavorite(entry.entry)
         analyticsLogger.logToggleFavoriteEvent(
-          entry.entry.id,
+          entry.id,
           entry.kanjiOrReading,
-          !entry.entry.isFavorited()
+          !entry.isFavorited
         )
       }
     }

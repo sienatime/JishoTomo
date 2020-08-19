@@ -107,7 +107,7 @@ class AppRepository {
     lifecycleOwner: LifecycleOwner
   ) {
     senseDao.getCrossReferencedEntries(
-      entry.entry.id
+      entry.id
     ).observe(
       lifecycleOwner,
       Observer { crossReferencedEntries: List<CrossReferencedEntry> ->

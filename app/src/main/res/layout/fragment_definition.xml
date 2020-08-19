@@ -58,7 +58,7 @@
             app:layout_constraintTop_toTopOf="parent"
             textInJapanese="@{presenter.getReading()}"
             tools:text="ねこじゃらし"
-            visibleOrGone="@{presenter.hasKanji()}"
+            visibleOrGone="@{presenter.hasKanji}"
             />
 
         <TextView
@@ -154,7 +154,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            jlptPill="@{presenter.entry.getJlptLevel()}"
+            jlptPill="@{presenter.getJlptLevel()}"
             tools:text="N1"
             style="@style/dark_pill"
             />
@@ -171,8 +171,8 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:elevation="@dimen/fab_elevation"
-        android:contentDescription="@{presenter.entry.isFavorited() ? @string/remove_from_favorites : @string/add_to_favorites }"
-        android:src="@{presenter.entry.isFavorited() ? @drawable/ic_star : @drawable/ic_star_border }"
+        android:contentDescription="@{presenter.isFavorited() ? @string/remove_from_favorites : @string/add_to_favorites }"
+        android:src="@{presenter.isFavorited() ? @drawable/ic_star : @drawable/ic_star_border }"
         />
   </FrameLayout>
 

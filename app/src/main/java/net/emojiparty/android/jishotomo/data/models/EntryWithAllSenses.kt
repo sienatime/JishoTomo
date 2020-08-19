@@ -11,29 +11,27 @@ data class EntryWithAllSenses(
   @Embedded var entry: Entry,
   @Relation(parentColumn = "id", entityColumn = "entry_id", entity = Sense::class)
   var senses: List<SenseWithCrossReferences> = emptyList()
-) {
+) : BasicEntry() {
 
-  val kanjiOrReading: String
-    get() = if (hasKanji()) entry.primaryKanji!! else entry.primaryReading
-
-  val reading: String?
-    get() = if (hasKanji()) entry.primaryReading else null
-
-  fun hasKanji(): Boolean {
-    return entry.primaryKanji != null
-  }
+  @Ignore override var primaryKanji = entry.primaryKanji
+  @Ignore override var primaryReading = entry.primaryReading
+  @Ignore override var id = entry.id
+  @Ignore val otherKanji = entry.otherKanji
+  @Ignore val otherReadings = entry.otherReadings
+  @Ignore val jlptLevel = entry.jlptLevel
+  @Ignore val isFavorited = entry.isFavorited()
 
   @Ignore
-  val alternateKanji: String = entry.otherKanji?.splitAndJoin() ?: ""
+  val alternateKanji: String = otherKanji?.splitAndJoin() ?: ""
 
   @Ignore
-  val alternateReadings: String = entry.otherReadings?.splitAndJoin() ?: ""
+  val alternateReadings: String = otherReadings?.splitAndJoin() ?: ""
 
   fun hasAlternateKanji(): Boolean {
-    return entry.otherKanji != null
+    return otherKanji != null
   }
 
   fun hasAlternateReadings(): Boolean {
-    return entry.otherReadings != null
+    return otherReadings != null
   }
 }

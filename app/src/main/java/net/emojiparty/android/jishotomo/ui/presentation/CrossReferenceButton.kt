@@ -19,7 +19,7 @@ class CrossReferenceButton(private val context: Context) {
     val button = Button(
       ContextThemeWrapper(context, buttonStyleId), null, buttonStyleId
     )
-    button.text = JapaneseLocaleSpan.all(crossReferencedEntry.kanjiOrReading())
+    button.text = JapaneseLocaleSpan.all(crossReferencedEntry.kanjiOrReading)
     setMargins(button)
     button.setOnClickListener {
       EntryClickHandler.open(

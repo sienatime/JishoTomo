@@ -71,7 +71,7 @@ class JishoTomoJlptWidget : AppWidgetProvider() {
         .logWidgetUpdated(
           selectedLevel,
           entry.id,
-          entry.kanjiOrReading()
+          entry.kanjiOrReading
         )
     }
 
@@ -82,10 +82,10 @@ class JishoTomoJlptWidget : AppWidgetProvider() {
       appWidgetId: Int
     ): RemoteViews {
       val views = RemoteViews(context.packageName, layout.jisho_tomo_jlpt_widget)
-      views.setTextViewText(id.widget_kanji, entry.kanjiOrReading())
-      views.setTextViewText(id.widget_reading, entry.reading())
+      views.setTextViewText(id.widget_kanji, entry.kanjiOrReading)
+      views.setTextViewText(id.widget_reading, entry.reading)
 
-      val readingVisible = if (entry.reading() == null) View.GONE else View.VISIBLE
+      val readingVisible = if (entry.reading == null) View.GONE else View.VISIBLE
       views.setViewVisibility(id.widget_reading, readingVisible)
       views.setTextViewText(id.widget_gloss, entry.getPrimaryGloss())
 

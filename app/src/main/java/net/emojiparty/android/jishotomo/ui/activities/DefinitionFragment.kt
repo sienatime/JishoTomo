@@ -61,7 +61,7 @@ class DefinitionFragment : Fragment() {
           Observer { entry: EntryWithAllSenses ->
             binding.setVariable(BR.presenter, entry)
             adapter.setItems(getPresenters(entry.senses))
-            analyticsLogger.logViewItem(entry.entry.id, entry.kanjiOrReading)
+            analyticsLogger.logViewItem(entry.id, entry.kanjiOrReading)
 
             fab.setOnClickListener {
               viewModel.toggleFavorite(analyticsLogger)

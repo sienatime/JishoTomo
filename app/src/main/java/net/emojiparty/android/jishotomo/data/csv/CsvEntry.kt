@@ -45,10 +45,10 @@ class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: 
 
   @VisibleForTesting
   fun reading(): String {
-    return if (entry.hasKanji()) {
-      formatReading(entry.entry.primaryKanji, entry.entry.primaryReading)
+    return if (entry.hasKanji) {
+      formatReading(entry.primaryKanji, entry.primaryReading)
     } else {
-      entry.entry.primaryReading
+      entry.primaryReading
     }
   }
 
