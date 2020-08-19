@@ -1,21 +1,16 @@
 package net.emojiparty.android.jishotomo.data
 
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import net.emojiparty.android.jishotomo.JishoTomoApp
 import net.emojiparty.android.jishotomo.data.CJKUtil.isJapanese
-import net.emojiparty.android.jishotomo.data.models.CrossReferencedEntry
 import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry
 import net.emojiparty.android.jishotomo.data.room.Entry
 import net.emojiparty.android.jishotomo.data.room.EntryDao
 import net.emojiparty.android.jishotomo.data.room.SenseDao
 import org.jetbrains.annotations.TestOnly
-import java.util.HashMap
 import javax.inject.Inject
 
 private const val PAGE_SIZE = 20
@@ -31,19 +26,7 @@ class AppRepository {
   @Inject
   lateinit var senseDao: SenseDao
 
-  fun getEntryWithAllSenses(
-    entryId: Int,
-    lifecycleOwner: LifecycleOwner
-  ): MutableLiveData<EntryWithAllSenses> {
-    val liveData = MutableLiveData<EntryWithAllSenses>()
-    entryDao.getEntryById(entryId).observe(
-      lifecycleOwner,
-      Observer { entry: EntryWithAllSenses ->
-        setCrossReferences(entry, liveData, lifecycleOwner)
-      }
-    )
-    return liveData
-  }
+  fun getEntryWithAllSenses(entryId: Int) = entryDao.getEntryById(entryId)
 
   fun search(term: String): LiveData<PagedList<SearchResultEntry>> {
     val unicodeCodePoint = Character.codePointAt(term, 0)
@@ -101,41 +84,5 @@ class AppRepository {
   @TestOnly
   suspend fun getEntryByKanji(kanji: String): Entry = entryDao.getEntryByKanji(kanji)
 
-  private fun setCrossReferences(
-    entry: EntryWithAllSenses,
-    liveData: MutableLiveData<EntryWithAllSenses>,
-    lifecycleOwner: LifecycleOwner
-  ) {
-    senseDao.getCrossReferencedEntries(
-      entry.id
-    ).observe(
-      lifecycleOwner,
-      Observer { crossReferencedEntries: List<CrossReferencedEntry> ->
-        val hashMap = crossReferenceHash(crossReferencedEntries)
-        entry.senses.forEach { sense ->
-          hashMap[sense.id]?.let {
-            sense.crossReferences = it
-          }
-        }
-        liveData.setValue(entry)
-      }
-    )
-  }
-
-  private fun crossReferenceHash(
-    senses: List<CrossReferencedEntry>
-  ): HashMap<Int, MutableList<CrossReferencedEntry>> {
-    val hashMap = HashMap<Int, MutableList<CrossReferencedEntry>>()
-
-    senses.forEach { crossReferencedEntry ->
-      val senseId = crossReferencedEntry.senseId
-
-      if (hashMap[senseId] == null) {
-        hashMap[senseId] = mutableListOf(crossReferencedEntry)
-      } else {
-        hashMap[senseId]!!.add(crossReferencedEntry)
-      }
-    }
-    return hashMap
-  }
+  suspend fun getCrossReferences(entryId: Int) = senseDao.getCrossReferencedEntries(entryId)
 }

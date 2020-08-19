@@ -18,7 +18,6 @@ import net.emojiparty.android.jishotomo.R
 import net.emojiparty.android.jishotomo.R.layout
 import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger
 import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses
-import net.emojiparty.android.jishotomo.data.room.Sense
 import net.emojiparty.android.jishotomo.ui.adapters.DataBindingAdapter
 import net.emojiparty.android.jishotomo.ui.presentation.SensePresenter
 import net.emojiparty.android.jishotomo.ui.viewmodels.EntryViewModel
@@ -50,31 +49,30 @@ class DefinitionFragment : Fragment() {
     sensesRecyclerView.adapter = adapter
 
     val entryId = findEntryId(bundle)
-    if (entryId != ENTRY_EMPTY) {
 
+    if (entryId != ENTRY_EMPTY) {
       val viewModel: EntryViewModel by viewModels()
 
       viewModel
-        .entryLiveData(viewLifecycleOwner, entryId)
+        .entryLiveData(entryId)
         .observe(
           viewLifecycleOwner,
           Observer { entry: EntryWithAllSenses ->
             binding.setVariable(BR.presenter, entry)
-            adapter.setItems(getPresenters(entry.senses))
-            analyticsLogger.logViewItem(entry.id, entry.kanjiOrReading)
+
+            val presenters = entry.senses.map { SensePresenter(it, viewModel.getCrossReferencesForSense(it.id)) }
+            adapter.setItems(presenters)
 
             fab.setOnClickListener {
               viewModel.toggleFavorite(analyticsLogger)
             }
+
+            analyticsLogger.logViewItem(entry.id, entry.kanjiOrReading)
           }
         )
     } else {
       no_entry_textview.visibility = View.VISIBLE
     }
-  }
-
-  private fun getPresenters(senses: List<Sense>): List<SensePresenter?> {
-    return senses.map { SensePresenter(it) }
   }
 
   private fun findEntryId(bundle: Bundle?): Int {

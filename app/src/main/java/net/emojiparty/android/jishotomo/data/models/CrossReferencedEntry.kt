@@ -7,4 +7,4 @@ data class CrossReferencedEntry(
   @ColumnInfo(name = "primary_kanji") override var primaryKanji: String?,
   @ColumnInfo(name = "primary_reading") override var primaryReading: String,
   var senseId: Int
-): BasicEntry()
+) : BasicEntry()

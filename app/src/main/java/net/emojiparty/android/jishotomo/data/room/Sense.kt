@@ -2,10 +2,8 @@ package net.emojiparty.android.jishotomo.data.room
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import net.emojiparty.android.jishotomo.data.models.CrossReferencedEntry
 
 /**
  * A Sense is like a definition, but is also self-referential,
@@ -23,6 +21,4 @@ data class Sense(
   var glosses: String,
   @ColumnInfo(name = "applies_to") var appliesTo: String? = null,
   @ColumnInfo(name = "cross_references") var _crossReferences: String? = null
-) {
-  @Ignore var crossReferences: List<CrossReferencedEntry> = emptyList()
-}
+)

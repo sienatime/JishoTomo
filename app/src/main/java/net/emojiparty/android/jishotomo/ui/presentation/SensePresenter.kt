@@ -5,7 +5,10 @@ import net.emojiparty.android.jishotomo.data.models.CrossReferencedEntry
 import net.emojiparty.android.jishotomo.data.room.Sense
 import net.emojiparty.android.jishotomo.ext.splitAndJoin
 
-class SensePresenter(private val sense: Sense) {
+class SensePresenter(
+  private val sense: Sense,
+  private val crossReferences: List<CrossReferencedEntry>
+) {
 
   fun partsOfSpeechIsVisible(): Boolean {
     return sense.partsOfSpeech != null
@@ -28,10 +31,10 @@ class SensePresenter(private val sense: Sense) {
   }
 
   fun crossReferencesIsVisible(): Boolean {
-    return sense.crossReferences.isNotEmpty()
+    return crossReferences.isNotEmpty()
   }
 
   fun crossReferenceLinks(): List<CrossReferencedEntry> {
-    return sense.crossReferences
+    return crossReferences
   }
 }

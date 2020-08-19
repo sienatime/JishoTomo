@@ -107,11 +107,11 @@ class CsvEntryTest {
     partsOfSpeech: String? = null
   ): Sense {
     return Sense(
-        0,
-        0,
-        partsOfSpeech,
-        gloss
-      )
+      0,
+      0,
+      partsOfSpeech,
+      gloss
+    )
   }
 
   private fun makeEntry(
