@@ -10,10 +10,11 @@ import net.emojiparty.android.jishotomo.ext.splitAndJoin
 //   the first Sense
 //     that Sense's glosses
 data class SearchResultEntry(
-  var id: Int,
-  @ColumnInfo(name = "primary_kanji") var primaryKanji: String?,
-  @ColumnInfo(name = "primary_reading") var primaryReading: String
-) {
+  override var id: Int,
+  @ColumnInfo(name = "primary_kanji") override var primaryKanji: String?,
+  @ColumnInfo(name = "primary_reading") override var primaryReading: String
+) : BasicEntry() {
+
   @Relation(
     parentColumn = "id",
     entityColumn = "entry_id",
@@ -23,10 +24,4 @@ data class SearchResultEntry(
   var glosses: List<String> = emptyList()
 
   fun getPrimaryGloss(): String = glosses[0].splitAndJoin()
-
-  fun hasKanji(): Boolean = primaryKanji != null
-
-  fun kanjiOrReading(): String = if (hasKanji()) primaryKanji!! else primaryReading
-
-  fun reading(): String? = if (hasKanji()) primaryReading else null
 }

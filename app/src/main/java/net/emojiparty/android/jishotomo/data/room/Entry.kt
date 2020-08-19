@@ -35,4 +35,10 @@ data class Entry(
       Date()
     }
   }
+
+  fun hasKanji(): Boolean = primaryKanji != null
+
+  fun kanjiOrReading(): String = if (hasKanji()) primaryKanji!! else primaryReading
+
+  fun reading(): String? = if (hasKanji()) primaryReading else null
 }
