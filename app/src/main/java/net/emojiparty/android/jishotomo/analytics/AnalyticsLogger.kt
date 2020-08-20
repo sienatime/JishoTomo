@@ -1,15 +1,13 @@
 package net.emojiparty.android.jishotomo.analytics
 
-import android.content.Context
-import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.FirebaseAnalytics.Event
-import com.google.firebase.analytics.FirebaseAnalytics.Param
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.ktx.Firebase
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl
 
 class AnalyticsLogger(
-  context: Context,
-  private val firebaseAnalytics: FirebaseAnalytics = FirebaseAnalytics.getInstance(context)
+  private val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
 ) {
   private val CATEGORY_ENTRY = "entry"
   private val EVENT_FAVORITE_ENTRY = "favorite_entry"
@@ -23,7 +21,7 @@ class AnalyticsLogger(
   private val PARAM_JLPT_LEVEL = "jlpt_level"
 
   fun logAppOpenEvent() {
-    firebaseAnalytics.logEvent(Event.APP_OPEN, Bundle())
+    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN) { }
   }
 
   fun logSearchResultsOrViewItemList(pagedEntriesControl: PagedEntriesControl) {
@@ -38,9 +36,11 @@ class AnalyticsLogger(
     entryId: Int,
     expression: String
   ) {
-    val bundle = entryBundle(entryId, expression)
-    bundle.putString(Param.ITEM_CATEGORY, CATEGORY_ENTRY)
-    firebaseAnalytics.logEvent(Event.VIEW_ITEM, bundle)
+    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM) {
+      param(FirebaseAnalytics.Param.ITEM_ID, entryId.toString())
+      param(FirebaseAnalytics.Param.ITEM_NAME, expression)
+      param(FirebaseAnalytics.Param.ITEM_CATEGORY, CATEGORY_ENTRY)
+    }
   }
 
   fun logToggleFavoriteEvent(
@@ -48,20 +48,25 @@ class AnalyticsLogger(
     expression: String,
     favorited: Boolean
   ) {
-    val bundle = entryBundle(entryId, expression)
     if (favorited) {
-      firebaseAnalytics.logEvent(EVENT_FAVORITE_ENTRY, bundle)
+      firebaseAnalytics.logEvent(EVENT_FAVORITE_ENTRY) {
+        param(FirebaseAnalytics.Param.ITEM_ID, entryId.toString())
+        param(FirebaseAnalytics.Param.ITEM_NAME, expression)
+      }
     } else {
-      firebaseAnalytics.logEvent(EVENT_UNFAVORITE_ENTRY, bundle)
+      firebaseAnalytics.logEvent(EVENT_UNFAVORITE_ENTRY) {
+        param(FirebaseAnalytics.Param.ITEM_ID, entryId.toString())
+        param(FirebaseAnalytics.Param.ITEM_NAME, expression)
+      }
     }
   }
 
   fun logAddWidget() {
-    firebaseAnalytics.logEvent(EVENT_ADD_WIDGET, Bundle())
+    firebaseAnalytics.logEvent(EVENT_ADD_WIDGET) { }
   }
 
   fun logDeleteWidget() {
-    firebaseAnalytics.logEvent(EVENT_REMOVE_WIDGET, Bundle())
+    firebaseAnalytics.logEvent(EVENT_REMOVE_WIDGET) { }
   }
 
   fun logWidgetUpdated(
@@ -69,47 +74,37 @@ class AnalyticsLogger(
     entryId: Int,
     expression: String
   ) {
-    val bundle = entryBundle(entryId, expression)
-    bundle.putString(PARAM_JLPT_LEVEL, jlptLevel.toString())
-    firebaseAnalytics.logEvent(EVENT_UPDATED_WIDGET, bundle)
+    firebaseAnalytics.logEvent(EVENT_UPDATED_WIDGET) {
+      param(FirebaseAnalytics.Param.ITEM_ID, entryId.toString())
+      param(FirebaseAnalytics.Param.ITEM_NAME, expression)
+      param(PARAM_JLPT_LEVEL, jlptLevel.toString())
+    }
   }
 
   fun logCsvSuccess() {
-    firebaseAnalytics.logEvent(EVENT_CSV_SUCCESS, Bundle())
+    firebaseAnalytics.logEvent(EVENT_CSV_SUCCESS) { }
   }
 
   fun logCsvFailed() {
-    firebaseAnalytics.logEvent(EVENT_CSV_FAILED, Bundle())
+    firebaseAnalytics.logEvent(EVENT_CSV_FAILED) { }
   }
 
   fun logUnfavoriteAll() {
-    firebaseAnalytics.logEvent(EVENT_UNFAVORITE_ALL, Bundle())
+    firebaseAnalytics.logEvent(EVENT_UNFAVORITE_ALL) { }
   }
 
-  private fun entryBundle(
-    entryId: Int,
-    expression: String
-  ): Bundle {
-    val bundle = Bundle()
-    bundle.putString(Param.ITEM_ID, entryId.toString())
-    bundle.putString(Param.ITEM_NAME, expression)
-    return bundle
-  }
-
-  private fun logSearchResults(pagedEntriesControl: PagedEntriesControl) {
-    val bundle = Bundle()
-    if (pagedEntriesControl is PagedEntriesControl.Search) {
-      bundle.putString(Param.SEARCH_TERM, pagedEntriesControl.searchTerm)
+  private fun logSearchResults(pagedEntriesControl: PagedEntriesControl.Search) {
+    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.VIEW_SEARCH_RESULTS) {
+      param(FirebaseAnalytics.Param.SEARCH_TERM, pagedEntriesControl.searchTerm)
     }
-    firebaseAnalytics.logEvent(Event.VIEW_SEARCH_RESULTS, bundle)
   }
 
   private fun logViewItemList(pagedEntriesControl: PagedEntriesControl) {
-    val bundle = Bundle()
-    bundle.putString(Param.ITEM_CATEGORY, pagedEntriesControl.name)
-    if (pagedEntriesControl is PagedEntriesControl.JLPT) {
-      bundle.putString(PARAM_JLPT_LEVEL, pagedEntriesControl.level.toString())
+    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM_LIST) {
+      param(FirebaseAnalytics.Param.ITEM_CATEGORY, pagedEntriesControl.name)
+      if (pagedEntriesControl is PagedEntriesControl.JLPT) {
+        param(PARAM_JLPT_LEVEL, pagedEntriesControl.level.toString())
+      }
     }
-    firebaseAnalytics.logEvent(Event.VIEW_ITEM_LIST, bundle)
   }
 }

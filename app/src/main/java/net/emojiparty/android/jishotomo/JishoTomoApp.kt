@@ -16,7 +16,7 @@ class JishoTomoApp : Application() {
     appComponent = DaggerAppComponent.builder()
       .roomModule(RoomModule(this))
       .build()
-    analyticsLogger = AnalyticsLogger(this.applicationContext)
+    analyticsLogger = AnalyticsLogger()
     analyticsLogger.logAppOpenEvent()
   }
 

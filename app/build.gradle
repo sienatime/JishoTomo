@@ -101,8 +101,8 @@ dependencies {
   kapt 'com.google.dagger:dagger-compiler:2.13'
 
   // Firebase Core and Crashlytics: Analytics, Crash Reporting
-  implementation 'com.google.firebase:firebase-crashlytics:17.1.1'
-  implementation 'com.google.firebase:firebase-analytics:17.4.4'
+  implementation 'com.google.firebase:firebase-crashlytics:17.2.1'
+  implementation 'com.google.firebase:firebase-analytics-ktx:17.5.0'
 
   // CSV export
   implementation("com.opencsv:opencsv:4.0") {
