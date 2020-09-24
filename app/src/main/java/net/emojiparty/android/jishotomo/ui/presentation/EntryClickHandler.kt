@@ -9,7 +9,7 @@ import net.emojiparty.android.jishotomo.ui.activities.DrawerActivity
 object EntryClickHandler {
   @JvmStatic
   fun open(context: Context, entryId: Int) {
-    if (context is DrawerActivity && context.fragmentContainer != null) {
+    if (context is DrawerActivity && context.isTablet()) {
       context.addDefinitionFragment(entryId)
     } else {
       val intent = Intent(context, DefinitionActivity::class.java).apply {

@@ -63,7 +63,7 @@
     <View style="@style/divider_full_height"/>
 
     <FrameLayout
-        android:id="@+id/definition_fragment_container"
+        android:id="@+id/tablet_definition_fragment_container"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="3"

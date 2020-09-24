@@ -22,10 +22,10 @@ import kotlinx.android.synthetic.main.activity_drawer.drawer_layout
 import kotlinx.android.synthetic.main.activity_drawer.nav_view
 import kotlinx.android.synthetic.main.app_bar_drawer.drawer_toolbar
 import kotlinx.android.synthetic.main.app_bar_drawer.toolbar_title
-import kotlinx.android.synthetic.main.content_drawer.definition_fragment_container
 import kotlinx.android.synthetic.main.content_drawer.loading
 import kotlinx.android.synthetic.main.content_drawer.no_results
 import kotlinx.android.synthetic.main.content_drawer.search_results_rv
+import kotlinx.android.synthetic.main.content_drawer.tablet_definition_fragment_container
 import net.emojiparty.android.jishotomo.JishoTomoApp
 import net.emojiparty.android.jishotomo.R
 import net.emojiparty.android.jishotomo.R.id
@@ -51,7 +51,7 @@ class DrawerActivity :
   private var adapter: PagedEntriesAdapter? = null
   private lateinit var analyticsLogger: AnalyticsLogger
   private var lastEntryViewed = DefinitionFragment.ENTRY_EMPTY
-  var fragmentContainer: FrameLayout? = null
+  private var tabletFragmentContainer: FrameLayout? = null
 
   private val STATE_SEARCH_TYPE = "state_search_type"
   private val STATE_SEARCH_TERM = "state_search_term"
@@ -64,7 +64,7 @@ class DrawerActivity :
     setSupportActionBar(drawer_toolbar)
     supportActionBar!!.setDisplayShowTitleEnabled(false) // I handle the title separately
 
-    fragmentContainer = definition_fragment_container
+    tabletFragmentContainer = tablet_definition_fragment_container
 
     val viewModel: PagedEntriesViewModel by viewModels()
     this.viewModel = viewModel
@@ -87,8 +87,12 @@ class DrawerActivity :
   override fun onDestroy() {
     searchViewMenuItem = null
     adapter = null
-    fragmentContainer = null
+    tabletFragmentContainer = null
     super.onDestroy()
+  }
+
+  fun isTablet(): Boolean {
+    return tabletFragmentContainer != null
   }
 
   private fun restoreFromBundle(bundle: Bundle) {
@@ -119,7 +123,7 @@ class DrawerActivity :
 
   private fun clearDefinitionBackstack() {
     // non-null on tablet
-    fragmentContainer?.let {
+    tabletFragmentContainer?.let {
       val fragmentManager = supportFragmentManager
       fragmentManager.popBackStack(
         null, FragmentManager.POP_BACK_STACK_INCLUSIVE
@@ -128,7 +132,7 @@ class DrawerActivity :
         val fragment =
           instance(DefinitionFragment.ENTRY_EMPTY)
         fragmentManager.beginTransaction()
-          .replace(id.definition_fragment_container, fragment)
+          .replace(id.tablet_definition_fragment_container, fragment)
           .commitAllowingStateLoss()
       }
     }
@@ -138,7 +142,7 @@ class DrawerActivity :
     lastEntryViewed = entryId
     val fragment = instance(entryId)
     supportFragmentManager.beginTransaction()
-      .add(id.definition_fragment_container, fragment)
+      .add(id.tablet_definition_fragment_container, fragment)
       .addToBackStack(null)
       .commit()
   }
