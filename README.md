@@ -1,4 +1,4 @@
-![Unit Tests with Gradle](https://github.com/sienatime/JishoTomo/workflows/Unit%20Tests%20with%20Gradle/badge.svg)
+![Unit Tests](https://github.com/sienatime/JishoTomo/workflows/Unit%20Tests/badge.svg)
 
 # Jisho Tomo
 
@@ -8,7 +8,7 @@ Jisho Tomo was created as part of the Android Developer Nanodegree program by Ud
 
 ## Database
 
-There is a companion Rails app also on GitHub but it's a bit of a mess. It was designed to produce the .sqlite file
+There is a companion [Rails app](https://github.com/sienatime/jmdict-rails) also on GitHub but it's a bit of a mess. It was designed to produce the .sqlite file
 that is present in this repository. 
 
 ## Attributions
