@@ -1,7 +1,7 @@
-# This workflow will run unit tests with Gradle
+# This workflow will run lint checks and unit tests with Gradle
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
 
-name: Unit Tests
+name: CI
 
 on:
   push:
@@ -28,5 +28,16 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
+    - name: Android check (lint)
+      run: ./gradlew check
+
     - name: Unit Tests
       run: ./gradlew test
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: lint-results
+        path: |
+          app/build/reports/*.html
+          app/build/reports/tests

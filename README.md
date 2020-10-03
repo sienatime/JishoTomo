@@ -1,4 +1,4 @@
-![Unit Tests](https://github.com/sienatime/JishoTomo/workflows/Unit%20Tests/badge.svg)
+![CI](https://github.com/sienatime/JishoTomo/workflows/CI/badge.svg)
 
 # Jisho Tomo
 
