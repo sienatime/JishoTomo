@@ -37,7 +37,7 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: lint-results
+        name: lint-and-test-results
         path: |
           app/build/reports/*.html
           app/build/reports/tests
