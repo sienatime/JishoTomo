@@ -16,6 +16,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import kotlinx.coroutines.runBlocking
 import net.emojiparty.android.jishotomo.R.id
 import net.emojiparty.android.jishotomo.data.AppRepository
 import net.emojiparty.android.jishotomo.ui.activities.DrawerActivity
@@ -43,13 +44,17 @@ class ExportIntentTest {
   }
 
   @Before fun checkAppLoaded() {
-    AppRepository().unfavoriteAll()
+    runBlocking {
+      AppRepository().unfavoriteAll()
+    }
     onView(withText("Jisho Tomo"))
       .check(matches(isDisplayed()))
   }
 
   @After fun cleanup() {
-    AppRepository().unfavoriteAll()
+    runBlocking {
+      AppRepository().unfavoriteAll()
+    }
   }
 
   @Test fun itCanExportFavoritesToCsv() {

@@ -19,6 +19,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
+import kotlinx.coroutines.runBlocking
 import net.emojiparty.android.jishotomo.R.id
 import net.emojiparty.android.jishotomo.R.string
 import net.emojiparty.android.jishotomo.data.AppRepository
@@ -50,14 +51,20 @@ class DrawerActivityInstrumentedTests {
   @get:Rule
   var mCountingTaskExecutorRule = CountingTaskExecutorRule()
 
-  @Before fun checkAppLoaded() {
-    AppRepository().unfavoriteAll()
+  @Before
+  fun checkAppLoaded() {
+    runBlocking {
+      AppRepository().unfavoriteAll()
+    }
     onView(withText("Jisho Tomo"))
       .check(matches(isDisplayed()))
   }
 
-  @After fun cleanup() {
-    AppRepository().unfavoriteAll()
+  @After
+  fun cleanup() {
+    runBlocking {
+      AppRepository().unfavoriteAll()
+    }
   }
 
   @Test
