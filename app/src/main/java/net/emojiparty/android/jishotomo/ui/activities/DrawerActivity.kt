@@ -127,8 +127,7 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
         null, FragmentManager.POP_BACK_STACK_INCLUSIVE
       )
       if (fragmentManager.backStackEntryCount == 0) {
-        val fragment =
-          instance(DefinitionFragment.ENTRY_EMPTY)
+        val fragment = instance(DefinitionFragment.ENTRY_EMPTY)
         fragmentManager.beginTransaction()
           .replace(id.tablet_definition_fragment_container, fragment)
           .commitAllowingStateLoss()
@@ -169,8 +168,8 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
       { entries: PagedList<SearchResultEntry> ->
         loading.visibility = View.INVISIBLE
         adapter?.submitList(entries)
+        refreshMenuItems()
         setNoResultsText(entries.size)
-        invalidateOptionsMenu()
       }
     )
   }
@@ -211,7 +210,6 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
-
     when (val control = viewModel.getPagedEntriesControl()) {
       is PagedEntriesControl.JLPT -> outState.putInt(STATE_JLPT_LEVEL, control.level)
       is PagedEntriesControl.Search -> outState.putString(STATE_SEARCH_TERM, control.searchTerm)
@@ -249,6 +247,10 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
       override fun onViewAttachedToWindow(view: View) {
         // hide other buttons while search input is open
         MenuButtons.hideExtraButtons(menu)
+        viewModel.getSearchTerm()?.let { query ->
+          searchViewMenuItem?.expandActionView()
+          searchView.setQuery(query, false)
+        }
       }
 
       override fun onViewDetachedFromWindow(view: View) {
@@ -260,7 +262,7 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
         } else {
           // refresh other menu buttons visibility based on current state, since
           // we hid the button when we opened the search input
-          invalidateOptionsMenu()
+          refreshMenuItems()
         }
       }
     })
@@ -281,6 +283,11 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
     return super.onOptionsItemSelected(item)
   }
 
+  private fun refreshMenuItems() {
+    // this calls both onCreateOptionsMenu and onPrepareOptionsMenu
+    invalidateOptionsMenu()
+  }
+
   private fun showAbout() {
     val intent = Intent(this, AboutAppActivity::class.java)
     startActivity(intent)
@@ -296,7 +303,7 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
     no_results.visibility = View.GONE
     loading.visibility = View.VISIBLE
     viewModel.setPagedEntriesControl(pagedEntriesControl)
-    invalidateOptionsMenu()
+    refreshMenuItems()
     analyticsLogger.logSearchResultsOrViewItemList(pagedEntriesControl)
   }
 
@@ -311,7 +318,7 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
 
     when {
       id == R.id.nav_search -> {
-        searchViewMenuItem!!.expandActionView()
+        openSearch()
       }
       id == R.id.nav_browse -> {
         pagedEntriesControl = PagedEntriesControl.Browse
@@ -333,6 +340,10 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
 
     closeDrawer()
     return true
+  }
+
+  private fun openSearch() {
+    searchViewMenuItem?.expandActionView()
   }
 
   private fun closeDrawer() {

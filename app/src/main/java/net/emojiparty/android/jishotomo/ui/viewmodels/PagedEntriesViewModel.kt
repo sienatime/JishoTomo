@@ -29,6 +29,10 @@ class PagedEntriesViewModel : ViewModel() {
 
   fun isSearch(): Boolean = pagedEntriesControl.value is PagedEntriesControl.Search
 
+  fun getSearchTerm(): String? {
+    return (pagedEntriesControl.value as? PagedEntriesControl.Search)?.searchTerm
+  }
+
   init {
     val appRepo = AppRepository()
 
