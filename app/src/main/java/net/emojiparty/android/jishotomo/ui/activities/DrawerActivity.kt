@@ -15,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.Observer
 import androidx.paging.PagedList
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
 import kotlinx.android.synthetic.main.activity_drawer.drawer_layout
@@ -41,9 +40,7 @@ import net.emojiparty.android.jishotomo.ui.presentation.StringForJlptLevel
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesViewModel
 
-class DrawerActivity :
-  AppCompatActivity(),
-  OnNavigationItemSelectedListener {
+class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
   private lateinit var viewModel: PagedEntriesViewModel
 
   private var searchViewMenuItem: MenuItem? = null
@@ -52,11 +49,6 @@ class DrawerActivity :
   private lateinit var analyticsLogger: AnalyticsLogger
   private var lastEntryViewed = DefinitionFragment.ENTRY_EMPTY
   private var tabletFragmentContainer: FrameLayout? = null
-
-  private val STATE_SEARCH_TYPE = "state_search_type"
-  private val STATE_SEARCH_TERM = "state_search_term"
-  private val STATE_JLPT_LEVEL = "state_jlpt_level"
-  private val STATE_LAST_ENTRY_VIEWED = "state_last_entry_viewed"
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -99,17 +91,23 @@ class DrawerActivity :
     val searchType = bundle.getString(STATE_SEARCH_TYPE)
     val searchTerm = bundle.getString(STATE_SEARCH_TERM)
 
-    val pagedEntriesControl = if (bundle.containsKey(STATE_JLPT_LEVEL)) {
-      PagedEntriesControl.JLPT(bundle.getInt(STATE_JLPT_LEVEL))
-    } else if (searchTerm != null) {
-      PagedEntriesControl.Search(searchTerm)
-    } else if (searchType == PagedEntriesControl.Favorites.name) {
-      PagedEntriesControl.Favorites
-    } else {
-      PagedEntriesControl.Browse
+    val pagedEntriesControl = when {
+      bundle.containsKey(STATE_JLPT_LEVEL) -> {
+        PagedEntriesControl.JLPT(bundle.getInt(STATE_JLPT_LEVEL))
+      }
+      searchTerm != null -> {
+        PagedEntriesControl.Search(searchTerm)
+      }
+      searchType == PagedEntriesControl.Favorites.name -> {
+        PagedEntriesControl.Favorites
+      }
+      else -> {
+        PagedEntriesControl.Browse
+      }
     }
 
     setPagedEntriesControl(pagedEntriesControl)
+
     val lastEntryViewedFromBundle = bundle.getInt(STATE_LAST_ENTRY_VIEWED)
     if (lastEntryViewedFromBundle != DefinitionFragment.ENTRY_EMPTY) {
       addDefinitionFragment(lastEntryViewedFromBundle)
@@ -168,7 +166,7 @@ class DrawerActivity :
   private fun setupRecyclerView() {
     viewModel.getEntries().observe(
       this,
-      Observer<PagedList<SearchResultEntry>> { entries: PagedList<SearchResultEntry> ->
+      { entries: PagedList<SearchResultEntry> ->
         loading.visibility = View.INVISIBLE
         adapter?.submitList(entries)
         setNoResultsText(entries.size)
@@ -311,16 +309,22 @@ class DrawerActivity :
     var pagedEntriesControl: PagedEntriesControl? = null
     val jlptIds = jlptMenuIds()
 
-    if (id == R.id.nav_search) {
-      searchViewMenuItem!!.expandActionView()
-    } else if (id == R.id.nav_browse) {
-      pagedEntriesControl = PagedEntriesControl.Browse
-    } else if (id == R.id.nav_favorites) {
-      pagedEntriesControl = PagedEntriesControl.Favorites
-    } else if (jlptIds.indexOf(id) > -1) {
-      pagedEntriesControl = PagedEntriesControl.JLPT(jlptIds.indexOf(id) + 1)
-    } else if (id == R.id.nav_about) {
-      showAbout()
+    when {
+      id == R.id.nav_search -> {
+        searchViewMenuItem!!.expandActionView()
+      }
+      id == R.id.nav_browse -> {
+        pagedEntriesControl = PagedEntriesControl.Browse
+      }
+      id == R.id.nav_favorites -> {
+        pagedEntriesControl = PagedEntriesControl.Favorites
+      }
+      jlptIds.indexOf(id) > -1 -> {
+        pagedEntriesControl = PagedEntriesControl.JLPT(jlptIds.indexOf(id) + 1)
+      }
+      id == R.id.nav_about -> {
+        showAbout()
+      }
     }
 
     pagedEntriesControl?.let {
@@ -344,5 +348,12 @@ class DrawerActivity :
       )
       is PagedEntriesControl.Search -> string.search_results
     }
+  }
+
+  companion object {
+    private const val STATE_SEARCH_TYPE = "state_search_type"
+    private const val STATE_SEARCH_TERM = "state_search_term"
+    private const val STATE_JLPT_LEVEL = "state_jlpt_level"
+    private const val STATE_LAST_ENTRY_VIEWED = "state_last_entry_viewed"
   }
 }
