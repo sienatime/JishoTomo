@@ -12,6 +12,7 @@ import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.DrawerMatchers.isClosed
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
+import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -202,7 +203,10 @@ class DrawerActivityInstrumentedTests {
     onView(withId(id.menu_remove_all_favorites))
       .perform(click())
     onView(withText("OK"))
-      .perform(click()) // flaky
+      .inRoot(isDialog())
+      .check(matches(isDisplayed()))
+    onView(withText("OK"))
+      .perform(click())
     drain()
     onView(withId(id.search_results_rv))
       .check(withItemCount(0))
