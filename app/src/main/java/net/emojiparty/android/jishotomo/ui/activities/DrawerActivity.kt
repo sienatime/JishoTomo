@@ -9,10 +9,12 @@ import android.view.MenuItem
 import android.view.View
 import android.view.View.OnAttachStateChangeListener
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.FileProvider
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
@@ -24,18 +26,23 @@ import kotlinx.android.synthetic.main.app_bar_drawer.drawer_toolbar
 import kotlinx.android.synthetic.main.app_bar_drawer.toolbar_title
 import kotlinx.android.synthetic.main.content_drawer.drawer_content_fragment
 import kotlinx.android.synthetic.main.content_drawer.tablet_definition_fragment_container
+import kotlinx.android.synthetic.main.fragment_entry_list.exporting
 import net.emojiparty.android.jishotomo.JishoTomoApp
 import net.emojiparty.android.jishotomo.R
 import net.emojiparty.android.jishotomo.R.id
 import net.emojiparty.android.jishotomo.R.layout
 import net.emojiparty.android.jishotomo.R.string
 import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger
+import net.emojiparty.android.jishotomo.data.csv.CsvExporter
+import net.emojiparty.android.jishotomo.ui.csv.CsvExportAsyncTask.CsvExportUiCallbacks
+import net.emojiparty.android.jishotomo.ui.dialogs.ExportDialog
+import net.emojiparty.android.jishotomo.ui.dialogs.UnfavoriteAllDialog
 import net.emojiparty.android.jishotomo.ui.presentation.AndroidResourceFetcher
-import net.emojiparty.android.jishotomo.ui.presentation.FavoritesMenu
 import net.emojiparty.android.jishotomo.ui.presentation.MenuButtons
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesViewModel
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesViewModelFactory
+import java.io.File
 
 class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
   private val viewModel: PagedEntriesViewModel by viewModels {
@@ -236,15 +243,54 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
   }
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
-    val favoritesMenu = FavoritesMenu((application as JishoTomoApp).analyticsLogger)
     if (item.itemId == id.menu_export) {
-      favoritesMenu.explainCsvExport(this, viewModel.getPagedEntriesControl())
+      ExportDialog(
+        viewModel.getPagedEntriesControl(),
+        csvExportUiCallbacks
+      ).show(supportFragmentManager)
       return true
     } else if (item.itemId == id.menu_remove_all_favorites) {
-      favoritesMenu.explainUnfavoriteAll(this)
+      explainUnfavoriteAll()
       return true
     }
     return super.onOptionsItemSelected(item)
+  }
+
+  private val csvExportUiCallbacks: CsvExportUiCallbacks = object : CsvExportUiCallbacks {
+    override fun onProgressUpdate(progress: Int?) {
+      exporting.progress = progress!!
+    }
+
+    override fun onPreExecute() {
+      exporting.visibility = View.VISIBLE
+    }
+
+    override fun onPostExecute() {
+      exporting.visibility = View.GONE
+      val csv = File(CsvExporter.fileLocation(this@DrawerActivity))
+      val csvUri = FileProvider.getUriForFile(
+        this@DrawerActivity, getString(string.fileprovider_package), csv
+      )
+      val shareIntent = Intent().apply {
+        this.action = Intent.ACTION_SEND
+        this.putExtra(Intent.EXTRA_STREAM, csvUri)
+        this.type = "text/csv"
+      }
+      startActivity(
+        Intent.createChooser(shareIntent, getString(string.share_csv))
+      )
+      analyticsLogger.logCsvSuccess()
+    }
+
+    override fun onCancelled() {
+      exporting.visibility = View.GONE
+      Toast.makeText(this@DrawerActivity, string.csv_failed, Toast.LENGTH_SHORT).show()
+      analyticsLogger.logCsvFailed()
+    }
+  }
+
+  private fun explainUnfavoriteAll() {
+    UnfavoriteAllDialog().show(supportFragmentManager)
   }
 
   private fun refreshMenuItems() {
