@@ -15,16 +15,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
-import androidx.paging.PagedList
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
 import kotlinx.android.synthetic.main.activity_drawer.drawer_layout
 import kotlinx.android.synthetic.main.activity_drawer.nav_view
 import kotlinx.android.synthetic.main.app_bar_drawer.drawer_toolbar
 import kotlinx.android.synthetic.main.app_bar_drawer.toolbar_title
-import kotlinx.android.synthetic.main.content_drawer.loading
-import kotlinx.android.synthetic.main.content_drawer.no_results
-import kotlinx.android.synthetic.main.content_drawer.search_results_rv
+import kotlinx.android.synthetic.main.content_drawer.drawer_content_fragment
 import kotlinx.android.synthetic.main.content_drawer.tablet_definition_fragment_container
 import net.emojiparty.android.jishotomo.JishoTomoApp
 import net.emojiparty.android.jishotomo.R
@@ -32,8 +30,6 @@ import net.emojiparty.android.jishotomo.R.id
 import net.emojiparty.android.jishotomo.R.layout
 import net.emojiparty.android.jishotomo.R.string
 import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger
-import net.emojiparty.android.jishotomo.data.models.SearchResultEntry
-import net.emojiparty.android.jishotomo.ui.adapters.PagedEntriesAdapter
 import net.emojiparty.android.jishotomo.ui.presentation.FavoritesMenu
 import net.emojiparty.android.jishotomo.ui.presentation.MenuButtons
 import net.emojiparty.android.jishotomo.ui.presentation.StringForJlptLevel
@@ -41,14 +37,13 @@ import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesViewModel
 
 class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
-  private lateinit var viewModel: PagedEntriesViewModel
-
+  private val viewModel: PagedEntriesViewModel by viewModels()
   private var searchViewMenuItem: MenuItem? = null
 
-  private var adapter: PagedEntriesAdapter? = null
   private lateinit var analyticsLogger: AnalyticsLogger
   private var lastEntryViewed = DefinitionFragment.ENTRY_EMPTY
   private var tabletFragmentContainer: FrameLayout? = null
+  private var fragmentContainer: FragmentContainerView? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -57,12 +52,11 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
     supportActionBar!!.setDisplayShowTitleEnabled(false) // I handle the title separately
 
     tabletFragmentContainer = tablet_definition_fragment_container
+    fragmentContainer = drawer_content_fragment
 
-    val viewModel: PagedEntriesViewModel by viewModels()
-    this.viewModel = viewModel
+    transactFragment(EntryListFragment())
 
     analyticsLogger = (application as JishoTomoApp).analyticsLogger
-    setRecyclerViewWithNewAdapter()
 
     if (savedInstanceState == null) {
       searchIntent(intent)
@@ -71,14 +65,20 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
     }
     setupDrawer()
     setupNavigationView()
-    setupRecyclerView()
 
-    toolbar_title.setOnClickListener { search_results_rv.scrollToPosition(0) }
+    viewModel.getEntries().observe(
+      this,
+      {
+        refreshMenuItems()
+      }
+    )
+
+    // TODO add some callback to the EntryListFragment for this
+//    toolbar_title.setOnClickListener { search_results_rv.scrollToPosition(0) }
   }
 
   override fun onDestroy() {
     searchViewMenuItem = null
-    adapter = null
     tabletFragmentContainer = null
     super.onDestroy()
   }
@@ -114,11 +114,6 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
     }
   }
 
-  private fun setRecyclerViewWithNewAdapter() {
-    adapter = PagedEntriesAdapter(layout.list_item_entry)
-    search_results_rv.adapter = adapter
-  }
-
   private fun clearDefinitionBackstack() {
     // non-null on tablet
     tabletFragmentContainer?.let {
@@ -135,9 +130,16 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
     }
   }
 
-  private fun transactFragment(fragment: Fragment) {
+  private fun transactFragmentOnTablet(fragment: Fragment) {
     supportFragmentManager.beginTransaction()
       .add(id.tablet_definition_fragment_container, fragment)
+      .addToBackStack(null)
+      .commit()
+  }
+
+  private fun transactFragment(fragment: Fragment) {
+    supportFragmentManager.beginTransaction()
+      .add(id.drawer_content_fragment, fragment)
       .addToBackStack(null)
       .commit()
   }
@@ -145,7 +147,7 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
   fun addDefinitionFragment(entryId: Int) {
     lastEntryViewed = entryId
     val fragment = DefinitionFragment.instance(entryId)
-    transactFragment(fragment)
+    transactFragmentOnTablet(fragment)
   }
 
   // https://developer.android.com/training/search/setup
@@ -163,38 +165,6 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
   override fun onNewIntent(intent: Intent) {
     super.onNewIntent(intent)
     searchIntent(intent)
-  }
-
-  // Paging library reference https://developer.android.com/topic/libraries/architecture/paging
-  private fun setupRecyclerView() {
-    viewModel.getEntries().observe(
-      this,
-      { entries: PagedList<SearchResultEntry> ->
-        loading.visibility = View.INVISIBLE
-        adapter?.submitList(entries)
-        refreshMenuItems()
-        setNoResultsText(entries.size)
-      }
-    )
-  }
-
-  private fun setNoResultsText(size: Int) {
-    if (size == 0) {
-      no_results.visibility = View.VISIBLE
-      no_results.text = noResultsText()
-    } else {
-      no_results.visibility = View.GONE
-    }
-  }
-
-  private fun noResultsText(): String {
-    return when (val control = viewModel.getPagedEntriesControl()) {
-      is PagedEntriesControl.Favorites -> getString(string.no_favorites)
-      is PagedEntriesControl.Search -> String.format(
-        getString(string.no_search_results), control.searchTerm
-      )
-      else -> getString(string.nothing_here)
-    }
   }
 
   private fun setupDrawer() {
@@ -234,7 +204,7 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
   }
 
   override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-    val hasFavorites = viewModel.isFavorites() && adapter!!.itemCount > 0
+    val hasFavorites = viewModel.isFavorites() && viewModel.hasEntries()
     MenuButtons.setExportVisibility(menu, hasFavorites || viewModel.isJlpt())
     MenuButtons.setUnfavoriteAllVisibility(menu, hasFavorites)
     return true
@@ -299,13 +269,7 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
 
   private fun setPagedEntriesControl(pagedEntriesControl: PagedEntriesControl) {
     toolbar_title.text = resources.getString(titleIdForSearchType(pagedEntriesControl))
-    // this is so that the PagedListAdapter does not try to perform a diff
-    // against the two lists when changing search types. the app was really laggy
-    // when changing lists without re-instantiating the adapter.
-    setRecyclerViewWithNewAdapter()
     clearDefinitionBackstack()
-    no_results.visibility = View.GONE
-    loading.visibility = View.VISIBLE
     viewModel.setPagedEntriesControl(pagedEntriesControl)
     refreshMenuItems()
     analyticsLogger.logSearchResultsOrViewItemList(pagedEntriesControl)

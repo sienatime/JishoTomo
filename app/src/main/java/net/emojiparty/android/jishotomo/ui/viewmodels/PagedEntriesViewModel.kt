@@ -13,6 +13,10 @@ class PagedEntriesViewModel : ViewModel() {
   private val entries: LiveData<PagedList<SearchResultEntry>>
   private val pagedEntriesControl = MutableLiveData<PagedEntriesControl>()
 
+  fun getPagedEntriesControlLiveData(): MutableLiveData<PagedEntriesControl> {
+    return pagedEntriesControl
+  }
+
   fun getPagedEntriesControl(): PagedEntriesControl {
     return pagedEntriesControl.value ?: PagedEntriesControl.Browse
   }
@@ -32,6 +36,8 @@ class PagedEntriesViewModel : ViewModel() {
   fun getSearchTerm(): String? {
     return (pagedEntriesControl.value as? PagedEntriesControl.Search)?.searchTerm
   }
+
+  fun hasEntries(): Boolean = (entries.value?.size ?: 0) > 0
 
   init {
     val appRepo = AppRepository()

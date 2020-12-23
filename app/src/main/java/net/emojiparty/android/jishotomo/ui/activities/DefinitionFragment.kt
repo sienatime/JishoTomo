@@ -8,7 +8,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_definition.fab
 import kotlinx.android.synthetic.main.fragment_definition.no_entry_textview
@@ -27,7 +26,7 @@ class DefinitionFragment : Fragment() {
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
-  ): View? {
+  ): View {
     val binding = DataBindingUtil.inflate<ViewDataBinding>(
       inflater, layout.fragment_definition, container, false
     )
@@ -57,7 +56,7 @@ class DefinitionFragment : Fragment() {
         .entryLiveData(entryId)
         .observe(
           viewLifecycleOwner,
-          Observer { entry: EntryWithAllSenses ->
+          { entry: EntryWithAllSenses ->
             binding.setVariable(BR.presenter, entry)
 
             val presenters = entry.senses.map { SensePresenter(it, viewModel.getCrossReferencesForSense(it.id)) }
