@@ -63,7 +63,7 @@ object BindingMethods {
     jlptLevel: Int?
   ) {
     if (jlptLevel != null) {
-      val stringId = StringForJlptLevel.getId(jlptLevel, view.context)
+      val stringId = AndroidResourceFetcher(view.context.resources, view.context.packageName).stringForJlptLevel(jlptLevel)
       view.setText(stringId)
       view.visibility = View.VISIBLE
     } else {

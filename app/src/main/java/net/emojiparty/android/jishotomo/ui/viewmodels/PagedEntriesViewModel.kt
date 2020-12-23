@@ -9,6 +9,10 @@ import net.emojiparty.android.jishotomo.R
 import net.emojiparty.android.jishotomo.data.AppRepository
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry
 import net.emojiparty.android.jishotomo.ui.presentation.ResourceFetcher
+import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl.Browse
+import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl.Favorites
+import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl.JLPT
+import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl.Search
 
 class PagedEntriesViewModel : ViewModel() {
 
@@ -20,7 +24,7 @@ class PagedEntriesViewModel : ViewModel() {
   }
 
   fun getPagedEntriesControl(): PagedEntriesControl {
-    return pagedEntriesControl.value ?: PagedEntriesControl.Browse
+    return pagedEntriesControl.value ?: Browse
   }
 
   fun setPagedEntriesControl(pagedEntriesControl: PagedEntriesControl) {
@@ -29,25 +33,35 @@ class PagedEntriesViewModel : ViewModel() {
 
   fun getEntries(): LiveData<PagedList<SearchResultEntry>> = entries
 
-  fun isFavorites(): Boolean = pagedEntriesControl.value is PagedEntriesControl.Favorites
+  fun isFavorites(): Boolean = pagedEntriesControl.value is Favorites
 
-  fun isJlpt(): Boolean = pagedEntriesControl.value is PagedEntriesControl.JLPT
+  fun isJlpt(): Boolean = pagedEntriesControl.value is JLPT
 
-  fun isSearch(): Boolean = pagedEntriesControl.value is PagedEntriesControl.Search
+  fun isSearch(): Boolean = pagedEntriesControl.value is Search
 
   fun getSearchTerm(): String? {
-    return (pagedEntriesControl.value as? PagedEntriesControl.Search)?.searchTerm
+    return (pagedEntriesControl.value as? Search)?.searchTerm
   }
 
   fun hasEntries(): Boolean = (entries.value?.size ?: 0) > 0
 
   fun noResultsText(resourceFetcher: ResourceFetcher): String {
     return when (val control = pagedEntriesControl.value) {
-      is PagedEntriesControl.Favorites -> resourceFetcher.getString(R.string.no_favorites)
-      is PagedEntriesControl.Search -> String.format(
+      is Favorites -> resourceFetcher.getString(R.string.no_favorites)
+      is Search -> String.format(
         resourceFetcher.getString(R.string.no_search_results), control.searchTerm
       )
       else -> resourceFetcher.getString(R.string.nothing_here)
+    }
+  }
+
+  fun titleIdForSearchType(resourceFetcher: ResourceFetcher): Int {
+    return when (val control = pagedEntriesControl.value) {
+      is Browse -> R.string.app_name
+      is Favorites -> R.string.favorites
+      is JLPT -> resourceFetcher.stringForJlptLevel(control.level)
+      is Search -> R.string.search_results
+      null -> 0
     }
   }
 
@@ -58,10 +72,10 @@ class PagedEntriesViewModel : ViewModel() {
       pagedEntriesControl
     ) { pagedEntriesControl: PagedEntriesControl ->
       return@switchMap when (pagedEntriesControl) {
-        is PagedEntriesControl.Search -> appRepo.search(pagedEntriesControl.searchTerm)
-        is PagedEntriesControl.Favorites -> appRepo.getFavorites()
-        is PagedEntriesControl.JLPT -> appRepo.getByJlptLevel(pagedEntriesControl.level)
-        is PagedEntriesControl.Browse -> appRepo.browse()
+        is Search -> appRepo.search(pagedEntriesControl.searchTerm)
+        is Favorites -> appRepo.getFavorites()
+        is JLPT -> appRepo.getByJlptLevel(pagedEntriesControl.level)
+        is Browse -> appRepo.browse()
       }
     }
   }

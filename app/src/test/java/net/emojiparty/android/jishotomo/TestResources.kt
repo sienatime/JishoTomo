@@ -34,4 +34,8 @@ class TestResources : ResourceFetcher {
   override fun getString(id: Int): String {
     return partsOfSpeech[id]
   }
+
+  override fun stringForJlptLevel(level: Int): Int {
+    return level
+  }
 }

@@ -17,7 +17,7 @@ import net.emojiparty.android.jishotomo.data.AppRepository
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry
 import net.emojiparty.android.jishotomo.ui.activities.DefinitionActivity
 import net.emojiparty.android.jishotomo.ui.activities.DefinitionFragment
-import net.emojiparty.android.jishotomo.ui.presentation.StringForJlptLevel.getId
+import net.emojiparty.android.jishotomo.ui.presentation.AndroidResourceFetcher
 
 /**
  * Implementation of App Widget functionality.
@@ -89,7 +89,7 @@ class JishoTomoJlptWidget : AppWidgetProvider() {
       views.setViewVisibility(id.widget_reading, readingVisible)
       views.setTextViewText(id.widget_gloss, entry.getPrimaryGloss())
 
-      val jlptStringId = getId(selectedLevel, context)
+      val jlptStringId = AndroidResourceFetcher(context.resources, context.packageName).stringForJlptLevel(selectedLevel)
       views.setTextViewText(id.widget_level, context.getString(jlptStringId))
       val appPendingIntent = openDefinitionActivity(entry, context, appWidgetId)
       views.setOnClickPendingIntent(id.widget_container, appPendingIntent)

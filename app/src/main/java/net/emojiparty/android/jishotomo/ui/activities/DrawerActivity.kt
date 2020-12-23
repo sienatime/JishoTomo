@@ -30,9 +30,9 @@ import net.emojiparty.android.jishotomo.R.id
 import net.emojiparty.android.jishotomo.R.layout
 import net.emojiparty.android.jishotomo.R.string
 import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger
+import net.emojiparty.android.jishotomo.ui.presentation.AndroidResourceFetcher
 import net.emojiparty.android.jishotomo.ui.presentation.FavoritesMenu
 import net.emojiparty.android.jishotomo.ui.presentation.MenuButtons
-import net.emojiparty.android.jishotomo.ui.presentation.StringForJlptLevel
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesViewModel
 
@@ -268,9 +268,9 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
   }
 
   private fun setPagedEntriesControl(pagedEntriesControl: PagedEntriesControl) {
-    toolbar_title.text = resources.getString(titleIdForSearchType(pagedEntriesControl))
     clearDefinitionBackstack()
     viewModel.setPagedEntriesControl(pagedEntriesControl)
+    toolbar_title.text = resources.getString(viewModel.titleIdForSearchType(AndroidResourceFetcher(resources, packageName)))
     refreshMenuItems()
     analyticsLogger.logSearchResultsOrViewItemList(pagedEntriesControl)
   }
@@ -316,17 +316,6 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
 
   private fun closeDrawer() {
     drawer_layout.closeDrawer(GravityCompat.START)
-  }
-
-  private fun titleIdForSearchType(pagedEntriesControl: PagedEntriesControl): Int {
-    return when (pagedEntriesControl) {
-      is PagedEntriesControl.Browse -> string.app_name
-      is PagedEntriesControl.Favorites -> string.favorites
-      is PagedEntriesControl.JLPT -> StringForJlptLevel.getId(
-        pagedEntriesControl.level, this
-      )
-      is PagedEntriesControl.Search -> string.search_results
-    }
   }
 
   companion object {
