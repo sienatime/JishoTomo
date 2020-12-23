@@ -15,14 +15,15 @@ import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl.Favori
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl.JLPT
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl.Search
 
-class PagedEntriesViewModel : ViewModel() {
+class PagedEntriesViewModel(
+  private val resourceFetcher: ResourceFetcher,
+  private val appRepo: AppRepository = AppRepository()
+) : ViewModel() {
 
   private val entries: LiveData<PagedList<SearchResultEntry>>
   private val pagedEntriesControl = MutableLiveData<PagedEntriesControl>()
 
   init {
-    val appRepo = AppRepository()
-
     entries = Transformations.switchMap(
       pagedEntriesControl
     ) { pagedEntriesControl: PagedEntriesControl ->
@@ -63,7 +64,7 @@ class PagedEntriesViewModel : ViewModel() {
     return (pagedEntriesControl.value ?: Browse).name
   }
 
-  fun noResultsText(resourceFetcher: ResourceFetcher): String {
+  fun noResultsText(): String {
     return when (val control = pagedEntriesControl.value) {
       is Favorites -> resourceFetcher.getString(R.string.no_favorites)
       is Search -> String.format(
@@ -73,7 +74,7 @@ class PagedEntriesViewModel : ViewModel() {
     }
   }
 
-  fun titleIdForSearchType(resourceFetcher: ResourceFetcher): Int {
+  fun titleIdForSearchType(): Int {
     return when (val control = pagedEntriesControl.value) {
       is Browse -> R.string.app_name
       is Favorites -> R.string.favorites
@@ -97,18 +98,10 @@ class PagedEntriesViewModel : ViewModel() {
     jlptLevel: Int
   ) {
     val pagedEntriesControl = when {
-      jlptLevel > 0 -> {
-        JLPT(jlptLevel)
-      }
-      searchTerm != null -> {
-        Search(searchTerm)
-      }
-      searchType == Favorites.name -> {
-        Favorites
-      }
-      else -> {
-        Browse
-      }
+      jlptLevel > 0 -> JLPT(jlptLevel)
+      searchTerm != null -> Search(searchTerm)
+      searchType == Favorites.name -> Favorites
+      else -> Browse
     }
     setPagedEntriesControl(pagedEntriesControl)
   }

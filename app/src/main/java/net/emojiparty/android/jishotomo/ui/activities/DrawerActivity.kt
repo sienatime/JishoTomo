@@ -35,9 +35,12 @@ import net.emojiparty.android.jishotomo.ui.presentation.FavoritesMenu
 import net.emojiparty.android.jishotomo.ui.presentation.MenuButtons
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesViewModel
+import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesViewModelFactory
 
 class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
-  private val viewModel: PagedEntriesViewModel by viewModels()
+  private val viewModel: PagedEntriesViewModel by viewModels {
+    PagedEntriesViewModelFactory(AndroidResourceFetcher(resources, packageName))
+  }
   private var searchViewMenuItem: MenuItem? = null
 
   private lateinit var analyticsLogger: AnalyticsLogger
@@ -256,7 +259,7 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
 
   private fun setPagedEntriesControl(pagedEntriesControl: PagedEntriesControl) {
     clearDefinitionBackstack()
-    toolbar_title.text = resources.getString(viewModel.titleIdForSearchType(AndroidResourceFetcher(resources, packageName)))
+    toolbar_title.text = resources.getString(viewModel.titleIdForSearchType())
     refreshMenuItems()
     analyticsLogger.logSearchResultsOrViewItemList(pagedEntriesControl)
   }

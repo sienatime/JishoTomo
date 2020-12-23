@@ -11,7 +11,6 @@ import kotlinx.android.synthetic.main.fragment_entry_list.search_results_rv
 import net.emojiparty.android.jishotomo.R
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry
 import net.emojiparty.android.jishotomo.ui.adapters.PagedEntriesAdapter
-import net.emojiparty.android.jishotomo.ui.presentation.AndroidResourceFetcher
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesViewModel
 
 class EntryListFragment : Fragment(R.layout.fragment_entry_list) {
@@ -61,7 +60,7 @@ class EntryListFragment : Fragment(R.layout.fragment_entry_list) {
   private fun setNoResultsText(size: Int) {
     if (size == 0) {
       no_results.visibility = View.VISIBLE
-      no_results.text = viewModel.noResultsText(AndroidResourceFetcher(resources))
+      no_results.text = viewModel.noResultsText()
     } else {
       no_results.visibility = View.GONE
     }
