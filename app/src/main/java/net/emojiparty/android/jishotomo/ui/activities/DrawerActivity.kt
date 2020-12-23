@@ -14,6 +14,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.paging.PagedList
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
@@ -32,7 +33,6 @@ import net.emojiparty.android.jishotomo.R.layout
 import net.emojiparty.android.jishotomo.R.string
 import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry
-import net.emojiparty.android.jishotomo.ui.activities.DefinitionFragment.Companion.instance
 import net.emojiparty.android.jishotomo.ui.adapters.PagedEntriesAdapter
 import net.emojiparty.android.jishotomo.ui.presentation.FavoritesMenu
 import net.emojiparty.android.jishotomo.ui.presentation.MenuButtons
@@ -127,7 +127,7 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
         null, FragmentManager.POP_BACK_STACK_INCLUSIVE
       )
       if (fragmentManager.backStackEntryCount == 0) {
-        val fragment = instance(DefinitionFragment.ENTRY_EMPTY)
+        val fragment = DefinitionFragment.instance(DefinitionFragment.ENTRY_EMPTY)
         fragmentManager.beginTransaction()
           .replace(id.tablet_definition_fragment_container, fragment)
           .commitAllowingStateLoss()
@@ -135,13 +135,17 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
     }
   }
 
-  fun addDefinitionFragment(entryId: Int) {
-    lastEntryViewed = entryId
-    val fragment = instance(entryId)
+  private fun transactFragment(fragment: Fragment) {
     supportFragmentManager.beginTransaction()
       .add(id.tablet_definition_fragment_container, fragment)
       .addToBackStack(null)
       .commit()
+  }
+
+  fun addDefinitionFragment(entryId: Int) {
+    lastEntryViewed = entryId
+    val fragment = DefinitionFragment.instance(entryId)
+    transactFragment(fragment)
   }
 
   // https://developer.android.com/training/search/setup
