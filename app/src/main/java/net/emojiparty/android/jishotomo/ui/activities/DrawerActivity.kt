@@ -73,6 +73,13 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
       }
     )
 
+    viewModel.getPagedEntriesControlLiveData().observe(
+      this,
+      {
+        setPagedEntriesControl(it)
+      }
+    )
+
     // TODO add some callback to the EntryListFragment for this
 //    toolbar_title.setOnClickListener { search_results_rv.scrollToPosition(0) }
   }
@@ -88,25 +95,11 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
   }
 
   private fun restoreFromBundle(bundle: Bundle) {
-    val searchType = bundle.getString(STATE_SEARCH_TYPE)
-    val searchTerm = bundle.getString(STATE_SEARCH_TERM)
-
-    val pagedEntriesControl = when {
-      bundle.containsKey(STATE_JLPT_LEVEL) -> {
-        PagedEntriesControl.JLPT(bundle.getInt(STATE_JLPT_LEVEL))
-      }
-      searchTerm != null -> {
-        PagedEntriesControl.Search(searchTerm)
-      }
-      searchType == PagedEntriesControl.Favorites.name -> {
-        PagedEntriesControl.Favorites
-      }
-      else -> {
-        PagedEntriesControl.Browse
-      }
-    }
-
-    setPagedEntriesControl(pagedEntriesControl)
+    viewModel.restoreFromBundleValues(
+      bundle.getString(STATE_SEARCH_TYPE),
+      bundle.getString(STATE_SEARCH_TERM),
+      bundle.getInt(STATE_JLPT_LEVEL)
+    )
 
     val lastEntryViewedFromBundle = bundle.getInt(STATE_LAST_ENTRY_VIEWED)
     if (lastEntryViewedFromBundle != DefinitionFragment.ENTRY_EMPTY) {
@@ -150,16 +143,11 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
     transactFragmentOnTablet(fragment)
   }
 
-  // https://developer.android.com/training/search/setup
-  // https://developer.android.com/guide/topics/search/search-dialog
   private fun searchIntent(intent: Intent) {
-    val pagedEntriesControl = if (Intent.ACTION_SEARCH == intent.action) {
-      val query = intent.getStringExtra(SearchManager.QUERY)
-      PagedEntriesControl.Search(query)
-    } else {
-      PagedEntriesControl.Browse
-    }
-    setPagedEntriesControl(pagedEntriesControl)
+    viewModel.setFromSearchIntentAction(
+      intent.action,
+      intent.getStringExtra(SearchManager.QUERY)
+    )
   }
 
   override fun onNewIntent(intent: Intent) {
@@ -184,13 +172,13 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
-    when (val control = viewModel.getPagedEntriesControl()) {
-      is PagedEntriesControl.JLPT -> outState.putInt(STATE_JLPT_LEVEL, control.level)
-      is PagedEntriesControl.Search -> outState.putString(STATE_SEARCH_TERM, control.searchTerm)
+    viewModel.getJlptLevel()?.let {
+      outState.putInt(STATE_JLPT_LEVEL, it)
     }
-
-    outState.putString(STATE_SEARCH_TYPE, viewModel.getPagedEntriesControl().name)
-
+    viewModel.getSearchTerm()?.let {
+      outState.putString(STATE_SEARCH_TERM, it)
+    }
+    outState.putString(STATE_SEARCH_TYPE, viewModel.getName())
     outState.putInt(STATE_LAST_ENTRY_VIEWED, lastEntryViewed)
     super.onSaveInstanceState(outState)
   }
@@ -204,9 +192,8 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
   }
 
   override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-    val hasFavorites = viewModel.isFavorites() && viewModel.hasEntries()
-    MenuButtons.setExportVisibility(menu, hasFavorites || viewModel.isJlpt())
-    MenuButtons.setUnfavoriteAllVisibility(menu, hasFavorites)
+    MenuButtons.setExportVisibility(menu, viewModel.isExportVisible())
+    MenuButtons.setUnfavoriteAllVisibility(menu, viewModel.isUnfavoriteAllVisible())
     return true
   }
 
@@ -269,7 +256,6 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
 
   private fun setPagedEntriesControl(pagedEntriesControl: PagedEntriesControl) {
     clearDefinitionBackstack()
-    viewModel.setPagedEntriesControl(pagedEntriesControl)
     toolbar_title.text = resources.getString(viewModel.titleIdForSearchType(AndroidResourceFetcher(resources, packageName)))
     refreshMenuItems()
     analyticsLogger.logSearchResultsOrViewItemList(pagedEntriesControl)
@@ -281,7 +267,6 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
 
   override fun onNavigationItemSelected(item: MenuItem): Boolean {
     val id = item.itemId
-    var pagedEntriesControl: PagedEntriesControl? = null
     val jlptIds = jlptMenuIds()
 
     when {
@@ -289,21 +274,17 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
         openSearch()
       }
       id == R.id.nav_browse -> {
-        pagedEntriesControl = PagedEntriesControl.Browse
+        viewModel.setPagedEntriesControl(PagedEntriesControl.Browse)
       }
       id == R.id.nav_favorites -> {
-        pagedEntriesControl = PagedEntriesControl.Favorites
+        viewModel.setPagedEntriesControl(PagedEntriesControl.Favorites)
       }
       jlptIds.indexOf(id) > -1 -> {
-        pagedEntriesControl = PagedEntriesControl.JLPT(jlptIds.indexOf(id) + 1)
+        viewModel.setPagedEntriesControl(PagedEntriesControl.JLPT(jlptIds.indexOf(id) + 1))
       }
       id == R.id.nav_about -> {
         showAbout()
       }
-    }
-
-    pagedEntriesControl?.let {
-      setPagedEntriesControl(it)
     }
 
     closeDrawer()

@@ -48,6 +48,7 @@ class CsvExporter(
     }
   }
 
+  // could possibly bubble this up to remove dependency on PagedEntriesControl
   private fun entriesForSearchType(pagedEntriesControl: PagedEntriesControl): List<EntryWithAllSenses?> {
     val appRepo = AppRepository()
     return when (pagedEntriesControl) {

@@ -1,5 +1,6 @@
 package net.emojiparty.android.jishotomo.ui.viewmodels
 
+import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -19,6 +20,21 @@ class PagedEntriesViewModel : ViewModel() {
   private val entries: LiveData<PagedList<SearchResultEntry>>
   private val pagedEntriesControl = MutableLiveData<PagedEntriesControl>()
 
+  init {
+    val appRepo = AppRepository()
+
+    entries = Transformations.switchMap(
+      pagedEntriesControl
+    ) { pagedEntriesControl: PagedEntriesControl ->
+      return@switchMap when (pagedEntriesControl) {
+        is Search -> appRepo.search(pagedEntriesControl.searchTerm)
+        is Favorites -> appRepo.getFavorites()
+        is JLPT -> appRepo.getByJlptLevel(pagedEntriesControl.level)
+        is Browse -> appRepo.browse()
+      }
+    }
+  }
+
   fun getPagedEntriesControlLiveData(): MutableLiveData<PagedEntriesControl> {
     return pagedEntriesControl
   }
@@ -33,17 +49,19 @@ class PagedEntriesViewModel : ViewModel() {
 
   fun getEntries(): LiveData<PagedList<SearchResultEntry>> = entries
 
-  fun isFavorites(): Boolean = pagedEntriesControl.value is Favorites
-
-  fun isJlpt(): Boolean = pagedEntriesControl.value is JLPT
-
   fun isSearch(): Boolean = pagedEntriesControl.value is Search
 
   fun getSearchTerm(): String? {
     return (pagedEntriesControl.value as? Search)?.searchTerm
   }
 
-  fun hasEntries(): Boolean = (entries.value?.size ?: 0) > 0
+  fun getJlptLevel(): Int? {
+    return (pagedEntriesControl.value as? JLPT)?.level
+  }
+
+  fun getName(): String {
+    return (pagedEntriesControl.value ?: Browse).name
+  }
 
   fun noResultsText(resourceFetcher: ResourceFetcher): String {
     return when (val control = pagedEntriesControl.value) {
@@ -65,18 +83,55 @@ class PagedEntriesViewModel : ViewModel() {
     }
   }
 
-  init {
-    val appRepo = AppRepository()
+  fun isExportVisible(): Boolean {
+    return hasFavorites() || isJlpt()
+  }
 
-    entries = Transformations.switchMap(
-      pagedEntriesControl
-    ) { pagedEntriesControl: PagedEntriesControl ->
-      return@switchMap when (pagedEntriesControl) {
-        is Search -> appRepo.search(pagedEntriesControl.searchTerm)
-        is Favorites -> appRepo.getFavorites()
-        is JLPT -> appRepo.getByJlptLevel(pagedEntriesControl.level)
-        is Browse -> appRepo.browse()
+  fun isUnfavoriteAllVisible(): Boolean {
+    return hasFavorites()
+  }
+
+  fun restoreFromBundleValues(
+    searchType: String?,
+    searchTerm: String?,
+    jlptLevel: Int
+  ) {
+    val pagedEntriesControl = when {
+      jlptLevel > 0 -> {
+        JLPT(jlptLevel)
+      }
+      searchTerm != null -> {
+        Search(searchTerm)
+      }
+      searchType == Favorites.name -> {
+        Favorites
+      }
+      else -> {
+        Browse
       }
     }
+    setPagedEntriesControl(pagedEntriesControl)
   }
+
+  fun setFromSearchIntentAction(
+    action: String?,
+    query: String?
+  ) {
+    val pagedEntriesControl = if (Intent.ACTION_SEARCH == action) {
+      Search(query ?: "")
+    } else {
+      Browse
+    }
+    setPagedEntriesControl(pagedEntriesControl)
+  }
+
+  private fun hasFavorites(): Boolean {
+    return isFavorites() && hasEntries()
+  }
+
+  private fun isFavorites(): Boolean = pagedEntriesControl.value is Favorites
+
+  private fun isJlpt(): Boolean = pagedEntriesControl.value is JLPT
+
+  private fun hasEntries(): Boolean = (entries.value?.size ?: 0) > 0
 }
