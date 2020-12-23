@@ -5,8 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagedList
+import net.emojiparty.android.jishotomo.R
 import net.emojiparty.android.jishotomo.data.AppRepository
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry
+import net.emojiparty.android.jishotomo.ui.presentation.ResourceFetcher
 
 class PagedEntriesViewModel : ViewModel() {
 
@@ -38,6 +40,16 @@ class PagedEntriesViewModel : ViewModel() {
   }
 
   fun hasEntries(): Boolean = (entries.value?.size ?: 0) > 0
+
+  fun noResultsText(resourceFetcher: ResourceFetcher): String {
+    return when (val control = pagedEntriesControl.value) {
+      is PagedEntriesControl.Favorites -> resourceFetcher.getString(R.string.no_favorites)
+      is PagedEntriesControl.Search -> String.format(
+        resourceFetcher.getString(R.string.no_search_results), control.searchTerm
+      )
+      else -> resourceFetcher.getString(R.string.nothing_here)
+    }
+  }
 
   init {
     val appRepo = AppRepository()

@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.fragment_entry_list.search_results_rv
 import net.emojiparty.android.jishotomo.R
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry
 import net.emojiparty.android.jishotomo.ui.adapters.PagedEntriesAdapter
-import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl
+import net.emojiparty.android.jishotomo.ui.presentation.AndroidResourceFetcher
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesViewModel
 
 class EntryListFragment : Fragment(R.layout.fragment_entry_list) {
@@ -28,7 +28,7 @@ class EntryListFragment : Fragment(R.layout.fragment_entry_list) {
 
     viewModel.getPagedEntriesControlLiveData().observe(
       viewLifecycleOwner,
-      { pagedEntriesControl ->
+      {
         // this is so that the PagedListAdapter does not try to perform a diff
         // against the two lists when changing search types. the app was really laggy
         // when changing lists without re-instantiating the adapter.
@@ -61,19 +61,9 @@ class EntryListFragment : Fragment(R.layout.fragment_entry_list) {
   private fun setNoResultsText(size: Int) {
     if (size == 0) {
       no_results.visibility = View.VISIBLE
-      no_results.text = noResultsText()
+      no_results.text = viewModel.noResultsText(AndroidResourceFetcher(resources))
     } else {
       no_results.visibility = View.GONE
-    }
-  }
-
-  private fun noResultsText(): String {
-    return when (val control = viewModel.getPagedEntriesControl()) {
-      is PagedEntriesControl.Favorites -> getString(R.string.no_favorites)
-      is PagedEntriesControl.Search -> String.format(
-        getString(R.string.no_search_results), control.searchTerm
-      )
-      else -> getString(R.string.nothing_here)
     }
   }
 }
