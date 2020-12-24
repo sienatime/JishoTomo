@@ -34,7 +34,7 @@ import net.emojiparty.android.jishotomo.R.layout
 import net.emojiparty.android.jishotomo.R.string
 import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger
 import net.emojiparty.android.jishotomo.data.csv.CsvExporter
-import net.emojiparty.android.jishotomo.ui.csv.CsvExportAsyncTask.CsvExportUiCallbacks
+import net.emojiparty.android.jishotomo.ui.csv.CsvExportUiCallbacks
 import net.emojiparty.android.jishotomo.ui.dialogs.ExportDialog
 import net.emojiparty.android.jishotomo.ui.dialogs.UnfavoriteAllDialog
 import net.emojiparty.android.jishotomo.ui.presentation.AndroidResourceFetcher
@@ -83,7 +83,7 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
       }
     )
 
-    viewModel.getPagedEntriesControlLiveData().observe(
+    viewModel.getPagedEntriesControl().observe(
       this,
       {
         setPagedEntriesControl(it)
@@ -245,7 +245,7 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     if (item.itemId == id.menu_export) {
       ExportDialog(
-        viewModel.getPagedEntriesControl(),
+        viewModel.getEntriesForExportAsync(),
         csvExportUiCallbacks
       ).show(supportFragmentManager)
       return true

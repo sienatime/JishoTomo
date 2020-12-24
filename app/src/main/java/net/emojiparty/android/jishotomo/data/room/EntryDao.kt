@@ -46,14 +46,14 @@ interface EntryDao {
 
   @Transaction
   @Query("SELECT * FROM entries WHERE favorited IS NOT NULL ORDER BY favorited DESC")
-  fun getAllFavorites(): List<EntryWithAllSenses>
+  suspend fun getAllFavorites(): List<EntryWithAllSenses>
 
   @Query("UPDATE entries SET favorited = null WHERE favorited IS NOT NULL ")
   suspend fun unfavoriteAll(): Int
 
   @Transaction
   @Query("SELECT * FROM entries WHERE jlpt_level = :level ORDER BY id ASC")
-  fun getAllByJlptLevel(level: Int): List<EntryWithAllSenses>
+  suspend fun getAllByJlptLevel(level: Int): List<EntryWithAllSenses>
 
   @Transaction
   @Query(

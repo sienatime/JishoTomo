@@ -5,9 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.paging.PagedList
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import net.emojiparty.android.jishotomo.R
 import net.emojiparty.android.jishotomo.data.AppRepository
+import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry
 import net.emojiparty.android.jishotomo.ui.presentation.ResourceFetcher
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl.Browse
@@ -36,12 +40,8 @@ class PagedEntriesViewModel(
     }
   }
 
-  fun getPagedEntriesControlLiveData(): MutableLiveData<PagedEntriesControl> {
+  fun getPagedEntriesControl(): MutableLiveData<PagedEntriesControl> {
     return pagedEntriesControl
-  }
-
-  fun getPagedEntriesControl(): PagedEntriesControl {
-    return pagedEntriesControl.value ?: Browse
   }
 
   fun setPagedEntriesControl(pagedEntriesControl: PagedEntriesControl) {
@@ -116,6 +116,16 @@ class PagedEntriesViewModel(
       Browse
     }
     setPagedEntriesControl(pagedEntriesControl)
+  }
+
+  fun getEntriesForExportAsync(): Deferred<List<EntryWithAllSenses>> {
+    return when (val control = pagedEntriesControl.value) {
+      is Favorites -> viewModelScope.async { appRepo.getAllFavorites() }
+      is JLPT -> viewModelScope.async { appRepo.getAllByJlptLevel(control.level) }
+      else -> throw RuntimeException(
+        "Not allowed to export this kind of list! ${control?.name}"
+      )
+    }
   }
 
   private fun hasFavorites(): Boolean {

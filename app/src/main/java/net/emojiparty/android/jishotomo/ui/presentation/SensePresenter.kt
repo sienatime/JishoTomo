@@ -15,7 +15,7 @@ class SensePresenter(
   }
 
   fun partsOfSpeech(context: Context): String {
-    return SenseDisplay.formatPartsOfSpeech(sense, AndroidResourceFetcher(context.resources), context.packageName)
+    return SenseDisplay.formatPartsOfSpeech(sense, AndroidResourceFetcher(context.resources, context.packageName))
   }
 
   fun gloss(): String {

@@ -25,7 +25,7 @@ class EntryListFragment : Fragment(R.layout.fragment_entry_list) {
     setupRecyclerView()
     setRecyclerViewWithNewAdapter()
 
-    viewModel.getPagedEntriesControlLiveData().observe(
+    viewModel.getPagedEntriesControl().observe(
       viewLifecycleOwner,
       {
         // this is so that the PagedListAdapter does not try to perform a diff

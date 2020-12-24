@@ -5,15 +5,15 @@ import net.emojiparty.android.jishotomo.data.room.Sense
 import net.emojiparty.android.jishotomo.ext.semicolonSplit
 import java.util.LinkedHashSet
 
-class SenseDisplay(private val resources: ResourceFetcher, private val packageName: String) {
+class SenseDisplay(private val resourceFetcher: ResourceFetcher) {
 
   fun formatPartsOfSpeech(unsplitPartsOfSpeech: String?): String {
     val partsOfSpeech = unsplitPartsOfSpeech?.semicolonSplit() ?: emptyList()
     val localizedPartsOfSpeech = LinkedHashSet<String>()
     for (partOfSpeech in partsOfSpeech) {
       val key = getPartOfSpeechKey(partOfSpeech)
-      val stringId = resources.getIdentifier(key, "string", packageName)
-      localizedPartsOfSpeech.add(resources.getString(stringId))
+      val stringId = resourceFetcher.getIdentifier(key, "string")
+      localizedPartsOfSpeech.add(resourceFetcher.getString(stringId))
     }
     return localizedPartsOfSpeech.joinToString(", ")
   }
@@ -21,10 +21,9 @@ class SenseDisplay(private val resources: ResourceFetcher, private val packageNa
   companion object {
     fun formatPartsOfSpeech(
       sense: Sense,
-      resources: ResourceFetcher,
-      packageName: String
+      resources: ResourceFetcher
     ): String {
-      return SenseDisplay(resources, packageName).formatPartsOfSpeech(sense.partsOfSpeech)
+      return SenseDisplay(resources).formatPartsOfSpeech(sense.partsOfSpeech)
     }
 
     @VisibleForTesting

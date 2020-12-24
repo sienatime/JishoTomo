@@ -7,7 +7,10 @@ import net.emojiparty.android.jishotomo.data.room.Sense
 import net.emojiparty.android.jishotomo.ext.splitAndJoin
 import net.emojiparty.android.jishotomo.ui.presentation.SenseDisplay
 
-class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: SenseDisplay) {
+class CsvEntry(
+  private val entry: EntryWithAllSenses,
+  private val senseDisplay: SenseDisplay
+) {
   fun toArray(): Array<String> {
     return arrayOf(entry.kanjiOrReading, meaning(), reading())
   }
@@ -75,7 +78,7 @@ class CsvEntry(private val entry: EntryWithAllSenses, private val senseDisplay: 
   }
 
   private fun addKanjiReadingPair(builder: StringBuilder, kanji: String, reading: String): StringBuilder {
-    if (kanji.equals(reading)) {
+    if (kanji == reading) {
       builder.append(reading)
       return builder
     }

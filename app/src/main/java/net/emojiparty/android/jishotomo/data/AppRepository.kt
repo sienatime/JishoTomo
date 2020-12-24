@@ -56,11 +56,11 @@ class AppRepository {
     ).build()
   }
 
-  fun getAllFavorites(): List<EntryWithAllSenses> {
+  suspend fun getAllFavorites(): List<EntryWithAllSenses> {
     return entryDao.getAllFavorites()
   }
 
-  fun getAllByJlptLevel(jlptLevel: Int): List<EntryWithAllSenses> {
+  suspend fun getAllByJlptLevel(jlptLevel: Int): List<EntryWithAllSenses> {
     return entryDao.getAllByJlptLevel(jlptLevel)
   }
 

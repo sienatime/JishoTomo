@@ -10,7 +10,7 @@ import org.hamcrest.core.Is.`is`
 import org.junit.Test
 
 class CsvEntryTest {
-  private val senseDisplay = SenseDisplay(TestResources(), "")
+  private val senseDisplay = SenseDisplay(TestResources())
 
   @Test
   fun `reading, when an entry has kanji, returns the kanji followed by the reading`() {

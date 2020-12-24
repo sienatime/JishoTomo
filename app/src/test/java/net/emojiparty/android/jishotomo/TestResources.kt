@@ -27,7 +27,7 @@ class TestResources : ResourceFetcher {
     "Verb (Transitive)", "Verb"
   )
 
-  override fun getIdentifier(name: String, defType: String, defPackage: String): Int {
+  override fun getIdentifier(name: String, defType: String): Int {
     return keys.indexOf(name)
   }
 

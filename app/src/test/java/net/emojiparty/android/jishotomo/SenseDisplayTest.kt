@@ -6,19 +6,18 @@ import org.junit.Assert.assertThat
 import org.junit.Test
 
 class SenseDisplayTest {
-  val testPackageName = "test.package"
   val testResources = TestResources()
 
   @Test
   fun `formatPartsOfSpeech formats a semicolon-separated list of keys`() {
-    val senseDisplay = SenseDisplay(testResources, testPackageName)
+    val senseDisplay = SenseDisplay(testResources)
 
     assertThat(senseDisplay.formatPartsOfSpeech("n;v1"), `is`("Noun, Verb"))
   }
 
   @Test
   fun `formatPartsOfSpeech when called with null returns empty string`() {
-    val senseDisplay = SenseDisplay(testResources, testPackageName)
+    val senseDisplay = SenseDisplay(testResources)
 
     assertThat(senseDisplay.formatPartsOfSpeech(null), `is`(""))
   }

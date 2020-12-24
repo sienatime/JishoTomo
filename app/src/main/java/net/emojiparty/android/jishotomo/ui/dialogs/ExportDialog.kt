@@ -2,13 +2,16 @@ package net.emojiparty.android.jishotomo.ui.dialogs
 
 import android.os.Environment
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.launch
 import net.emojiparty.android.jishotomo.R.string
-import net.emojiparty.android.jishotomo.ui.csv.CsvExportAsyncTask
-import net.emojiparty.android.jishotomo.ui.csv.CsvExportAsyncTask.CsvExportUiCallbacks
-import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl
+import net.emojiparty.android.jishotomo.data.csv.CsvExporter
+import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses
+import net.emojiparty.android.jishotomo.ui.csv.CsvExportUiCallbacks
 
 class ExportDialog(
-  private val pagedEntriesControl: PagedEntriesControl,
+  private val deferredEntries: Deferred<List<EntryWithAllSenses>>,
   private val uiCallbacks: CsvExportUiCallbacks
 ) : CallbackDialog(
   string.export_instructions,
@@ -16,7 +19,7 @@ class ExportDialog(
 ) {
 
   override fun onConfirm() {
-    checkForPermissionThenExport(pagedEntriesControl)
+    checkForPermissionThenExport()
   }
 
   override val dialogTag: String = "export_explain"
@@ -27,19 +30,31 @@ class ExportDialog(
       return Environment.MEDIA_MOUNTED == Environment.getExternalStorageState()
     }
 
-  private fun checkForPermissionThenExport(
-    pagedEntriesControl: PagedEntriesControl
-  ) {
+  private fun checkForPermissionThenExport() {
     if (!isExternalStorageWritable) {
       Toast.makeText(activity, string.no_external_storage, Toast.LENGTH_LONG).show()
       return
     }
-    exportCsv(pagedEntriesControl)
+    exportCsv()
   }
 
-  private fun exportCsv(
-    pagedEntriesControl: PagedEntriesControl
-  ) {
-    CsvExportAsyncTask(uiCallbacks, pagedEntriesControl).execute(activity)
+  private fun exportCsv() {
+    activity?.lifecycleScope?.launch {
+      val csvExporter = CsvExporter(
+        requireContext(),
+        { progress ->
+          uiCallbacks.onProgressUpdate(progress)
+        },
+        {
+          uiCallbacks.onCancelled()
+        }
+      )
+
+      uiCallbacks.onPreExecute()
+
+      csvExporter.export(deferredEntries.await())
+
+      uiCallbacks.onPostExecute()
+    }
   }
 }
