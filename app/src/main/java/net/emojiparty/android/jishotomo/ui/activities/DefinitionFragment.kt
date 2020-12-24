@@ -20,6 +20,7 @@ import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses
 import net.emojiparty.android.jishotomo.ui.adapters.DataBindingAdapter
 import net.emojiparty.android.jishotomo.ui.presentation.SensePresenter
 import net.emojiparty.android.jishotomo.ui.viewmodels.EntryViewModel
+import net.emojiparty.android.jishotomo.ui.viewmodels.EntryViewModelFactory
 
 class DefinitionFragment : Fragment() {
   override fun onCreateView(
@@ -50,10 +51,10 @@ class DefinitionFragment : Fragment() {
     val entryId = findEntryId(bundle)
 
     if (entryId != ENTRY_EMPTY) {
-      val viewModel: EntryViewModel by viewModels()
+      val viewModel: EntryViewModel by viewModels { EntryViewModelFactory(entryId) }
 
       viewModel
-        .entryLiveData(entryId)
+        .entryLiveData()
         .observe(
           viewLifecycleOwner,
           { entry: EntryWithAllSenses ->

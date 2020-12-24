@@ -26,7 +26,7 @@ class AppRepository {
   @Inject
   lateinit var senseDao: SenseDao
 
-  fun getEntryWithAllSenses(entryId: Int) = entryDao.getEntryById(entryId)
+  suspend fun getEntryWithAllSenses(entryId: Int) = entryDao.getEntryById(entryId)
 
   fun search(term: String): LiveData<PagedList<SearchResultEntry>> {
     val unicodeCodePoint = Character.codePointAt(term, 0)

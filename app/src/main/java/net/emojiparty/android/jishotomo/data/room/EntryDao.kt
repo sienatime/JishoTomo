@@ -1,6 +1,5 @@
 package net.emojiparty.android.jishotomo.data.room
 
-import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
 import androidx.room.Dao
 import androidx.room.Query
@@ -10,6 +9,10 @@ import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry
 import org.jetbrains.annotations.TestOnly
 
+/**
+ * Functions that return a DataSource should not be `suspend`ing,
+ * since they already have their own async stuff built in
+ */
 @Dao
 interface EntryDao {
   @Update
@@ -17,7 +20,7 @@ interface EntryDao {
 
   @Transaction
   @Query("SELECT * FROM entries WHERE entries.id = :id LIMIT 1")
-  fun getEntryById(id: Int): LiveData<EntryWithAllSenses>
+  suspend fun getEntryById(id: Int): EntryWithAllSenses
 
   @Transaction
   @Query("SELECT id, primary_kanji, primary_reading FROM entries ORDER BY id ASC")

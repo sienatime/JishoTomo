@@ -12,14 +12,17 @@ import net.emojiparty.android.jishotomo.data.models.CrossReferencedEntry
 import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses
 import java.util.HashMap
 
-class EntryViewModel : ViewModel() {
+class EntryViewModel(private val entryId: Int) : ViewModel() {
   private val appRepository: AppRepository by lazy { AppRepository() }
+  private val entry = MutableLiveData<EntryWithAllSenses>()
 
-  private var entry: LiveData<EntryWithAllSenses> = MutableLiveData<EntryWithAllSenses>()
+  init {
+    viewModelScope.launch {
+      entry.value = appRepository.getEntryWithAllSenses(entryId)
+    }
+  }
 
-  fun entryLiveData(entryId: Int): LiveData<EntryWithAllSenses> {
-    entry = appRepository.getEntryWithAllSenses(entryId)
-
+  fun entryLiveData(): LiveData<EntryWithAllSenses> {
     return entry
   }
 
