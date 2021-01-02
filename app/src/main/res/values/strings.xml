@@ -32,7 +32,7 @@
   <string name="jlpt_n3">N3</string>
   <string name="jlpt_n4">N4</string>
   <string name="jlpt_n5">N5</string>
-  <string name="export">Export to CSV</string>
+  <string name="export">Export to TSV</string>
   <string name="remove_all_favorites">Remove All Favorites</string>
   <string name="about">About</string>
 
@@ -43,16 +43,16 @@
   <string name="add_widget">Add widget</string>
 
   <!-- CSV export -->
-  <string name="export_instructions">You can export your favorites or the JLPT lists to a CSV for
-    importing into other programs, like Anki SRS. The format is expression;meaning;reading. Please
+  <string name="export_instructions">You can export your favorites or the JLPT lists to a TSV (tab-separated values) for
+    importing into other programs, like Anki SRS. The format is "expression meaning reading" separated by tabs. Please
     make sure to allow HTML when you import.</string>
   <string name="export_yes">Proceed</string>
   <string name="cancel">Cancel</string>
   <string name="permission_denied">External Storage Write Permission Denied: You will not be able to use the Export feature.</string>
   <string name="no_external_storage">No external storage detected. You will not be able to use the Export feature.</string>
-  <string name="csv_successful">CSV export successful!</string>
-  <string name="csv_failed">CSV export failed.</string>
-  <string name="share_csv">Share Exported CSV</string>
+  <string name="csv_successful">TSV export successful!</string>
+  <string name="csv_failed">TSV export failed.</string>
+  <string name="share_csv">Share Exported TSV</string>
 
   <string name="explain_unfavorite_all">This will remove all of your favorites. This cannot be undone. Continue?</string>
   <string name="okay">OK</string>

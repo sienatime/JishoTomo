@@ -21,7 +21,7 @@ class CsvExporter(
   ) {
     val writer: CSVWriter
     try {
-      writer = semicolonSeparatedWriter(fileLocation(context))
+      writer = tabSeparatedWriter(fileLocation(context))
       val totalCount = entries.size
       val senseDisplay = SenseDisplay(
         AndroidResourceFetcher(context.resources, context.packageName)
@@ -40,16 +40,16 @@ class CsvExporter(
   }
 
   @Throws(IOException::class)
-  private fun semicolonSeparatedWriter(csv: String): CSVWriter {
+  private fun tabSeparatedWriter(csv: String): CSVWriter {
     return CSVWriter(
-      FileWriter(csv), ';', CSVWriter.NO_QUOTE_CHARACTER,
+      FileWriter(csv), '\t', CSVWriter.NO_QUOTE_CHARACTER,
       CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END
     )
   }
 
   companion object {
     fun fileLocation(context: Context): String {
-      return context.getExternalFilesDir("csv_export")?.toString() + "/jisho_tomo_export.csv"
+      return context.getExternalFilesDir("csv_export")?.toString() + "/jisho_tomo_export.tsv"
     }
   }
 }
