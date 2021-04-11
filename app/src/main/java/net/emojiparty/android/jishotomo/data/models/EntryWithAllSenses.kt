@@ -19,7 +19,9 @@ data class EntryWithAllSenses(
   @Ignore val otherKanji = entry.otherKanji
   @Ignore val otherReadings = entry.otherReadings
   @Ignore val jlptLevel = entry.jlptLevel
-  @Ignore val isFavorited = entry.isFavorited()
+
+  val isFavorited
+    get() = entry.isFavorited()
 
   @Ignore
   val alternateKanji: String = otherKanji?.splitAndJoin() ?: ""

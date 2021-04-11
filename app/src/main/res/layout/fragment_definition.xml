@@ -163,7 +163,7 @@
 
     </androidx.core.widget.NestedScrollView>
 
-
+    <!-- content description is set programmatically -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
@@ -171,8 +171,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:elevation="@dimen/fab_elevation"
-        android:contentDescription="@{presenter.isFavorited() ? @string/remove_from_favorites : @string/add_to_favorites }"
-        android:src="@{presenter.isFavorited() ? @drawable/ic_star : @drawable/ic_star_border }"
+        tools:ignore="ContentDescription"
         />
   </FrameLayout>
 

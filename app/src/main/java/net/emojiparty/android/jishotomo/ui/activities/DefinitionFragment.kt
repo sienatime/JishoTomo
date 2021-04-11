@@ -9,13 +9,14 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_definition.fab
 import kotlinx.android.synthetic.main.fragment_definition.no_entry_textview
+import kotlinx.android.synthetic.main.fragment_definition.view.fab
 import net.emojiparty.android.jishotomo.BR
 import net.emojiparty.android.jishotomo.JishoTomoApp
 import net.emojiparty.android.jishotomo.R
 import net.emojiparty.android.jishotomo.R.layout
-import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger
 import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses
 import net.emojiparty.android.jishotomo.ui.adapters.DataBindingAdapter
 import net.emojiparty.android.jishotomo.ui.presentation.SensePresenter
@@ -33,16 +34,14 @@ class DefinitionFragment : Fragment() {
     )
     val root = binding.root
     binding.lifecycleOwner = activity
-    val analyticsLogger = (requireActivity().application as JishoTomoApp).analyticsLogger
-    setupViewModel(arguments, binding, root, analyticsLogger)
+    setupViewModel(arguments, binding, root)
     return root
   }
 
   private fun setupViewModel(
     bundle: Bundle?,
     binding: ViewDataBinding,
-    root: View,
-    analyticsLogger: AnalyticsLogger
+    root: View
   ) {
     val sensesRecyclerView: RecyclerView = root.findViewById(R.id.senses_rv)
     val adapter = DataBindingAdapter(layout.list_item_sense)
@@ -58,16 +57,16 @@ class DefinitionFragment : Fragment() {
         .observe(
           viewLifecycleOwner,
           { entry: EntryWithAllSenses ->
-            binding.setVariable(BR.presenter, entry)
+            entryObserver(entry, binding, viewModel, adapter)
+          }
+        )
 
-            val presenters = entry.senses.map { SensePresenter(it, viewModel.getCrossReferencesForSense(it.id)) }
-            adapter.setItems(presenters)
-
-            fab.setOnClickListener {
-              viewModel.toggleFavorite(analyticsLogger)
-            }
-
-            analyticsLogger.logViewItem(entry.id, entry.kanjiOrReading)
+      viewModel
+        .isFavoritedLiveData()
+        .observe(
+          viewLifecycleOwner,
+          { isFavorited: Boolean ->
+            isFavoritedObserver(isFavorited, root.fab)
           }
         )
     } else {
@@ -77,6 +76,36 @@ class DefinitionFragment : Fragment() {
 
   private fun findEntryId(bundle: Bundle?): Int {
     return bundle?.getInt(ENTRY_ID_EXTRA, ENTRY_EMPTY) ?: ENTRY_EMPTY
+  }
+
+  private fun entryObserver(
+    entry: EntryWithAllSenses,
+    binding: ViewDataBinding,
+    viewModel: EntryViewModel,
+    adapter: DataBindingAdapter
+  ) {
+    binding.setVariable(BR.presenter, entry)
+
+    val presenters = entry.senses.map { SensePresenter(it, viewModel.getCrossReferencesForSense(it.id)) }
+    adapter.setItems(presenters)
+
+    val analyticsLogger = (requireActivity().application as JishoTomoApp).analyticsLogger
+
+    fab.setOnClickListener {
+      viewModel.toggleFavorite(analyticsLogger)
+    }
+
+    analyticsLogger.logViewItem(entry.id, entry.kanjiOrReading)
+  }
+
+  private fun isFavoritedObserver(isFavorited: Boolean, fab: FloatingActionButton) {
+    if (isFavorited) {
+      fab.contentDescription = getString(R.string.remove_from_favorites)
+      fab.setImageResource(R.drawable.ic_star)
+    } else {
+      fab.contentDescription = getString(R.string.add_to_favorites)
+      fab.setImageResource(R.drawable.ic_star_border)
+    }
   }
 
   companion object {

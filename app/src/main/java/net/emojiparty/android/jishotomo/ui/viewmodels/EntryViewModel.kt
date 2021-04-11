@@ -15,15 +15,22 @@ import java.util.HashMap
 class EntryViewModel(private val entryId: Int) : ViewModel() {
   private val appRepository: AppRepository by lazy { AppRepository() }
   private val entry = MutableLiveData<EntryWithAllSenses>()
+  private val isFavorited = MutableLiveData<Boolean>()
 
   init {
     viewModelScope.launch {
-      entry.value = appRepository.getEntryWithAllSenses(entryId)
+      val entryWithSenses = appRepository.getEntryWithAllSenses(entryId)
+      entry.value = entryWithSenses
+      isFavorited.value = entryWithSenses.isFavorited
     }
   }
 
   fun entryLiveData(): LiveData<EntryWithAllSenses> {
     return entry
+  }
+
+  fun isFavoritedLiveData(): LiveData<Boolean> {
+    return isFavorited
   }
 
   fun getCrossReferencesForSense(senseId: Int): List<CrossReferencedEntry> {
@@ -46,10 +53,11 @@ class EntryViewModel(private val entryId: Int) : ViewModel() {
     entry.value?.let { entry ->
       viewModelScope.launch {
         appRepository.toggleFavorite(entry.entry)
+        isFavorited.value = entry.isFavorited
         analyticsLogger.logToggleFavoriteEvent(
           entry.id,
           entry.kanjiOrReading,
-          !entry.isFavorited
+          entry.isFavorited
         )
       }
     }
