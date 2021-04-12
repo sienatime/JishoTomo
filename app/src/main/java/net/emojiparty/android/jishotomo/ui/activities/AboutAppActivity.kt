@@ -3,15 +3,16 @@ package net.emojiparty.android.jishotomo.ui.activities
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_about_app.about_text
-import net.emojiparty.android.jishotomo.R.layout
 import net.emojiparty.android.jishotomo.R.string
+import net.emojiparty.android.jishotomo.databinding.ActivityAboutAppBinding
 
 class AboutAppActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(layout.activity_about_app)
     supportActionBar!!.setTitle(string.about)
-    about_text.movementMethod = LinkMovementMethod.getInstance()
+    val binding = ActivityAboutAppBinding.inflate(layoutInflater)
+    binding.aboutText.movementMethod = LinkMovementMethod.getInstance()
+    val view = binding.root
+    setContentView(view)
   }
 }

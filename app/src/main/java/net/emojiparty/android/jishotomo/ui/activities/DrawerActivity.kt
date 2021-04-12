@@ -20,20 +20,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
-import kotlinx.android.synthetic.main.activity_drawer.drawer_layout
-import kotlinx.android.synthetic.main.activity_drawer.nav_view
-import kotlinx.android.synthetic.main.app_bar_drawer.drawer_toolbar
-import kotlinx.android.synthetic.main.app_bar_drawer.toolbar_title
-import kotlinx.android.synthetic.main.content_drawer.drawer_content_fragment
-import kotlinx.android.synthetic.main.content_drawer.tablet_definition_fragment_container
-import kotlinx.android.synthetic.main.fragment_entry_list.exporting
 import net.emojiparty.android.jishotomo.JishoTomoApp
 import net.emojiparty.android.jishotomo.R
-import net.emojiparty.android.jishotomo.R.id
-import net.emojiparty.android.jishotomo.R.layout
-import net.emojiparty.android.jishotomo.R.string
 import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger
 import net.emojiparty.android.jishotomo.data.csv.CsvExporter
+import net.emojiparty.android.jishotomo.databinding.ActivityDrawerBinding
 import net.emojiparty.android.jishotomo.ui.csv.CsvExportUiCallbacks
 import net.emojiparty.android.jishotomo.ui.dialogs.ExportDialog
 import net.emojiparty.android.jishotomo.ui.dialogs.UnfavoriteAllDialog
@@ -55,14 +46,20 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
   private var tabletFragmentContainer: FrameLayout? = null
   private var fragmentContainer: FragmentContainerView? = null
 
+  private lateinit var binding: ActivityDrawerBinding
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(layout.activity_drawer)
-    setSupportActionBar(drawer_toolbar)
+
+    binding = ActivityDrawerBinding.inflate(layoutInflater)
+    val view = binding.root
+    setContentView(view)
+
+    setSupportActionBar(binding.appBarDrawer.drawerToolbar)
     supportActionBar!!.setDisplayShowTitleEnabled(false) // I handle the title separately
 
-    tabletFragmentContainer = tablet_definition_fragment_container
-    fragmentContainer = drawer_content_fragment
+    tabletFragmentContainer = binding.appBarDrawer.contentDrawer.tabletDefinitionFragmentContainer
+    fragmentContainer = binding.appBarDrawer.contentDrawer.drawerContentFragment
 
     transactFragment(EntryListFragment())
 
@@ -127,24 +124,28 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
       if (fragmentManager.backStackEntryCount == 0) {
         val fragment = DefinitionFragment.instance(DefinitionFragment.ENTRY_EMPTY)
         fragmentManager.beginTransaction()
-          .replace(id.tablet_definition_fragment_container, fragment)
+          .replace(R.id.tablet_definition_fragment_container, fragment)
           .commitAllowingStateLoss()
       }
     }
   }
 
   private fun transactFragmentOnTablet(fragment: Fragment) {
-    supportFragmentManager.beginTransaction()
-      .add(id.tablet_definition_fragment_container, fragment)
-      .addToBackStack(null)
-      .commit()
+    tabletFragmentContainer?.let { container ->
+      supportFragmentManager.beginTransaction()
+        .add(container.id, fragment)
+        .addToBackStack(null)
+        .commit()
+    }
   }
 
   private fun transactFragment(fragment: Fragment) {
-    supportFragmentManager.beginTransaction()
-      .add(id.drawer_content_fragment, fragment)
-      .addToBackStack(null)
-      .commit()
+    fragmentContainer?.let { container ->
+      supportFragmentManager.beginTransaction()
+        .add(container.id, fragment)
+        .addToBackStack(null)
+        .commit()
+    }
   }
 
   fun addDefinitionFragment(entryId: Int) {
@@ -168,17 +169,17 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
   private fun setupDrawer() {
     val toggle = ActionBarDrawerToggle(
       this,
-      drawer_layout,
-      drawer_toolbar,
-      string.navigation_drawer_open,
-      string.navigation_drawer_close
+      binding.drawerLayout,
+      binding.appBarDrawer.drawerToolbar,
+      R.string.navigation_drawer_open,
+      R.string.navigation_drawer_close
     )
-    drawer_layout.addDrawerListener(toggle)
+    binding.drawerLayout.addDrawerListener(toggle)
     toggle.syncState()
   }
 
   private fun setupNavigationView() {
-    nav_view.setNavigationItemSelectedListener(this)
+    binding.navView.setNavigationItemSelectedListener(this)
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
@@ -194,7 +195,7 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
   }
 
   override fun onBackPressed() {
-    if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
+    if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
       closeDrawer()
     } else {
       super.onBackPressed()
@@ -211,7 +212,7 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
     menuInflater.inflate(R.menu.drawer, menu)
     val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
 
-    searchViewMenuItem = menu.findItem(id.menu_search)
+    searchViewMenuItem = menu.findItem(R.id.menu_search)
     val searchView = searchViewMenuItem!!.actionView as SearchView
 
     searchView.addOnAttachStateChangeListener(object : OnAttachStateChangeListener {
@@ -243,13 +244,13 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
   }
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
-    if (item.itemId == id.menu_export) {
+    if (item.itemId == R.id.menu_export) {
       ExportDialog(
         viewModel.getEntriesForExportAsync(),
         csvExportUiCallbacks
       ).show(supportFragmentManager)
       return true
-    } else if (item.itemId == id.menu_remove_all_favorites) {
+    } else if (item.itemId == R.id.menu_remove_all_favorites) {
       explainUnfavoriteAll()
       return true
     }
@@ -258,18 +259,18 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
 
   private val csvExportUiCallbacks: CsvExportUiCallbacks = object : CsvExportUiCallbacks {
     override fun onProgressUpdate(progress: Int?) {
-      exporting.progress = progress!!
+      binding.appBarDrawer.contentDrawer.exporting?.progress = progress!!
     }
 
     override fun onPreExecute() {
-      exporting.visibility = View.VISIBLE
+      binding.appBarDrawer.contentDrawer.exporting?.visibility = View.VISIBLE
     }
 
     override fun onPostExecute() {
-      exporting.visibility = View.GONE
+      binding.appBarDrawer.contentDrawer.exporting?.visibility = View.GONE
       val csv = File(CsvExporter.fileLocation(this@DrawerActivity))
       val csvUri = FileProvider.getUriForFile(
-        this@DrawerActivity, getString(string.fileprovider_package), csv
+        this@DrawerActivity, getString(R.string.fileprovider_package), csv
       )
       val shareIntent = Intent().apply {
         this.action = Intent.ACTION_SEND
@@ -277,14 +278,14 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
         this.type = "text/csv"
       }
       startActivity(
-        Intent.createChooser(shareIntent, getString(string.share_csv))
+        Intent.createChooser(shareIntent, getString(R.string.share_csv))
       )
       analyticsLogger.logCsvSuccess()
     }
 
     override fun onCancelled() {
-      exporting.visibility = View.GONE
-      Toast.makeText(this@DrawerActivity, string.csv_failed, Toast.LENGTH_SHORT).show()
+      binding.appBarDrawer.contentDrawer.exporting?.visibility = View.GONE
+      Toast.makeText(this@DrawerActivity, R.string.csv_failed, Toast.LENGTH_SHORT).show()
       analyticsLogger.logCsvFailed()
     }
   }
@@ -305,13 +306,13 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
 
   private fun setPagedEntriesControl(pagedEntriesControl: PagedEntriesControl) {
     clearDefinitionBackstack()
-    toolbar_title.text = resources.getString(viewModel.titleIdForSearchType())
+    binding.appBarDrawer.toolbarTitle.text = resources.getString(viewModel.titleIdForSearchType())
     refreshMenuItems()
     analyticsLogger.logSearchResultsOrViewItemList(pagedEntriesControl)
   }
 
   private fun jlptMenuIds(): List<Int> {
-    return listOf(id.nav_jlptn1, id.nav_jlptn2, id.nav_jlptn3, id.nav_jlptn4, id.nav_jlptn5)
+    return listOf(R.id.nav_jlptn1, R.id.nav_jlptn2, R.id.nav_jlptn3, R.id.nav_jlptn4, R.id.nav_jlptn5)
   }
 
   override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -345,7 +346,7 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
   }
 
   private fun closeDrawer() {
-    drawer_layout.closeDrawer(GravityCompat.START)
+    binding.drawerLayout.closeDrawer(GravityCompat.START)
   }
 
   companion object {

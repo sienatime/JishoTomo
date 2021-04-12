@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'kotlin-kapt'
@@ -40,6 +39,7 @@ android {
   }
   buildFeatures {
     dataBinding true
+    viewBinding true
   }
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8

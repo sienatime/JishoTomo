@@ -8,9 +8,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.RadioButton
 import android.widget.RadioGroup
-import kotlinx.android.synthetic.main.jisho_tomo_jlpt_widget_configure.add_button
-import kotlinx.android.synthetic.main.jisho_tomo_jlpt_widget_configure.jlpt_button_group
-import net.emojiparty.android.jishotomo.R.layout
+import net.emojiparty.android.jishotomo.databinding.JishoTomoJlptWidgetConfigureBinding
 import net.emojiparty.android.jishotomo.ui.widget.JishoTomoJlptWidget.Companion.updateAppWidget
 
 /**
@@ -20,15 +18,21 @@ class JishoTomoJlptWidgetConfigureActivity : Activity() {
   private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
   private var jlptButtonGroup: RadioGroup? = null
 
+  private lateinit var binding: JishoTomoJlptWidgetConfigureBinding
+
   public override fun onCreate(bundle: Bundle?) {
     super.onCreate(bundle)
 
     // Set the result to CANCELED.  This will cause the widget host to cancel
     // out of the widget placement if the user presses the back button.
     setResult(RESULT_CANCELED)
-    setContentView(layout.jisho_tomo_jlpt_widget_configure)
-    jlptButtonGroup = jlpt_button_group
-    add_button.setOnClickListener { addWidget() }
+
+    binding = JishoTomoJlptWidgetConfigureBinding.inflate(layoutInflater)
+    val view = binding.root
+    setContentView(view)
+
+    jlptButtonGroup = binding.jlptButtonGroup
+    binding.addButton.setOnClickListener { addWidget() }
 
     // Find the widget id from the intent.
     intent.extras?.let {

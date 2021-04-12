@@ -20,8 +20,17 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         app:elevation="@dimen/app_bar_elevation"
-        app:popupTheme="@style/AppTheme.PopupOverlay"
-        />
+        app:popupTheme="@style/AppTheme.PopupOverlay">
+
+      <TextView
+          style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+          android:id="@+id/toolbar_title"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/app_name"
+          />
+
+    </androidx.appcompat.widget.Toolbar>
 
   </com.google.android.material.appbar.AppBarLayout>
 

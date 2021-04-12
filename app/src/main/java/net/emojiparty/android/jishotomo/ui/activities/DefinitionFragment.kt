@@ -5,45 +5,48 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.android.synthetic.main.fragment_definition.fab
-import kotlinx.android.synthetic.main.fragment_definition.no_entry_textview
-import kotlinx.android.synthetic.main.fragment_definition.view.fab
 import net.emojiparty.android.jishotomo.BR
 import net.emojiparty.android.jishotomo.JishoTomoApp
 import net.emojiparty.android.jishotomo.R
 import net.emojiparty.android.jishotomo.R.layout
 import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses
+import net.emojiparty.android.jishotomo.databinding.FragmentDefinitionBinding
 import net.emojiparty.android.jishotomo.ui.adapters.DataBindingAdapter
 import net.emojiparty.android.jishotomo.ui.presentation.SensePresenter
 import net.emojiparty.android.jishotomo.ui.viewmodels.EntryViewModel
 import net.emojiparty.android.jishotomo.ui.viewmodels.EntryViewModelFactory
 
 class DefinitionFragment : Fragment() {
+
+  private var _binding: FragmentDefinitionBinding? = null
+  private val binding: FragmentDefinitionBinding
+    get() = _binding!!
+
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View {
-    val binding = DataBindingUtil.inflate<ViewDataBinding>(
+    _binding = DataBindingUtil.inflate<FragmentDefinitionBinding>(
       inflater, layout.fragment_definition, container, false
     )
     val root = binding.root
     binding.lifecycleOwner = activity
-    setupViewModel(arguments, binding, root)
+    setupViewModel(arguments)
     return root
   }
 
-  private fun setupViewModel(
-    bundle: Bundle?,
-    binding: ViewDataBinding,
-    root: View
-  ) {
-    val sensesRecyclerView: RecyclerView = root.findViewById(R.id.senses_rv)
+  override fun onDestroyView() {
+    super.onDestroyView()
+    _binding = null
+  }
+
+  private fun setupViewModel(bundle: Bundle?) {
+    val sensesRecyclerView: RecyclerView = binding.sensesRv
     val adapter = DataBindingAdapter(layout.list_item_sense)
     sensesRecyclerView.adapter = adapter
 
@@ -57,7 +60,7 @@ class DefinitionFragment : Fragment() {
         .observe(
           viewLifecycleOwner,
           { entry: EntryWithAllSenses ->
-            entryObserver(entry, binding, viewModel, adapter)
+            entryObserver(entry, viewModel, adapter)
           }
         )
 
@@ -66,11 +69,11 @@ class DefinitionFragment : Fragment() {
         .observe(
           viewLifecycleOwner,
           { isFavorited: Boolean ->
-            isFavoritedObserver(isFavorited, root.fab)
+            isFavoritedObserver(isFavorited, binding.fab)
           }
         )
     } else {
-      no_entry_textview.visibility = View.VISIBLE
+      binding.noEntryTextview.visibility = View.VISIBLE
     }
   }
 
@@ -80,7 +83,6 @@ class DefinitionFragment : Fragment() {
 
   private fun entryObserver(
     entry: EntryWithAllSenses,
-    binding: ViewDataBinding,
     viewModel: EntryViewModel,
     adapter: DataBindingAdapter
   ) {
@@ -91,7 +93,7 @@ class DefinitionFragment : Fragment() {
 
     val analyticsLogger = (requireActivity().application as JishoTomoApp).analyticsLogger
 
-    fab.setOnClickListener {
+    binding.fab.setOnClickListener {
       viewModel.toggleFavorite(analyticsLogger)
     }
 
