@@ -115,9 +115,6 @@ dependencies {
   implementation "androidx.fragment:fragment-ktx:1.2.5"
 
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
-  testImplementation "org.mockito:mockito-core:2.19.0"
-  testImplementation 'org.mockito:mockito-inline:2.13.0'
 }
 
 task ktlint(type: JavaExec, group: "verification") {
