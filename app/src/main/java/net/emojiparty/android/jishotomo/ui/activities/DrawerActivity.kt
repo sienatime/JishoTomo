@@ -11,6 +11,7 @@ import android.view.View.OnAttachStateChangeListener
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.annotation.StringRes
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -18,7 +19,6 @@ import androidx.core.content.FileProvider
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
-import androidx.fragment.app.FragmentManager
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
 import net.emojiparty.android.jishotomo.JishoTomoApp
 import net.emojiparty.android.jishotomo.R
@@ -63,7 +63,11 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
     tabletFragmentContainer = binding.appBarDrawer.contentDrawer.tabletDefinitionFragmentContainer
     fragmentContainer = binding.appBarDrawer.contentDrawer.drawerContentFragment
 
-    transactFragment(EntryListFragment())
+    fragmentContainer?.let { container ->
+      supportFragmentManager.beginTransaction()
+        .add(container.id, EntryListFragment())
+        .commit()
+    }
 
     analyticsLogger = (application as JishoTomoApp).analyticsLogger
 
@@ -117,22 +121,10 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
   }
 
   private fun clearDefinitionBackstack() {
-    // non-null on tablet
-    tabletFragmentContainer?.let {
-      val fragmentManager = supportFragmentManager
-      fragmentManager.popBackStack(
-        null, FragmentManager.POP_BACK_STACK_INCLUSIVE
-      )
-      if (fragmentManager.backStackEntryCount == 0) {
-        val fragment = DefinitionFragment.instance(DefinitionFragment.ENTRY_EMPTY)
-        fragmentManager.beginTransaction()
-          .replace(R.id.tablet_definition_fragment_container, fragment)
-          .commitAllowingStateLoss()
-      }
-    }
+    supportFragmentManager.popBackStack(null, 0)
   }
 
-  private fun transactFragment(fragment: Fragment) {
+  private fun addFragmentToBackstack(fragment: Fragment) {
     fragmentContainer?.let { container ->
       supportFragmentManager.beginTransaction()
         .add(container.id, fragment)
@@ -144,7 +136,8 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
   fun addDefinitionFragment(entryId: Int) {
     lastEntryViewed = entryId
     val fragment = DefinitionFragment.instance(entryId)
-    transactFragment(fragment)
+    addFragmentToBackstack(fragment)
+    setToolbarTitle(R.string.app_name)
   }
 
   private fun searchIntent(intent: Intent) {
@@ -192,6 +185,11 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
       closeDrawer()
     } else {
       super.onBackPressed()
+      if (supportFragmentManager.backStackEntryCount == 0) {
+        // since EntryListFragment isn't on the backstack, we know that's showing,
+        // so restore title
+        setToolbarTitle(viewModel.titleIdForSearchType())
+      }
     }
   }
 
@@ -299,9 +297,13 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
 
   private fun setPagedEntriesControl(pagedEntriesControl: PagedEntriesControl) {
     clearDefinitionBackstack()
-    binding.appBarDrawer.toolbarTitle.text = resources.getString(viewModel.titleIdForSearchType())
+    setToolbarTitle(viewModel.titleIdForSearchType())
     refreshMenuItems()
     analyticsLogger.logSearchResultsOrViewItemList(pagedEntriesControl)
+  }
+
+  private fun setToolbarTitle(@StringRes resId: Int) {
+    binding.appBarDrawer.toolbarTitle.text = resources.getString(resId)
   }
 
   private fun jlptMenuIds(): List<Int> {
