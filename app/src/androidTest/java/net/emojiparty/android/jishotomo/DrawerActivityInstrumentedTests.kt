@@ -1,5 +1,6 @@
 package net.emojiparty.android.jishotomo
 
+import android.content.Intent
 import android.widget.EditText
 import androidx.arch.core.executor.testing.CountingTaskExecutorRule
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -13,6 +14,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.DrawerMatchers.isClosed
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 import androidx.test.espresso.matcher.RootMatchers.isDialog
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -25,8 +27,11 @@ import net.emojiparty.android.jishotomo.R.id
 import net.emojiparty.android.jishotomo.R.string
 import net.emojiparty.android.jishotomo.data.AppRepository
 import net.emojiparty.android.jishotomo.ui.activities.DrawerActivity
+import net.emojiparty.android.jishotomo.ui.fragments.DefinitionFragment
+import net.emojiparty.android.jishotomo.utils.CustomMatchers
 import net.emojiparty.android.jishotomo.utils.JishoTomoTestUtils
 import net.emojiparty.android.jishotomo.utils.RecyclerViewItemCountAssertion.Companion.withItemCount
+import org.hamcrest.CoreMatchers
 import org.hamcrest.Matchers.greaterThan
 import org.hamcrest.Matchers.not
 import org.junit.After
@@ -46,7 +51,9 @@ import java.util.concurrent.TimeUnit.MINUTES
 class DrawerActivityInstrumentedTests {
   @get:Rule
   var activityRule = ActivityTestRule(
-    DrawerActivity::class.java
+    DrawerActivity::class.java,
+    false,
+    false
   )
 
   @get:Rule
@@ -57,8 +64,6 @@ class DrawerActivityInstrumentedTests {
     runBlocking {
       AppRepository().unfavoriteAll()
     }
-    onView(withText("Jisho Tomo"))
-      .check(matches(isDisplayed()))
   }
 
   @After
@@ -68,8 +73,15 @@ class DrawerActivityInstrumentedTests {
     }
   }
 
+  private fun launchActivity() {
+    activityRule.launchActivity(null)
+    onView(withText("Jisho Tomo"))
+      .check(matches(isDisplayed()))
+  }
+
   @Test
   fun appLoads() {
+    launchActivity()
     onView(withId(id.search_results_rv))
       .check(
         withItemCount(greaterThan(1))
@@ -84,9 +96,10 @@ class DrawerActivityInstrumentedTests {
       .check(matches(isDisplayed()))
   }
 
-  // BROWSE
+  // region BROWSE
   @Test
   fun itHasOnlySearchMenuItem() {
+    launchActivity()
     onView(withId(id.menu_search))
       .check(matches(isDisplayed()))
     onView(withId(id.menu_export))
@@ -95,9 +108,12 @@ class DrawerActivityInstrumentedTests {
       .check(doesNotExist())
   }
 
-  // SEARCH
+  // endregion
+
+  // region SEARCH
   @Test
   fun itCanPerformSearchFromToolbar() {
+    launchActivity()
     onView(withId(id.menu_search))
       .perform(click())
     performSearch("朝")
@@ -115,6 +131,7 @@ class DrawerActivityInstrumentedTests {
 
   @Test
   fun itCanPerformSearchFromDrawer() {
+    launchActivity()
     JishoTomoTestUtils.clickDrawerItem(id.nav_search)
     performSearch("朝")
     onView(withText("あさ"))
@@ -125,6 +142,7 @@ class DrawerActivityInstrumentedTests {
 
   @Test
   fun itCanPerformASearchWithNoResults() {
+    launchActivity()
     val searchTerm = "alkdsjflksdjlf"
     JishoTomoTestUtils.clickDrawerItem(id.nav_search)
     performSearch(searchTerm, false)
@@ -138,9 +156,12 @@ class DrawerActivityInstrumentedTests {
       )
   }
 
-  // DRAWER
+  // endregion
+
+  // region DRAWER
   @Test
   fun itHasItemsInTheDrawer() {
+    launchActivity()
     JishoTomoTestUtils.openDrawer()
     onView(withText("Browse"))
       .check(matches(isDisplayed()))
@@ -156,16 +177,20 @@ class DrawerActivityInstrumentedTests {
 
   @Test
   fun itClosesTheDrawerWhenBackIsPressed() {
+    launchActivity()
     JishoTomoTestUtils.openDrawer()
     pressBack()
     onView(withId(id.drawer_layout))
       .check(matches(isClosed()))
   }
 
-  // FAVORITES
+  // endregion
+
+  // region FAVORITES
   @Test
   fun itShowsAllMenuItemsWhenThereAreFavorites() {
     JishoTomoTestUtils.addFavoriteEntry("七転び八起き")
+    launchActivity()
     JishoTomoTestUtils.clickDrawerItem(id.nav_favorites)
     onView(withId(id.menu_search))
       .check(matches(isDisplayed()))
@@ -183,6 +208,7 @@ class DrawerActivityInstrumentedTests {
 
   @Test
   fun itShowsOnlySearchMenuItemWhenThereAreNoFavorites() {
+    launchActivity()
     JishoTomoTestUtils.clickDrawerItem(id.nav_favorites)
     onView(withId(id.menu_search))
       .check(matches(isDisplayed()))
@@ -197,6 +223,7 @@ class DrawerActivityInstrumentedTests {
   @Test
   fun itCanRemoveAllFavorites() {
     JishoTomoTestUtils.addFavoriteEntry("七転び八起き")
+    launchActivity()
     JishoTomoTestUtils.clickDrawerItem(id.nav_favorites)
     onView(withId(id.search_results_rv))
       .check(withItemCount(1))
@@ -214,17 +241,23 @@ class DrawerActivityInstrumentedTests {
       .check(matches(withText(string.no_favorites)))
   }
 
-  // ABOUT
+  // endregion
+
+  // region ABOUT
   @Test
   fun itCanOpenAboutActivity() {
+    launchActivity()
     JishoTomoTestUtils.clickDrawerItem(id.nav_about)
     onView(withId(id.about_text))
       .check(matches(isDisplayed()))
   }
 
-  // JLPT LISTS
+  // endregion
+
+  // region JLPT LISTS
   @Test
   fun itShowsSearchAndExportMenuItems() {
+    launchActivity()
     JishoTomoTestUtils.clickDrawerItem(id.nav_jlptn1)
     onView(withId(id.menu_search))
       .check(matches(isDisplayed()))
@@ -234,7 +267,71 @@ class DrawerActivityInstrumentedTests {
       .check(doesNotExist())
   }
 
-  // HELPER METHODS
+  // endregion
+
+  // region ENTRY
+
+  @Test
+  fun itDisplaysAnEntry() {
+    launchActivityWithEntry("七転び八起き")
+    onView(withId(id.def_reading))
+      .check(matches(withText("ななころびやおき")))
+    onView(withText("NOUN, VERB"))
+      .check(matches(isDisplayed()))
+    onView(withText(CoreMatchers.containsString("not giving up")))
+      .check(matches(isDisplayed()))
+    onView(withText("NOUN"))
+      .check(matches(isDisplayed()))
+    onView(withText(CoreMatchers.containsString("ups and downs in life")))
+      .check(matches(isDisplayed()))
+    onView(withText("ALTERNATE KANJI"))
+      .check(matches(isDisplayed()))
+    onView(withText("ALTERNATE READINGS"))
+      .check(matches(isDisplayed()))
+  }
+
+  @Test
+  fun itCanNavigateToCrossReferences() {
+    launchActivityWithEntry("漢数字ゼロ")
+    onView(withText("See also:"))
+      .check(matches(isDisplayed()))
+    onView(withId(id.li_cross_reference_container))
+      .check(matches(ViewMatchers.hasChildCount(2)))
+    onView(
+      CustomMatchers.nthChildOf(withId(id.li_cross_reference_container), 0)
+    )
+      .perform(click())
+    onView(withText("circle (sometimes used for zero)"))
+      .check(matches(isDisplayed()))
+  }
+
+  // flaky
+  @Test
+  fun itCanAddAndRemoveFavorite() {
+    launchActivityWithEntry("七転び八起き")
+    onView(withId(id.fab))
+      .check(
+        matches(ViewMatchers.withContentDescription("Add Entry to Favorites"))
+      )
+    onView(withId(id.fab))
+      .perform(click())
+    onView(withId(id.fab))
+      .check(
+        matches(
+          ViewMatchers.withContentDescription("Remove Entry from Favorites")
+        )
+      )
+    onView(withId(id.fab))
+      .perform(click())
+    onView(withId(id.fab))
+      .check(
+        matches(ViewMatchers.withContentDescription("Add Entry to Favorites"))
+      )
+  }
+
+  // endregion
+
+  // region HELPER METHODS
   private fun drain() {
     mCountingTaskExecutorRule.drainTasks(1, MINUTES)
   }
@@ -258,4 +355,22 @@ class DrawerActivityInstrumentedTests {
         )
     }
   }
+
+  private fun launchActivityWithEntry(kanji: String) {
+    runBlocking {
+      val entry = AppRepository().getEntryByKanji(kanji)
+      val intent = Intent().apply {
+        this.putExtra(DefinitionFragment.ENTRY_ID_EXTRA, entry.id)
+      }
+
+      activityRule.launchActivity(intent)
+
+      onView(withText("Jisho Tomo"))
+        .check(matches(isDisplayed()))
+      onView(withId(id.def_kanji))
+        .check(matches(withText(kanji)))
+    }
+  }
+
+  // endregion
 }
