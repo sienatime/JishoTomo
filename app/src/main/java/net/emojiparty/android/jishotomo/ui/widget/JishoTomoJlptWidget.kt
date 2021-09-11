@@ -15,7 +15,7 @@ import net.emojiparty.android.jishotomo.R.layout
 import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger
 import net.emojiparty.android.jishotomo.data.AppRepository
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry
-import net.emojiparty.android.jishotomo.ui.activities.DefinitionActivity
+import net.emojiparty.android.jishotomo.ui.activities.DrawerActivity
 import net.emojiparty.android.jishotomo.ui.fragments.DefinitionFragment
 import net.emojiparty.android.jishotomo.ui.presentation.AndroidResourceFetcher
 
@@ -102,7 +102,7 @@ class JishoTomoJlptWidget : AppWidgetProvider() {
       context: Context,
       appWidgetId: Int
     ): PendingIntent? {
-      val appIntent = Intent(context, DefinitionActivity::class.java).apply {
+      val appIntent = Intent(context, DrawerActivity::class.java).apply {
         this.putExtra(DefinitionFragment.ENTRY_ID_EXTRA, entry.id)
       }
       return TaskStackBuilder.create(context)

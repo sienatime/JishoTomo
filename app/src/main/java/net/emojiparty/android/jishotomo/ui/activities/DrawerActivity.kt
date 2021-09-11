@@ -47,6 +47,7 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
   private var lastEntryViewed = DefinitionFragment.ENTRY_EMPTY
   private var tabletFragmentContainer: FrameLayout? = null
   private var fragmentContainer: FragmentContainerView? = null
+  private var isLaunchingWithEntry: Boolean = false
 
   private lateinit var binding: ActivityDrawerBinding
 
@@ -79,6 +80,13 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
     setupDrawer()
     setupNavigationView()
 
+
+    val entryId = intent.getIntExtra(DefinitionFragment.ENTRY_ID_EXTRA, DefinitionFragment.ENTRY_EMPTY)
+    if (entryId != DefinitionFragment.ENTRY_EMPTY) {
+      isLaunchingWithEntry = true
+      addDefinitionFragment(entryId)
+    }
+
     viewModel.getEntries().observe(
       this,
       {
@@ -89,7 +97,7 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
     viewModel.getPagedEntriesControl().observe(
       this,
       {
-        setPagedEntriesControl(it)
+        pagedEntriesControlObserver(it)
       }
     )
 
@@ -295,8 +303,11 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
     startActivity(intent)
   }
 
-  private fun setPagedEntriesControl(pagedEntriesControl: PagedEntriesControl) {
-    clearDefinitionBackstack()
+  private fun pagedEntriesControlObserver(pagedEntriesControl: PagedEntriesControl) {
+    if (!isLaunchingWithEntry) {
+      clearDefinitionBackstack()
+    }
+    isLaunchingWithEntry = false
     setToolbarTitle(viewModel.titleIdForSearchType())
     refreshMenuItems()
     analyticsLogger.logSearchResultsOrViewItemList(pagedEntriesControl)
