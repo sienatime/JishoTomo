@@ -80,7 +80,6 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
     setupDrawer()
     setupNavigationView()
 
-
     val entryId = intent.getIntExtra(DefinitionFragment.ENTRY_ID_EXTRA, DefinitionFragment.ENTRY_EMPTY)
     if (entryId != DefinitionFragment.ENTRY_EMPTY) {
       isLaunchingWithEntry = true
