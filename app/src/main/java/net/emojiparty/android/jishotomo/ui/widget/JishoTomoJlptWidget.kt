@@ -16,7 +16,7 @@ import net.emojiparty.android.jishotomo.analytics.AnalyticsLogger
 import net.emojiparty.android.jishotomo.data.AppRepository
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry
 import net.emojiparty.android.jishotomo.ui.activities.DefinitionActivity
-import net.emojiparty.android.jishotomo.ui.activities.DefinitionFragment
+import net.emojiparty.android.jishotomo.ui.fragments.DefinitionFragment
 import net.emojiparty.android.jishotomo.ui.presentation.AndroidResourceFetcher
 
 /**

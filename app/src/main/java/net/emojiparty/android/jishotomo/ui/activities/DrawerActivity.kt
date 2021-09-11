@@ -28,6 +28,8 @@ import net.emojiparty.android.jishotomo.databinding.ActivityDrawerBinding
 import net.emojiparty.android.jishotomo.ui.csv.CsvExportUiCallbacks
 import net.emojiparty.android.jishotomo.ui.dialogs.ExportDialog
 import net.emojiparty.android.jishotomo.ui.dialogs.UnfavoriteAllDialog
+import net.emojiparty.android.jishotomo.ui.fragments.DefinitionFragment
+import net.emojiparty.android.jishotomo.ui.fragments.EntryListFragment
 import net.emojiparty.android.jishotomo.ui.presentation.AndroidResourceFetcher
 import net.emojiparty.android.jishotomo.ui.presentation.MenuButtons
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesControl
@@ -130,15 +132,6 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
     }
   }
 
-  private fun transactFragmentOnTablet(fragment: Fragment) {
-    tabletFragmentContainer?.let { container ->
-      supportFragmentManager.beginTransaction()
-        .add(container.id, fragment)
-        .addToBackStack(null)
-        .commit()
-    }
-  }
-
   private fun transactFragment(fragment: Fragment) {
     fragmentContainer?.let { container ->
       supportFragmentManager.beginTransaction()
@@ -151,7 +144,7 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
   fun addDefinitionFragment(entryId: Int) {
     lastEntryViewed = entryId
     val fragment = DefinitionFragment.instance(entryId)
-    transactFragmentOnTablet(fragment)
+    transactFragment(fragment)
   }
 
   private fun searchIntent(intent: Intent) {

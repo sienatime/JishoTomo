@@ -6,7 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import net.emojiparty.android.jishotomo.R.id
 import net.emojiparty.android.jishotomo.R.layout
 import net.emojiparty.android.jishotomo.databinding.ActivityDefinitionBinding
-import net.emojiparty.android.jishotomo.ui.activities.DefinitionFragment.Companion.instance
+import net.emojiparty.android.jishotomo.ui.fragments.DefinitionFragment
+import net.emojiparty.android.jishotomo.ui.fragments.DefinitionFragment.Companion.instance
 
 class DefinitionActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {

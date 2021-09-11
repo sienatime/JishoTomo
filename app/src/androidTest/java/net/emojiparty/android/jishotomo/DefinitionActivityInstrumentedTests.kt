@@ -16,7 +16,7 @@ import kotlinx.coroutines.runBlocking
 import net.emojiparty.android.jishotomo.R.id
 import net.emojiparty.android.jishotomo.data.AppRepository
 import net.emojiparty.android.jishotomo.ui.activities.DefinitionActivity
-import net.emojiparty.android.jishotomo.ui.activities.DefinitionFragment
+import net.emojiparty.android.jishotomo.ui.fragments.DefinitionFragment
 import net.emojiparty.android.jishotomo.utils.CustomMatchers.nthChildOf
 import org.hamcrest.CoreMatchers
 import org.junit.After

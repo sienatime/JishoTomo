@@ -1,4 +1,4 @@
-package net.emojiparty.android.jishotomo.ui.activities
+package net.emojiparty.android.jishotomo.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
