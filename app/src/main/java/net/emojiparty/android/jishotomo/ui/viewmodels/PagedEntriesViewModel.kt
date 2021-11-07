@@ -26,6 +26,8 @@ class PagedEntriesViewModel(
 
   private val entries: LiveData<PagedList<SearchResultEntry>>
   private val pagedEntriesControl = MutableLiveData<PagedEntriesControl>()
+  private val exportProgress = MutableLiveData<Int>()
+  private val isExporting = MutableLiveData<Boolean>()
 
   init {
     entries = Transformations.switchMap(
@@ -49,6 +51,18 @@ class PagedEntriesViewModel(
   }
 
   fun getEntries(): LiveData<PagedList<SearchResultEntry>> = entries
+
+  fun getExportProgress(): LiveData<Int> = exportProgress
+
+  fun setExportProgress(progess: Int) {
+    exportProgress.value = progess
+  }
+
+  fun getIsExporting(): LiveData<Boolean> = isExporting
+
+  fun setIsExporting(isExporting: Boolean) {
+    this.isExporting.value = isExporting
+  }
 
   fun isSearch(): Boolean = pagedEntriesControl.value is Search
 

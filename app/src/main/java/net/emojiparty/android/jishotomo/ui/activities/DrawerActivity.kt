@@ -8,7 +8,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.View.OnAttachStateChangeListener
-import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
@@ -45,7 +44,6 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
 
   private lateinit var analyticsLogger: AnalyticsLogger
   private var lastEntryViewed = DefinitionFragment.ENTRY_EMPTY
-  private var tabletFragmentContainer: FrameLayout? = null
   private var fragmentContainer: FragmentContainerView? = null
   private var isLaunchingWithEntry: Boolean = false
 
@@ -61,7 +59,6 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
     setSupportActionBar(binding.appBarDrawer.drawerToolbar)
     supportActionBar!!.setDisplayShowTitleEnabled(false) // I handle the title separately
 
-    tabletFragmentContainer = binding.appBarDrawer.contentDrawer.tabletDefinitionFragmentContainer
     fragmentContainer = binding.appBarDrawer.contentDrawer.drawerContentFragment
 
     fragmentContainer?.let { container ->
@@ -106,12 +103,7 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
 
   override fun onDestroy() {
     searchViewMenuItem = null
-    tabletFragmentContainer = null
     super.onDestroy()
-  }
-
-  fun isTablet(): Boolean {
-    return tabletFragmentContainer != null
   }
 
   private fun restoreFromBundle(bundle: Bundle) {
@@ -132,7 +124,7 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
   }
 
   private fun addFragmentToBackstack(fragment: Fragment) {
-    fragmentContainer?.let { container ->
+    (fragmentContainer ?: binding.appBarDrawer.contentDrawer.tabletDefinitionFragmentContainer)?.let { container ->
       supportFragmentManager.beginTransaction()
         .add(container.id, fragment)
         .addToBackStack(null)
@@ -140,11 +132,18 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
     }
   }
 
+  private fun isTablet(): Boolean {
+    return binding.appBarDrawer.contentDrawer.tabletDefinitionFragmentContainer != null
+  }
+
   fun addDefinitionFragment(entryId: Int) {
     lastEntryViewed = entryId
     val fragment = DefinitionFragment.instance(entryId)
     addFragmentToBackstack(fragment)
     setToolbarTitle(R.string.app_name)
+    if (!isTablet()) {
+      MenuButtons.hideExtraButtons(binding.appBarDrawer.drawerToolbar.menu)
+    }
   }
 
   private fun searchIntent(intent: Intent) {
@@ -257,15 +256,17 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
 
   private val csvExportUiCallbacks: CsvExportUiCallbacks = object : CsvExportUiCallbacks {
     override fun onProgressUpdate(progress: Int?) {
-      binding.appBarDrawer.contentDrawer.exporting?.progress = progress!!
+      progress?.let {
+        viewModel.setExportProgress(progress)
+      }
     }
 
     override fun onPreExecute() {
-      binding.appBarDrawer.contentDrawer.exporting?.visibility = View.VISIBLE
+      viewModel.setIsExporting(true)
     }
 
     override fun onPostExecute() {
-      binding.appBarDrawer.contentDrawer.exporting?.visibility = View.GONE
+      viewModel.setIsExporting(false)
       val csv = File(CsvExporter.fileLocation(this@DrawerActivity))
       val csvUri = FileProvider.getUriForFile(
         this@DrawerActivity, getString(R.string.fileprovider_package), csv
@@ -282,7 +283,7 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
     }
 
     override fun onCancelled() {
-      binding.appBarDrawer.contentDrawer.exporting?.visibility = View.GONE
+      viewModel.setIsExporting(false)
       Toast.makeText(this@DrawerActivity, R.string.csv_failed, Toast.LENGTH_SHORT).show()
       analyticsLogger.logCsvFailed()
     }

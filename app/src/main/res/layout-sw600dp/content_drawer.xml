@@ -9,64 +9,26 @@
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:baselineAligned="false"
-      >
+    android:orientation="horizontal">
 
-    <FrameLayout
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/tablet_list_fragment_container"
+        android:name="net.emojiparty.android.jishotomo.ui.fragments.EntryListFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"
-        android:background="@color/background"
         android:paddingTop="?attr/actionBarSize"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context=".ui.activities.DrawerActivity"
-        tools:showIn="@layout/app_bar_drawer"
-        >
+        tools:layout="@layout/fragment_entry_list"
+        />
 
-      <ProgressBar
-          android:id="@+id/exporting"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_gravity="top"
-          android:indeterminate="false"
-          android:visibility="gone"
-          style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-          />
-
-      <ProgressBar
-          android:id="@+id/loading"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center"
-          />
-
-      <androidx.recyclerview.widget.RecyclerView
-          android:id="@+id/search_results_rv"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-          />
-
-      <TextView
-          android:id="@+id/no_results"
-          android:layout_marginTop="24dp"
-          android:layout_marginStart="16dp"
-          android:layout_marginEnd="16dp"
-          android:textSize="@dimen/text_size_body"
-          app:fontFamily="sans-serif"
-          android:visibility="gone"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content" />
-
-    </FrameLayout>
-
-    <View style="@style/divider_full_height"/>
-
-    <FrameLayout
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/tablet_definition_fragment_container"
+        android:name="net.emojiparty.android.jishotomo.ui.fragments.DefinitionFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="3"
+        android:paddingTop="?attr/actionBarSize"
+        tools:layout="@layout/fragment_definition"
         />
 
   </LinearLayout>

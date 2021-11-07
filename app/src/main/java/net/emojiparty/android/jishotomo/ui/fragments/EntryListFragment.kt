@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.paging.PagedList
@@ -52,6 +53,20 @@ class EntryListFragment : Fragment() {
         setRecyclerViewWithNewAdapter()
         binding.noResults.visibility = View.GONE
         binding.loading.visibility = View.VISIBLE
+      }
+    )
+
+    viewModel.getExportProgress().observe(
+      viewLifecycleOwner,
+      {
+        binding.exporting.progress = it
+      }
+    )
+
+    viewModel.getIsExporting().observe(
+      viewLifecycleOwner,
+      {
+        binding.exporting.isVisible = it
       }
     )
 

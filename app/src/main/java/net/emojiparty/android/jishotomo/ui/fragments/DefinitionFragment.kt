@@ -2,7 +2,6 @@ package net.emojiparty.android.jishotomo.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -17,7 +16,6 @@ import net.emojiparty.android.jishotomo.R.layout
 import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses
 import net.emojiparty.android.jishotomo.databinding.FragmentDefinitionBinding
 import net.emojiparty.android.jishotomo.ui.adapters.DataBindingAdapter
-import net.emojiparty.android.jishotomo.ui.presentation.MenuButtons
 import net.emojiparty.android.jishotomo.ui.presentation.SensePresenter
 import net.emojiparty.android.jishotomo.ui.viewmodels.EntryViewModel
 import net.emojiparty.android.jishotomo.ui.viewmodels.EntryViewModelFactory
@@ -33,24 +31,18 @@ class DefinitionFragment : Fragment() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View {
-    _binding = DataBindingUtil.inflate<FragmentDefinitionBinding>(
+    _binding = DataBindingUtil.inflate(
       inflater, layout.fragment_definition, container, false
     )
     val root = binding.root
     binding.lifecycleOwner = activity
     setupViewModel(arguments)
-    setHasOptionsMenu(true)
     return root
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
     _binding = null
-  }
-
-  override fun onPrepareOptionsMenu(menu: Menu) {
-    super.onPrepareOptionsMenu(menu)
-    MenuButtons.hideExtraButtons(menu)
   }
 
   private fun setupViewModel(bundle: Bundle?) {
@@ -82,6 +74,7 @@ class DefinitionFragment : Fragment() {
         )
     } else {
       binding.noEntryTextview.visibility = View.VISIBLE
+      binding.fab.visibility = View.GONE
     }
   }
 
