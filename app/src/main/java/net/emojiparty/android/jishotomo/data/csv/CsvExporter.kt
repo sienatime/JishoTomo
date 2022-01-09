@@ -26,12 +26,17 @@ class CsvExporter(
       val senseDisplay = SenseDisplay(
         AndroidResourceFetcher(context.resources, context.packageName)
       )
+      var lastProgress = 0
       for (i in 0 until totalCount) {
         val entry = entries[i]
         writer.writeNext(
           CsvEntry(entry, senseDisplay).toArray()
         )
-        onUpdateProgress((i + 1) * 100 / totalCount)
+        val progress = (i + 1) * 100 / totalCount
+        if (progress != lastProgress) {
+          onUpdateProgress(progress)
+          lastProgress = progress
+        }
       }
       writer.close()
     } catch (exception: IOException) {

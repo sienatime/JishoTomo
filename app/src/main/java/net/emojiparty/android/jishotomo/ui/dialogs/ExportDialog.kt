@@ -39,6 +39,7 @@ class ExportDialog(
   }
 
   private fun exportCsv() {
+    dismiss()
     activity?.lifecycleScope?.launch {
       val csvExporter = CsvExporter(
         requireContext(),
