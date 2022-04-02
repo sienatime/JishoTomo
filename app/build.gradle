@@ -40,6 +40,7 @@ android {
   buildFeatures {
     dataBinding true
     viewBinding true
+    compose true
   }
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_11
@@ -47,6 +48,9 @@ android {
   }
   kotlinOptions {
     jvmTarget = "11"
+  }
+  composeOptions {
+    kotlinCompilerExtensionVersion '1.1.1'
   }
   testOptions {
     animationsDisabled = true
@@ -95,6 +99,13 @@ dependencies {
   implementation("com.opencsv:opencsv:4.0") {
     exclude group: 'commons-logging', module: 'commons-logging'
   }
+
+  // Compose
+  implementation 'androidx.activity:activity-compose:1.4.0'
+  implementation 'androidx.compose.material:material:1.1.1'
+  implementation 'androidx.compose.ui:ui-tooling:1.1.1'
+  implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1'
+  implementation "com.google.accompanist:accompanist-appcompat-theme:0.16.0"
 
   // AndroidX KTX Extensions
   implementation "androidx.core:core-ktx:1.7.0"
