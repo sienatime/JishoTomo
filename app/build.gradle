@@ -9,11 +9,11 @@ def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
-  compileSdkVersion 30
+  compileSdkVersion 31
   defaultConfig {
     applicationId "net.emojiparty.android.jishotomo"
     minSdkVersion 21
-    targetSdkVersion 30
+    targetSdkVersion 31
     versionCode 1
     versionName "1.0"
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -77,7 +77,7 @@ dependencies {
   def lifecycle_version = "2.2.0"
   def arch_version = "2.1.0"
   def paging_version = "2.1.2"
-  def room_version = "2.2.0"
+  def room_version = "2.4.2"
 
   // ViewModel and LiveData
   implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
@@ -114,7 +114,7 @@ dependencies {
   implementation "androidx.activity:activity-ktx:1.1.0"
   implementation "androidx.fragment:fragment-ktx:1.2.5"
 
-  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
 
 task ktlint(type: JavaExec, group: "verification") {
