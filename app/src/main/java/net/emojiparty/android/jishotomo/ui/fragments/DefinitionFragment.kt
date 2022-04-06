@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.google.accompanist.appcompattheme.AppCompatTheme
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import net.emojiparty.android.jishotomo.BR
 import net.emojiparty.android.jishotomo.JishoTomoApp
@@ -15,6 +14,7 @@ import net.emojiparty.android.jishotomo.R
 import net.emojiparty.android.jishotomo.R.layout
 import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses
 import net.emojiparty.android.jishotomo.databinding.FragmentDefinitionBinding
+import net.emojiparty.android.jishotomo.ui.JishoTomoTheme
 import net.emojiparty.android.jishotomo.ui.composables.SensesList
 import net.emojiparty.android.jishotomo.ui.presentation.SensePresenter
 import net.emojiparty.android.jishotomo.ui.viewmodels.EntryViewModel
@@ -87,7 +87,7 @@ class DefinitionFragment : Fragment() {
     val presenters = entry.senses.map { SensePresenter(it, viewModel.getCrossReferencesForSense(it.id)) }
 
     binding.sensesRv.setContent {
-      AppCompatTheme {
+      JishoTomoTheme {
         SensesList(presenters)
       }
     }

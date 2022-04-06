@@ -5,24 +5,18 @@ import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.intl.Locale
-import androidx.compose.ui.text.intl.LocaleList
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.google.accompanist.appcompattheme.AppCompatTheme
 import net.emojiparty.android.jishotomo.R.string
 import net.emojiparty.android.jishotomo.data.models.CrossReferencedEntry
 import net.emojiparty.android.jishotomo.data.room.Sense
+import net.emojiparty.android.jishotomo.ui.JishoTomoTheme
 import net.emojiparty.android.jishotomo.ui.presentation.EntryClickHandler
 import net.emojiparty.android.jishotomo.ui.presentation.SensePresenter
 
@@ -60,7 +54,7 @@ private fun PartsOfSpeech(isVisible: Boolean, partsOfSpeech: String) {
     Text(
       text = partsOfSpeech,
       modifier = Modifier.padding(top = 24.dp, bottom = 8.dp),
-      style = TextStyle(fontWeight = FontWeight.Bold)
+      style = MaterialTheme.typography.caption
     )
   }
 }
@@ -70,11 +64,7 @@ private fun Gloss(gloss: String) {
   Text(
     text = gloss,
     modifier = Modifier.padding(top = 20.dp),
-    style = TextStyle(
-      fontSize = 20.sp,
-      lineHeight = 26.sp,
-      fontFamily = FontFamily.SansSerif
-    )
+    style = MaterialTheme.typography.body1
   )
 }
 
@@ -88,12 +78,7 @@ private fun AppliesTo(
       modifier = Modifier
         .padding(top = 20.dp)
         .focusable(),
-      style = TextStyle(
-        fontSize = 20.sp,
-        lineHeight = 26.sp,
-        fontFamily = FontFamily.SansSerif,
-        localeList = LocaleList(Locale("JP"), Locale.current)
-      )
+      style = MaterialTheme.typography.body1
     )
   }
 }
@@ -105,10 +90,7 @@ private fun CrossReferences(crossReferences: List<CrossReferencedEntry>) {
     Text(
       text = context.getString(string.see_also),
       modifier = Modifier.padding(top = 12.dp, bottom = 4.dp),
-      style = TextStyle(
-        fontSize = 20.sp,
-        fontFamily = FontFamily.SansSerif
-      )
+      style = MaterialTheme.typography.body1
     )
     Row {
       for (crossReference in crossReferences) {
@@ -123,7 +105,7 @@ private fun CrossReferenceButton(
   crossReference: CrossReferencedEntry,
   context: Context
 ) {
-  Button(
+  SecondaryButton(
     onClick = {
       EntryClickHandler.open(
         context, crossReference.id
@@ -133,7 +115,7 @@ private fun CrossReferenceButton(
   ) {
     Text(
       text = crossReference.kanjiOrReading,
-      style = TextStyle(fontSize = 24.sp)
+      color = MaterialTheme.colors.onSecondary
     )
   }
 }
@@ -172,7 +154,7 @@ fun SensePreview() {
       )
     )
   )
-  AppCompatTheme {
+  JishoTomoTheme {
     SensesList(presenters)
   }
 }
