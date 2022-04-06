@@ -28,7 +28,7 @@ object BindingMethods {
       return
     }
 
-    val crossReferenceButton = CrossReferenceButton(view.context)
+    val crossReferenceButton = LegacyCrossReferenceButton(view.context)
 
     crossReferencedEntries.forEach { crossReferencedEntry ->
       view.addView(crossReferenceButton.create(crossReferencedEntry))

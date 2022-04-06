@@ -72,17 +72,15 @@
             tools:text="猫じゃらし"
             />
 
-        <androidx.recyclerview.widget.RecyclerView
+        <androidx.compose.ui.platform.ComposeView
             android:id="@+id/senses_rv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/def_kanji"
-            />
+            app:layout_constraintTop_toBottomOf="@id/def_kanji"/>
 
         <View
             android:id="@+id/sense_divider"

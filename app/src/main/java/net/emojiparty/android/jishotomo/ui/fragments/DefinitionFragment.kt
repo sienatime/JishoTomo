@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.RecyclerView
+import com.google.accompanist.appcompattheme.AppCompatTheme
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import net.emojiparty.android.jishotomo.BR
 import net.emojiparty.android.jishotomo.JishoTomoApp
@@ -15,7 +15,7 @@ import net.emojiparty.android.jishotomo.R
 import net.emojiparty.android.jishotomo.R.layout
 import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses
 import net.emojiparty.android.jishotomo.databinding.FragmentDefinitionBinding
-import net.emojiparty.android.jishotomo.ui.adapters.DataBindingAdapter
+import net.emojiparty.android.jishotomo.ui.composables.SensesList
 import net.emojiparty.android.jishotomo.ui.presentation.SensePresenter
 import net.emojiparty.android.jishotomo.ui.viewmodels.EntryViewModel
 import net.emojiparty.android.jishotomo.ui.viewmodels.EntryViewModelFactory
@@ -46,10 +46,6 @@ class DefinitionFragment : Fragment() {
   }
 
   private fun setupViewModel(bundle: Bundle?) {
-    val sensesRecyclerView: RecyclerView = binding.sensesRv
-    val adapter = DataBindingAdapter(layout.list_item_sense)
-    sensesRecyclerView.adapter = adapter
-
     val entryId = findEntryId(bundle)
 
     if (entryId != ENTRY_EMPTY) {
@@ -60,7 +56,7 @@ class DefinitionFragment : Fragment() {
         .observe(
           viewLifecycleOwner,
           { entry: EntryWithAllSenses ->
-            entryObserver(entry, viewModel, adapter)
+            entryObserver(entry, viewModel)
           }
         )
 
@@ -84,13 +80,17 @@ class DefinitionFragment : Fragment() {
 
   private fun entryObserver(
     entry: EntryWithAllSenses,
-    viewModel: EntryViewModel,
-    adapter: DataBindingAdapter
+    viewModel: EntryViewModel
   ) {
     binding.setVariable(BR.presenter, entry)
 
     val presenters = entry.senses.map { SensePresenter(it, viewModel.getCrossReferencesForSense(it.id)) }
-    adapter.setItems(presenters)
+
+    binding.sensesRv.setContent {
+      AppCompatTheme {
+        SensesList(presenters)
+      }
+    }
 
     val analyticsLogger = (requireActivity().application as JishoTomoApp).analyticsLogger
 

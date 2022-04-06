@@ -9,7 +9,7 @@ import net.emojiparty.android.jishotomo.R.dimen
 import net.emojiparty.android.jishotomo.R.style
 import net.emojiparty.android.jishotomo.data.models.CrossReferencedEntry
 
-class CrossReferenceButton(private val context: Context) {
+class LegacyCrossReferenceButton(private val context: Context) {
   private val resources: Resources = context.resources
 
   private val margin: Float = resources.getDimension(dimen.cross_ref_button_margin)

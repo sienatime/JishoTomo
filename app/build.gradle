@@ -55,6 +55,7 @@ android {
   testOptions {
     animationsDisabled = true
   }
+  buildToolsVersion '31.0.0 rc2'
 }
 
 configurations {
