@@ -1,175 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     >
-  <data>
-    <variable
-        name="presenter"
-        type="net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses"
-        />
-  </data>
 
-  <FrameLayout
-      android:background="@color/background"
+  <androidx.core.widget.NestedScrollView
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:clipToPadding="false"
       >
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/entry_parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="false"
+        android:paddingBottom="72dp"
+        android:paddingEnd="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="24dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         >
-      <androidx.constraintlayout.widget.ConstraintLayout
 
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:paddingBottom="72dp"
-          android:paddingEnd="16dp"
-          android:paddingLeft="16dp"
-          android:paddingRight="16dp"
-          android:paddingStart="16dp"
-          android:paddingTop="24dp"
-          app:layout_behavior="@string/appbar_scrolling_view_behavior"
-          >
+    </androidx.compose.ui.platform.ComposeView>
 
-        <TextView
-            android:id="@+id/no_entry_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_body"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:visibility="gone"
-            android:text="@string/select_something"
-            />
+  </androidx.core.widget.NestedScrollView>
 
-        <TextView
-            android:id="@+id/def_reading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_body"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            textInJapanese="@{presenter.getReading()}"
-            tools:text="ねこじゃらし"
-            visibleOrGone="@{presenter.hasKanji}"
-            />
-
-        <TextView
-            android:id="@+id/def_kanji"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_headline"
-            app:layout_constraintLeft_toLeftOf="@id/def_reading"
-            app:layout_constraintStart_toStartOf="@id/def_reading"
-            app:layout_constraintTop_toBottomOf="@id/def_reading"
-            textInJapanese="@{presenter.getKanjiOrReading()}"
-            tools:text="猫じゃらし"
-            />
-
-        <androidx.compose.ui.platform.ComposeView
-            android:id="@+id/senses_rv"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/def_kanji"/>
-
-        <View
-            android:id="@+id/sense_divider"
-            app:layout_constraintLeft_toLeftOf="@id/def_reading"
-            app:layout_constraintStart_toStartOf="@id/def_reading"
-            app:layout_constraintTop_toBottomOf="@id/senses_rv"
-            visibleOrGone="@{presenter.hasAlternateKanji() || presenter.hasAlternateReadings() }"
-            style="@style/divider_full_width"
-            />
-
-        <TextView
-            android:id="@+id/def_alt_kanji_header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="8dp"
-            android:paddingTop="16dp"
-            android:text="@string/alt_kanji"
-            app:layout_constraintLeft_toLeftOf="@id/def_reading"
-            app:layout_constraintStart_toStartOf="@id/def_reading"
-            app:layout_constraintTop_toBottomOf="@id/senses_rv"
-            visibleOrGone="@{presenter.hasAlternateKanji()}"
-            style="@style/small_caps"
-            />
-
-        <TextView
-            android:id="@+id/def_alt_kanji"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_body"
-            app:layout_constraintLeft_toLeftOf="@id/def_reading"
-            app:layout_constraintStart_toStartOf="@id/def_reading"
-            app:layout_constraintTop_toBottomOf="@id/def_alt_kanji_header"
-            textInJapanese="@{presenter.getAlternateKanji()}"
-            tools:text="ネコジャラシ"
-            visibleOrGone="@{presenter.hasAlternateKanji()}"
-            />
-
-        <TextView
-            android:id="@+id/def_alt_readings_header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="8dp"
-            android:paddingTop="16dp"
-            android:text="@string/alt_readings"
-            app:layout_constraintLeft_toLeftOf="@id/def_reading"
-            app:layout_constraintStart_toStartOf="@id/def_reading"
-            app:layout_constraintTop_toBottomOf="@id/def_alt_kanji"
-            visibleOrGone="@{presenter.hasAlternateReadings()}"
-            style="@style/small_caps"
-            />
-
-        <TextView
-            android:id="@+id/def_alt_readings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_body"
-            app:layout_constraintLeft_toLeftOf="@id/def_reading"
-            app:layout_constraintStart_toStartOf="@id/def_reading"
-            app:layout_constraintTop_toBottomOf="@id/def_alt_readings_header"
-            textInJapanese="@{presenter.getAlternateReadings()}"
-            tools:text="ネコジャラシ"
-            visibleOrGone="@{presenter.hasAlternateReadings()}"
-            />
-        <TextView
-            android:id="@+id/def_level"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            jlptPill="@{presenter.getJlptLevel()}"
-            tools:text="N1"
-            style="@style/dark_pill"
-            />
-
-      </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.core.widget.NestedScrollView>
-
-    <!-- content description is set programmatically -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:elevation="@dimen/fab_elevation"
-        tools:ignore="ContentDescription"
-        />
-  </FrameLayout>
-
-</layout>
+  <!-- content description is set programmatically -->
+  <com.google.android.material.floatingactionbutton.FloatingActionButton
+      android:id="@+id/fab"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="bottom|end"
+      android:layout_margin="@dimen/fab_margin"
+      app:elevation="@dimen/fab_elevation"
+      tools:ignore="ContentDescription"
+      />
+</FrameLayout>

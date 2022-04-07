@@ -39,23 +39,28 @@ val Pink = Color(0xffef9a9a)
 val LightPink = Color(0xffffcccb)
 val DarkPink = Color(0xffba6b6c)
 val LineGray = Color(0xffdfdfdf)
-val DarkGray = Color(0xff757575)
+val BodyTextGray = Color(0xff757575)
+val DarkGray = Color(0xff404040)
 
 private val DarkColorPalette = darkColors(
-  surface = Color.Black,
+  surface = DarkGray,
   onSurface = Color.White,
+  onBackground = Color.White,
   primary = DarkGreen,
   onPrimary = Color.White,
   secondary = DarkPink,
-  onSecondary = Color.White
+  secondaryVariant = Pink,
+  onSecondary = Color.Black
 )
 
 private val LightColorPalette = lightColors(
   surface = Color.White,
-  onSurface = DarkGray,
+  onSurface = BodyTextGray,
+  onBackground = BodyTextGray,
   primary = Green,
   onPrimary = Color.White,
   secondary = Pink,
+  secondaryVariant = LightPink,
   onSecondary = Color.Black
 )
 
@@ -65,7 +70,6 @@ val typography = Typography(
     fontWeight = FontWeight.Normal,
     fontSize = 20.sp,
     lineHeight = 30.sp,
-    color = DarkGray,
     localeList = LocaleList(Locale("JP"), Locale.current)
   ),
   button = TextStyle(
@@ -77,17 +81,14 @@ val typography = Typography(
     fontFamily = FontFamily.Default,
     fontWeight = FontWeight.Light,
     fontSize = 36.sp,
-    color = DarkGray
   ),
   h2 = TextStyle(
     fontFamily = FontFamily.Default,
     fontWeight = FontWeight.Light,
     fontSize = 30.sp,
-    color = DarkGray
   ),
   caption = TextStyle(
     fontWeight = FontWeight.Bold,
     fontSize = 14.sp,
-    color = DarkGray
   )
 )

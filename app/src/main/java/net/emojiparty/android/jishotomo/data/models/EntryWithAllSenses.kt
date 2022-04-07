@@ -24,16 +24,11 @@ data class EntryWithAllSenses(
     get() = entry.isFavorited()
 
   @Ignore
-  val alternateKanji: String = otherKanji?.splitAndJoin() ?: ""
+  val alternateKanji: String? = otherKanji?.splitAndJoin()
 
   @Ignore
-  val alternateReadings: String = otherReadings?.splitAndJoin() ?: ""
+  val alternateReadings: String? = otherReadings?.splitAndJoin()
 
-  fun hasAlternateKanji(): Boolean {
-    return otherKanji != null
-  }
-
-  fun hasAlternateReadings(): Boolean {
-    return otherReadings != null
-  }
+  @Ignore
+  val hasAlternates = otherKanji != null || otherReadings != null
 }
