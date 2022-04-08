@@ -1,8 +1,6 @@
 package net.emojiparty.android.jishotomo.data
 
-import androidx.lifecycle.LiveData
-import androidx.paging.LivePagedListBuilder
-import androidx.paging.PagedList
+import androidx.paging.PagingSource
 import net.emojiparty.android.jishotomo.JishoTomoApp
 import net.emojiparty.android.jishotomo.data.CJKUtil.isJapanese
 import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses
@@ -30,32 +28,26 @@ class AppRepository {
     return entryDao.getEntryById(entryId)
   }
 
-  fun search(term: String): LiveData<PagedList<SearchResultEntry>> {
+  fun search(term: String): PagingSource<Int, SearchResultEntry> {
     val unicodeCodePoint = Character.codePointAt(term, 0)
     return if (isJapanese(unicodeCodePoint)) {
       val wildcardQuery = String.format("*%s*", term)
-      LivePagedListBuilder(
-        entryDao.searchByJapaneseTerm(wildcardQuery), PAGE_SIZE
-      ).build()
+      entryDao.searchByJapaneseTerm(wildcardQuery)
     } else {
-      LivePagedListBuilder(
-        entryDao.searchByEnglishTerm(term), PAGE_SIZE
-      ).build()
+      entryDao.searchByEnglishTerm(term)
     }
   }
 
-  fun browse(): LiveData<PagedList<SearchResultEntry>> {
-    return LivePagedListBuilder(entryDao.browse(), PAGE_SIZE).build()
+  fun browse(): PagingSource<Int, SearchResultEntry> {
+    return entryDao.browse()
   }
 
-  fun getFavorites(): LiveData<PagedList<SearchResultEntry>> {
-    return LivePagedListBuilder(entryDao.getFavorites(), PAGE_SIZE).build()
+  fun getFavorites(): PagingSource<Int, SearchResultEntry> {
+    return entryDao.getFavorites()
   }
 
-  fun getByJlptLevel(level: Int): LiveData<PagedList<SearchResultEntry>> {
-    return LivePagedListBuilder(
-      entryDao.findByJlptLevel(level), PAGE_SIZE
-    ).build()
+  fun getByJlptLevel(level: Int): PagingSource<Int, SearchResultEntry> {
+    return entryDao.findByJlptLevel(level)
   }
 
   suspend fun getAllFavorites(): List<EntryWithAllSenses> {

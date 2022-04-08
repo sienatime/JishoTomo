@@ -7,9 +7,10 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.paging.PagedList
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
+import kotlinx.coroutines.launch
 import net.emojiparty.android.jishotomo.R
-import net.emojiparty.android.jishotomo.data.models.SearchResultEntry
 import net.emojiparty.android.jishotomo.databinding.FragmentEntryListBinding
 import net.emojiparty.android.jishotomo.ui.adapters.PagedEntriesAdapter
 import net.emojiparty.android.jishotomo.ui.viewmodels.PagedEntriesViewModel
@@ -26,10 +27,9 @@ class EntryListFragment : Fragment() {
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
-  ): View? {
+  ): View {
     _binding = FragmentEntryListBinding.inflate(inflater, container, false)
-    val view = binding.root
-    return view
+    return binding.root
   }
 
   override fun onDestroyView() {
@@ -41,61 +41,44 @@ class EntryListFragment : Fragment() {
     view: View,
     savedInstanceState: Bundle?
   ) {
-    setupRecyclerView()
     setRecyclerViewWithNewAdapter()
 
-    viewModel.getPagedEntriesControl().observe(
-      viewLifecycleOwner,
-      {
-        // this is so that the PagedListAdapter does not try to perform a diff
-        // against the two lists when changing search types. the app was really laggy
-        // when changing lists without re-instantiating the adapter.
-        setRecyclerViewWithNewAdapter()
-        binding.noResults.visibility = View.GONE
-        binding.loading.visibility = View.VISIBLE
-      }
-    )
+    binding.noResults.visibility = View.GONE
+    binding.loading.visibility = View.VISIBLE
 
-    viewModel.getExportProgress().observe(
-      viewLifecycleOwner,
-      {
-        binding.exporting.progress = it
+    viewModel.entriesLiveData.observe(viewLifecycleOwner) { pagingData ->
+      // this is so that the PagingDataAdapter does not try to perform a diff
+      // against the two lists when changing search types. the app was really laggy
+      // when changing lists without re-instantiating the adapter.
+      setRecyclerViewWithNewAdapter()
+      binding.loading.visibility = View.GONE
+      viewLifecycleOwner.lifecycleScope.launch {
+        adapter?.submitData(pagingData)
       }
-    )
+    }
 
-    viewModel.getIsExporting().observe(
-      viewLifecycleOwner,
-      {
-        binding.exporting.isVisible = it
-      }
-    )
+    viewModel.getExportProgress().observe(viewLifecycleOwner) {
+      binding.exporting.progress = it
+    }
+
+    viewModel.getIsExporting().observe(viewLifecycleOwner) {
+      binding.exporting.isVisible = it
+    }
 
     super.onViewCreated(view, savedInstanceState)
   }
 
-  // Paging library reference https://developer.android.com/topic/libraries/architecture/paging
-  private fun setupRecyclerView() {
-    viewModel.getEntries().observe(
-      viewLifecycleOwner,
-      { entries: PagedList<SearchResultEntry> ->
-        binding.loading.visibility = View.INVISIBLE
-        adapter?.submitList(entries)
-        setNoResultsText(entries.size)
-      }
-    )
-  }
-
   private fun setRecyclerViewWithNewAdapter() {
-    adapter = PagedEntriesAdapter(R.layout.list_item_entry)
-    binding.searchResultsRv.adapter = adapter
-  }
-
-  private fun setNoResultsText(size: Int) {
-    if (size == 0) {
-      binding.noResults.visibility = View.VISIBLE
-      binding.noResults.text = viewModel.noResultsText()
-    } else {
-      binding.noResults.visibility = View.GONE
+    adapter = PagedEntriesAdapter(R.layout.list_item_entry).also {
+      it.addLoadStateListener { loadState ->
+        if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && it.itemCount < 1) {
+          binding.noResults.visibility = View.VISIBLE
+          binding.noResults.text = viewModel.noResultsText()
+        } else {
+          binding.noResults.visibility = View.GONE
+        }
+      }
     }
+    binding.searchResultsRv.adapter = adapter
   }
 }

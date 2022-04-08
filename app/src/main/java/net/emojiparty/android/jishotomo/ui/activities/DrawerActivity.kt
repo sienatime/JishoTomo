@@ -83,19 +83,9 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
       addDefinitionFragment(entryId)
     }
 
-    viewModel.getEntries().observe(
-      this,
-      {
-        refreshMenuItems()
-      }
-    )
-
-    viewModel.getPagedEntriesControl().observe(
-      this,
-      {
-        pagedEntriesControlObserver(it)
-      }
-    )
+    viewModel.pagedEntriesControlLiveData.observe(this) {
+      pagedEntriesControlObserver(it)
+    }
 
     // TODO add some callback to the EntryListFragment for this
 //    toolbar_title.setOnClickListener { search_results_rv.scrollToPosition(0) }

@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.paging.PagedListAdapter
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil.ItemCallback
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import net.emojiparty.android.jishotomo.BR
@@ -13,7 +13,7 @@ import net.emojiparty.android.jishotomo.data.models.SearchResultEntry
 import net.emojiparty.android.jishotomo.ui.adapters.PagedEntriesAdapter.DataBindingViewHolder
 
 class PagedEntriesAdapter(private val layoutId: Int) :
-  PagedListAdapter<SearchResultEntry, DataBindingViewHolder>(DIFF_CALLBACK) {
+  PagingDataAdapter<SearchResultEntry, DataBindingViewHolder>(DIFF_CALLBACK) {
 
   override fun onBindViewHolder(
     holder: DataBindingViewHolder,

@@ -3,10 +3,13 @@ package net.emojiparty.android.jishotomo.ui.viewmodels
 import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagedList
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingSource
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import net.emojiparty.android.jishotomo.R
@@ -24,33 +27,21 @@ class PagedEntriesViewModel(
   private val appRepo: AppRepository = AppRepository()
 ) : ViewModel() {
 
-  private val entries: LiveData<PagedList<SearchResultEntry>>
-  private val pagedEntriesControl = MutableLiveData<PagedEntriesControl>()
+  val pagedEntriesControlLiveData = MutableLiveData<PagedEntriesControl>()
   private val exportProgress = MutableLiveData<Int>()
   private val isExporting = MutableLiveData<Boolean>()
 
-  init {
-    entries = Transformations.switchMap(
-      pagedEntriesControl
-    ) { pagedEntriesControl: PagedEntriesControl ->
-      return@switchMap when (pagedEntriesControl) {
-        is Search -> appRepo.search(pagedEntriesControl.searchTerm)
-        is Favorites -> appRepo.getFavorites()
-        is JLPT -> appRepo.getByJlptLevel(pagedEntriesControl.level)
-        is Browse -> appRepo.browse()
-      }
-    }
-  }
-
-  fun getPagedEntriesControl(): MutableLiveData<PagedEntriesControl> {
-    return pagedEntriesControl
+  val entriesLiveData = pagedEntriesControlLiveData.switchMap { query ->
+    Pager(
+      PagingConfig(pageSize = 20)
+    ) {
+      getSearchResults(query)
+    }.flow.asLiveData()
   }
 
   fun setPagedEntriesControl(pagedEntriesControl: PagedEntriesControl) {
-    this.pagedEntriesControl.value = pagedEntriesControl
+    this.pagedEntriesControlLiveData.value = pagedEntriesControl
   }
-
-  fun getEntries(): LiveData<PagedList<SearchResultEntry>> = entries
 
   fun getExportProgress(): LiveData<Int> = exportProgress
 
@@ -64,22 +55,22 @@ class PagedEntriesViewModel(
     this.isExporting.value = isExporting
   }
 
-  fun isSearch(): Boolean = pagedEntriesControl.value is Search
+  fun isSearch(): Boolean = pagedEntriesControlLiveData.value is Search
 
   fun getSearchTerm(): String? {
-    return (pagedEntriesControl.value as? Search)?.searchTerm
+    return (pagedEntriesControlLiveData.value as? Search)?.searchTerm
   }
 
   fun getJlptLevel(): Int? {
-    return (pagedEntriesControl.value as? JLPT)?.level
+    return (pagedEntriesControlLiveData.value as? JLPT)?.level
   }
 
   fun getName(): String {
-    return (pagedEntriesControl.value ?: Browse).name
+    return (pagedEntriesControlLiveData.value ?: Browse).name
   }
 
   fun noResultsText(): String {
-    return when (val control = pagedEntriesControl.value) {
+    return when (val control = pagedEntriesControlLiveData.value) {
       is Favorites -> resourceFetcher.getString(R.string.no_favorites)
       is Search -> String.format(
         resourceFetcher.getString(R.string.no_search_results), control.searchTerm
@@ -89,7 +80,7 @@ class PagedEntriesViewModel(
   }
 
   fun titleIdForSearchType(): Int {
-    return when (val control = pagedEntriesControl.value) {
+    return when (val control = pagedEntriesControlLiveData.value) {
       is Browse -> R.string.app_name
       is Favorites -> R.string.favorites
       is JLPT -> resourceFetcher.stringForJlptLevel(control.level)
@@ -99,11 +90,11 @@ class PagedEntriesViewModel(
   }
 
   fun isExportVisible(): Boolean {
-    return hasFavorites() || isJlpt()
+    return isFavorites() || isJlpt()
   }
 
   fun isUnfavoriteAllVisible(): Boolean {
-    return hasFavorites()
+    return isFavorites()
   }
 
   fun restoreFromBundleValues(
@@ -133,7 +124,7 @@ class PagedEntriesViewModel(
   }
 
   fun getEntriesForExportAsync(): Deferred<List<EntryWithAllSenses>> {
-    return when (val control = pagedEntriesControl.value) {
+    return when (val control = pagedEntriesControlLiveData.value) {
       is Favorites -> viewModelScope.async { appRepo.getAllFavorites() }
       is JLPT -> viewModelScope.async { appRepo.getAllByJlptLevel(control.level) }
       else -> throw RuntimeException(
@@ -142,13 +133,16 @@ class PagedEntriesViewModel(
     }
   }
 
-  private fun hasFavorites(): Boolean {
-    return isFavorites() && hasEntries()
+  private fun getSearchResults(pagedEntriesControl: PagedEntriesControl): PagingSource<Int, SearchResultEntry> {
+    return when (pagedEntriesControl) {
+      is Search -> appRepo.search(pagedEntriesControl.searchTerm)
+      is Favorites -> appRepo.getFavorites()
+      is JLPT -> appRepo.getByJlptLevel(pagedEntriesControl.level)
+      else -> appRepo.browse()
+    }
   }
 
-  private fun isFavorites(): Boolean = pagedEntriesControl.value is Favorites
+  private fun isFavorites(): Boolean = pagedEntriesControlLiveData.value is Favorites
 
-  private fun isJlpt(): Boolean = pagedEntriesControl.value is JLPT
-
-  private fun hasEntries(): Boolean = (entries.value?.size ?: 0) > 0
+  private fun isJlpt(): Boolean = pagedEntriesControlLiveData.value is JLPT
 }

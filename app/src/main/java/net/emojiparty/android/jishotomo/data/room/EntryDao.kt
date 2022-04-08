@@ -1,6 +1,6 @@
 package net.emojiparty.android.jishotomo.data.room
 
-import androidx.paging.DataSource
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
@@ -24,14 +24,14 @@ interface EntryDao {
 
   @Transaction
   @Query("SELECT id, primary_kanji, primary_reading FROM entries ORDER BY id ASC")
-  fun browse(): DataSource.Factory<Int, SearchResultEntry>
+  fun browse(): PagingSource<Int, SearchResultEntry>
 
   @Transaction
   @Query(
     "SELECT entries.id, entries.primary_kanji, entries.primary_reading FROM entries " +
       "JOIN entriesFts ON (entries.id = entriesFts.docid) WHERE entriesFts MATCH :term"
   )
-  fun searchByJapaneseTerm(term: String): DataSource.Factory<Int, SearchResultEntry>
+  fun searchByJapaneseTerm(term: String): PagingSource<Int, SearchResultEntry>
 
   @Transaction
   @Query(
@@ -39,13 +39,13 @@ interface EntryDao {
       "JOIN senses ON senses.entry_id = entries.id " +
       "JOIN sensesFts ON (senses.id = sensesFts.docid) WHERE sensesFts MATCH :term"
   )
-  fun searchByEnglishTerm(term: String): DataSource.Factory<Int, SearchResultEntry>
+  fun searchByEnglishTerm(term: String): PagingSource<Int, SearchResultEntry>
 
   @Transaction
   @Query(
     "SELECT id, primary_kanji, primary_reading FROM entries WHERE favorited IS NOT NULL ORDER BY favorited DESC"
   )
-  fun getFavorites(): DataSource.Factory<Int, SearchResultEntry>
+  fun getFavorites(): PagingSource<Int, SearchResultEntry>
 
   @Transaction
   @Query("SELECT * FROM entries WHERE favorited IS NOT NULL ORDER BY favorited DESC")
@@ -62,7 +62,7 @@ interface EntryDao {
   @Query(
     "SELECT id, primary_kanji, primary_reading FROM entries WHERE jlpt_level = :level ORDER BY id ASC"
   )
-  fun findByJlptLevel(level: Int): DataSource.Factory<Int, SearchResultEntry>
+  fun findByJlptLevel(level: Int): PagingSource<Int, SearchResultEntry>
 
   @TestOnly
   @Query("SELECT * FROM entries WHERE primary_kanji = :kanji LIMIT 1")
