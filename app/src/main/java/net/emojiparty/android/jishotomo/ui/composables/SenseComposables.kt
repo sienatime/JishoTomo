@@ -37,13 +37,13 @@ private fun SenseItem(presenter: SensePresenter) {
       modifier = Modifier.padding(bottom = 24.dp)
     ) {
       PartsOfSpeech(
-        isVisible = presenter.partsOfSpeechIsVisible(),
+        isVisible = presenter.partsOfSpeechIsVisible,
         partsOfSpeech = presenter.partsOfSpeech(context).uppercase()
       )
       Divider()
-      Gloss(presenter.gloss())
+      Gloss(presenter.gloss)
       AppliesTo(appliesTo = presenter.appliesToText(context))
-      CrossReferences(presenter.crossReferenceLinks())
+      CrossReferences(presenter.crossReferences)
     }
   }
 }
