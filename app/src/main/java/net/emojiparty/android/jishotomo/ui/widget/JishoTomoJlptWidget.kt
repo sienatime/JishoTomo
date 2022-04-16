@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.view.View
 import android.widget.RemoteViews
 import androidx.core.app.TaskStackBuilder
@@ -107,7 +108,13 @@ class JishoTomoJlptWidget : AppWidgetProvider() {
       }
       return TaskStackBuilder.create(context)
         .addNextIntentWithParentStack(appIntent)
-        .getPendingIntent(appWidgetId, PendingIntent.FLAG_UPDATE_CURRENT)
+        .getPendingIntent(appWidgetId, pendingIntentFlag)
+    }
+
+    private val pendingIntentFlag: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+    } else {
+      PendingIntent.FLAG_UPDATE_CURRENT
     }
 
     private fun getAnalyticsLoggerFromContext(context: Context): AnalyticsLogger {
