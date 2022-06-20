@@ -87,8 +87,7 @@ class DrawerActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
       pagedEntriesControlObserver(it)
     }
 
-    // TODO add some callback to the EntryListFragment for this
-//    toolbar_title.setOnClickListener { search_results_rv.scrollToPosition(0) }
+    binding.appBarDrawer.toolbarTitle.setOnClickListener { viewModel.toolbarTapped() }
   }
 
   override fun onDestroy() {

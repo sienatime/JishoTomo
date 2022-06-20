@@ -13,6 +13,7 @@ import androidx.paging.PagingSource
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import net.emojiparty.android.jishotomo.R
+import net.emojiparty.android.jishotomo.SingleLiveEvent
 import net.emojiparty.android.jishotomo.data.AppRepository
 import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses
 import net.emojiparty.android.jishotomo.data.models.SearchResultEntry
@@ -38,6 +39,8 @@ class PagedEntriesViewModel(
       getSearchResults(query)
     }.flow.asLiveData()
   }
+
+  val toolbarTappedLiveEvent = SingleLiveEvent<Unit>()
 
   fun setPagedEntriesControl(pagedEntriesControl: PagedEntriesControl) {
     this.pagedEntriesControlLiveData.value = pagedEntriesControl
@@ -131,6 +134,10 @@ class PagedEntriesViewModel(
         "Not allowed to export this kind of list! ${control?.name}"
       )
     }
+  }
+
+  fun toolbarTapped() {
+    toolbarTappedLiveEvent.call()
   }
 
   private fun getSearchResults(pagedEntriesControl: PagedEntriesControl): PagingSource<Int, SearchResultEntry> {

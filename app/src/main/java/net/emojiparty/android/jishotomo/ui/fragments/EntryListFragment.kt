@@ -65,7 +65,15 @@ class EntryListFragment : Fragment() {
       binding.exporting.isVisible = it
     }
 
+    viewModel.toolbarTappedLiveEvent.observe(viewLifecycleOwner) {
+      onToolbarTapped()
+    }
+
     super.onViewCreated(view, savedInstanceState)
+  }
+
+  private fun onToolbarTapped() {
+    binding.searchResultsRv.scrollToPosition(0)
   }
 
   private fun setRecyclerViewWithNewAdapter() {
