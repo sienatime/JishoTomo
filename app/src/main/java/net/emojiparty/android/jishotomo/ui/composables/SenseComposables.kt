@@ -1,6 +1,11 @@
 package net.emojiparty.android.jishotomo.ui.composables
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
+import android.widget.Toast
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import net.emojiparty.android.jishotomo.R
 import net.emojiparty.android.jishotomo.R.string
 import net.emojiparty.android.jishotomo.data.models.CrossReferencedEntry
 import net.emojiparty.android.jishotomo.data.room.Sense
@@ -21,16 +27,16 @@ import net.emojiparty.android.jishotomo.ui.presentation.EntryClickHandler
 import net.emojiparty.android.jishotomo.ui.presentation.SensePresenter
 
 @Composable
-fun SensesList(presenters: List<SensePresenter>) {
+fun SensesList(presenters: List<SensePresenter>, copyTextOnLongPress: String) {
   Column {
     for (presenter in presenters) {
-      SenseItem(presenter)
+      SenseItem(presenter, copyTextOnLongPress)
     }
   }
 }
 
 @Composable
-private fun SenseItem(presenter: SensePresenter) {
+private fun SenseItem(presenter: SensePresenter, copyTextOnLongPress: String) {
   val context = LocalContext.current
   Surface {
     Column(
@@ -41,7 +47,7 @@ private fun SenseItem(presenter: SensePresenter) {
         partsOfSpeech = presenter.partsOfSpeech(context).uppercase()
       )
       Divider()
-      Gloss(presenter.gloss)
+      Gloss(presenter.gloss, copyTextOnLongPress)
       AppliesTo(appliesTo = presenter.appliesToText(context))
       CrossReferences(presenter.crossReferences)
     }
@@ -59,11 +65,25 @@ private fun PartsOfSpeech(isVisible: Boolean, partsOfSpeech: String) {
   }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun Gloss(gloss: String) {
+private fun Gloss(gloss: String, copyTextOnLongPress: String) {
+  val context = LocalContext.current
+
   Text(
     text = gloss,
-    modifier = Modifier.padding(top = 20.dp),
+    modifier = Modifier.padding(top = 20.dp).combinedClickable(
+      onLongClick = {
+        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+        val clip = ClipData.newPlainText(context.getString(R.string.copy_label), copyTextOnLongPress)
+
+        clipboard?.setPrimaryClip(clip)
+        Toast.makeText(context, context.getString(R.string.copied), Toast.LENGTH_LONG).show()
+      },
+      onClick = {
+        // no-op
+      }
+    ),
     style = MaterialTheme.typography.body1
   )
 }
@@ -155,6 +175,6 @@ fun SensePreview() {
     )
   )
   JishoTomoTheme {
-    SensesList(presenters)
+    SensesList(presenters, "")
   }
 }

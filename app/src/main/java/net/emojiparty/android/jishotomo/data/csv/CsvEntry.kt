@@ -12,17 +12,16 @@ class CsvEntry(
   private val senseDisplay: SenseDisplay
 ) {
   fun toArray(): Array<String> {
-    return arrayOf(entry.kanjiOrReading, meaning(), reading())
+    return arrayOf(entry.kanjiOrReading, meaning(html = true), reading())
   }
 
-  @VisibleForTesting
-  fun meaning(): String {
+  fun meaning(html: Boolean): String {
     val builder = StringBuilder()
     val numberOfSenses = entry.senses.size
     var glossIndex = 1
 
     entry.senses.forEach { sense ->
-      val newPartOfSpeech = appendPartsOfSpeech(builder, sense)
+      val newPartOfSpeech = appendPartsOfSpeech(builder, sense, html)
       if (newPartOfSpeech) {
         glossIndex = 1
       }
@@ -32,15 +31,23 @@ class CsvEntry(
         glossIndex++
       }
       builder.append(sense.glosses.splitAndJoin())
-      builder.append("<br/>")
+      appendLineBreak(builder, html)
     }
     return builder.toString()
   }
 
-  private fun appendPartsOfSpeech(builder: StringBuilder, sense: Sense): Boolean {
+  private fun appendLineBreak(builder: StringBuilder, html: Boolean) {
+    if (html) {
+      builder.append("<br/>")
+    } else {
+      builder.append("\n")
+    }
+  }
+
+  private fun appendPartsOfSpeech(builder: StringBuilder, sense: Sense, html: Boolean): Boolean {
     if (sense.partsOfSpeech != null) {
       builder.append(senseDisplay.formatPartsOfSpeech(sense.partsOfSpeech))
-      builder.append("<br/>")
+      appendLineBreak(builder, html)
       return true
     }
     return false

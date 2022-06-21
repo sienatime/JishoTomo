@@ -17,10 +17,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import net.emojiparty.android.jishotomo.R
+import net.emojiparty.android.jishotomo.data.csv.CsvEntry
 import net.emojiparty.android.jishotomo.data.models.CrossReferencedEntry
 import net.emojiparty.android.jishotomo.data.models.EntryWithAllSenses
 import net.emojiparty.android.jishotomo.data.room.Sense
 import net.emojiparty.android.jishotomo.ui.JishoTomoTheme
+import net.emojiparty.android.jishotomo.ui.presentation.AndroidResourceFetcher
+import net.emojiparty.android.jishotomo.ui.presentation.SenseDisplay
 import net.emojiparty.android.jishotomo.ui.presentation.SensePresenter
 import net.emojiparty.android.jishotomo.ui.viewmodels.EntryViewModel
 
@@ -60,10 +63,16 @@ private fun DefinitionContent(entry: EntryWithAllSenses, crossReferences: List<C
         Entry(entry.primaryReading)
       }
 
+      val senseDisplay = SenseDisplay(
+        AndroidResourceFetcher(context.resources, context.packageName)
+      )
+      val csvEntry = CsvEntry(entry, senseDisplay)
+
       SensesList(
         presenters = entry.senses.map { sense ->
           SensePresenter(sense, crossReferences)
-        }
+        },
+        copyTextOnLongPress = csvEntry.meaning(html = false)
       )
 
       if (entry.hasAlternates) {

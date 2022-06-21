@@ -20,6 +20,8 @@
   <string name="no_favorites">You have no favorite entries. Tap the star on an entry to favorite it.</string>
   <string name="no_search_results">No results found for \"%s\". Try a different search.</string>
   <string name="nothing_here">Whoops, there is nothing here.</string>
+  <string name="copied">Meaning copied to your clipboard.</string>
+  <string name="copy_label">Meaning</string>
 
   <!-- Menu -->
   <string name="search">Search</string>

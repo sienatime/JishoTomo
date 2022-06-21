@@ -65,14 +65,14 @@ class CsvEntryTest {
   fun `meaning, when only one sense, returns the parts of speech followed by the sense`() {
     val entryWithOneSense = makeEntry("ねこ", "猫", makeSense("cat", "n"))
     val csvEntry = CsvEntry(entryWithOneSense, senseDisplay)
-    assertThat(csvEntry.meaning(), `is`("Noun<br/>cat<br/>"))
+    assertThat(csvEntry.meaning(html = true), `is`("Noun<br/>cat<br/>"))
   }
 
   @Test
   fun `meaning, when more than one sense but one part of speech, returns the parts of speech followed by a numbered list of senses`() {
     val entryWithOneSense = makeEntry("ねこ", "猫", makeSense("cat", "n"), makeSense("a pretty cat"))
     val csvEntry = CsvEntry(entryWithOneSense, senseDisplay)
-    assertThat(csvEntry.meaning(), `is`("Noun<br/>1. cat<br/>2. a pretty cat<br/>"))
+    assertThat(csvEntry.meaning(html = true), `is`("Noun<br/>1. cat<br/>2. a pretty cat<br/>"))
   }
 
   @Test
@@ -83,7 +83,7 @@ class CsvEntryTest {
     )
     val csvEntry = CsvEntry(entryWithOneSense, senseDisplay)
     assertThat(
-      csvEntry.meaning(),
+      csvEntry.meaning(html = true),
       `is`("Noun<br/>1. cat<br/>2. a pretty cat<br/>Verb<br/>1. to do cat things<br/>")
     )
   }
