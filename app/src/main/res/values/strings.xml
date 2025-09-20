@@ -8,8 +8,8 @@
   <string name="action_search">Search</string>
   <string name="alt_readings">Alternate Readings</string>
   <string name="alt_kanji">Alternate Kanji</string>
-  <string name="see_also_format">%s %s</string>
-  <string name="applies_to_format">%s %s</string>
+  <string name="see_also_format">%1$s %2$s</string>
+  <string name="applies_to_format">%1$s %2$s</string>
   <string name="see_also">See also:</string>
   <string name="applies_to">Applies to:</string>
   <string name="list_of_words_delimiter">,\u0020</string>
